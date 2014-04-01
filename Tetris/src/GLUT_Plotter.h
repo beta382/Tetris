@@ -13,10 +13,10 @@
 #include <cstdlib>
 #include <queue>
 
-#ifdef _WIN32
-#include <GL/freeglut.h>
-#elif defined(__APPLE__) && defined(__MACH__)
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <GL/freeglut.h>
 #endif
 
 using namespace std;
