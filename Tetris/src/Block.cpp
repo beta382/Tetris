@@ -9,18 +9,18 @@
 
 #include "Block.h"
 
-Block::Block(): Drawable(0, 0, 1, 1) {}
+Block::Block(GLUT_Plotter *g): Drawable(g) {}
 
-Block::Block (int x, int y): Drawable(x, y, 1, 1) {}
+Block::Block (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 1, 1) {}
 
 /* ---------- Implemented from Drawable ---------- */
 
 void Block::draw() {
-    p.setColor(getColor());
-    p.plot(getLocationX(), getLocationY(), SQUARE);
+    g->setColor(getColor());
+    g->plot(getLocationX(), getLocationY());
 }
 
 void Block::erase() {
-    p.setColor(black);
-    p.plot(getLocationX(), getLocationY(), SQUARE);
+    g->setColor(Color::BLACK);
+    g->plot(getLocationX(), getLocationY());
 }

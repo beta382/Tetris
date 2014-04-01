@@ -4,13 +4,14 @@
  * Assignment description:
  * Due date:               
  * Date created:           Mar 27, 2014
- * Date last modified:     Mar 27, 2014
+ * Date last modified:     Mar 31, 2014
  */
 
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
-#include "plotter.h"
+#include "GLUT_Plotter.h"
+#include "drawkit.h"
 
 class Drawable {
     public:
@@ -26,15 +27,16 @@ class Drawable {
         int getLocationX() const;
         int getLocationY() const;
         
-        virtual void setColor (ink color);
-        ink getColor() const;
+        virtual void setColor (unsigned int color);
+        unsigned int getColor() const;
         
         virtual ~Drawable() {};
     protected:
-        Drawable();
-        Drawable(int x, int y, int width, int height, ink color = white);
+        Drawable(GLUT_Plotter *g);
+        Drawable(GLUT_Plotter *g, int x, int y);
+        Drawable(GLUT_Plotter *g, int x, int y, int width, int height, int color = Color::WHITE);
         
-        Plotter p;
+        GLUT_Plotter *g;
         
         int x;
         int y;
@@ -42,7 +44,7 @@ class Drawable {
         int width;
         int height;
         
-        ink color;
+        int color;
 };
 
 #endif /* DRAWABLE_H_ */

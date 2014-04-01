@@ -17,8 +17,8 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
 
 class Tetromino: public Shape {
     public:
-        Tetromino();
-        Tetromino(int x, int y, TetrominoShape type);
+        Tetromino(GLUT_Plotter *g);
+        Tetromino(GLUT_Plotter *g, int x, int y, TetrominoShape type);
         ~Tetromino();
         
         void rotateCW();
