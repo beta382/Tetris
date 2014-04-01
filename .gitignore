@@ -1,6 +1,15 @@
+## Eclipse
 .metadata/
 Tetris/.settings/
-Tetris/Debug/src/
+Tetris/Debug/
 
 .cproject
 .project
+
+## OS_X Codeblocks
+.DS_Store
+*.layout
+*.depend
+obj/
+bin/
+*.cbp

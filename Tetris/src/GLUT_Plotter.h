@@ -13,7 +13,15 @@
 #include <cstdlib>
 #include <queue>
 
+<<<<<<< HEAD
 #include <GLUT/glut.h>
+=======
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/freeglut.h>
+#endif
+>>>>>>> FETCH_HEAD
 
 using namespace std;
 

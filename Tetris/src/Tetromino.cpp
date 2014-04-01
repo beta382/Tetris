@@ -38,6 +38,8 @@ void Tetromino::rotateCCW() {
     for (int i = 0; i < blocks.getSize(); i++) {
         blocks[i]->setLocation((blocks[i]->getLocationY()-getLocationY()+offsetY)+getLocationX()-offsetX,
                 getWidth()-(blocks[i]->getLocationX()-getLocationX()+offsetX)-1+getLocationY()-offsetY);
+//        blocks[i]->setLocation( ,
+//                (blocks[i]->getLocationX()-getLocationX()+offsetX)+getLocationY()-offsetY); // TODO: FIX!
     }
     draw();
     swap(width, height);
