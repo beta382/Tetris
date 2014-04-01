@@ -9,15 +9,15 @@
 
 #include "Shape.h"
 
-Shape::Shape(): Drawable(0, 0, 1, 1) {}
+Shape::Shape(GLUT_Plotter *g): Drawable(g) {}
 
-Shape::Shape (int x, int y): Drawable(x, y, 1, 1) {}
+Shape::Shape (GLUT_Plotter *g, int x, int y): Drawable(g, x, y) {}
 
 Shape::~Shape() {
     erase();
 }
 
-Block Shape::getBlock(int index) const {
+Block *Shape::getBlock(int index) const {
     return blocks.at(index);
 }
 
@@ -27,13 +27,13 @@ int Shape::numBlocks() const {
 
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()-1);
+    setLocation(getLocationX(), getLocationY()+1);
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()+1);
+    setLocation(getLocationX(), getLocationY()-1);
     draw();
 }
 
@@ -56,16 +56,16 @@ void Shape::setLocation(int x, int y) {
     int dX = x - getLocationX();
     int dY = y - getLocationY();
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i].setLocation(blocks[i].getLocationX()+dX, blocks[i].getLocationY()+dY);
+        blocks[i]->setLocation(blocks[i]->getLocationX()+dX, blocks[i]->getLocationY()+dY);
     }
     
     this->x = x;
     this->y = y;
 }
 
-void Shape::setColor (ink color) {
+void Shape::setColor (unsigned int color) {
     for (int i = 0; i < blocks.getSize(); i++){
-        blocks[i].setColor(color);
+        blocks[i]->setColor(color);
     }
 }
 
@@ -74,12 +74,12 @@ void Shape::setColor (ink color) {
 
 void Shape::draw() {
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i].draw();
+        blocks[i]->draw();
     }
 }
 
 void Shape::erase() {
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i].erase();
+        blocks[i]->erase();
     }
 }

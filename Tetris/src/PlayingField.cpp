@@ -9,7 +9,7 @@
 
 #include "PlayingField.h"
 
-PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
+PlayingField::PlayingField(GLUT_Plotter *g): Drawable(g, 0, 0, 10, 20) {
     for (int i = 0; i < getWidth(); i++) {
         myVector<Block *> tmp;
         blocks.pushBack(tmp);
@@ -19,7 +19,17 @@ PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
     }
 }
 
-PlayingField::PlayingField(int x, int y, int width, int height): Drawable(x, y, width, height) {
+PlayingField::PlayingField(GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 20) {
+    for (int i = 0; i < getWidth(); i++) {
+        myVector<Block *> tmp;
+        blocks.pushBack(tmp);
+        for (int j = 0; j < getHeight(); j++) {
+            blocks[i].pushBack(NULL);
+        }
+    }
+}
+
+PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height): Drawable(g, x, y, width, height) {
     for (int i = 0; i < getWidth(); i++) {
         myVector<Block *> tmp;
         blocks.pushBack(tmp);
@@ -41,14 +51,14 @@ PlayingField::~PlayingField() {
 }
 
 Tetromino *PlayingField::spawnNewTetromino (int x, int y, TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(getLocationX()+x, getLocationY()+y, type);
+    Tetromino *tetromino = new Tetromino(g, getLocationX()+x, getLocationY()+y, type);
     
     return tetromino;
 }
 
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
-        Block *curBlock = new Block(shape->getBlock(i));
+        Block *curBlock = new Block(*(shape->getBlock(i)));
         blocks.at(curBlock->getLocationX()-getLocationX()).at(curBlock->getLocationY()-getLocationY()) = curBlock;
     }
     
@@ -61,9 +71,9 @@ bool PlayingField::canShiftUp(Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block curBlock = shape->getBlock(i);
-        if (curBlock.getLocationY()-1 < getLocationY() ||
-                blocks.at(curBlock.getLocationX()-getLocationX()).at(curBlock.getLocationY()-getLocationY()-1))
+        Block *tmp = shape->getBlock(i);
+        if (tmp->getLocationY()+1 >= getHeight()+getLocationY() ||
+                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()+1))
         {
             can = false;
         }
@@ -76,9 +86,9 @@ bool PlayingField::canShiftDown(Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block curBlock = shape->getBlock(i);
-        if (curBlock.getLocationY()+1 >= getHeight()+getLocationY() ||
-                blocks.at(curBlock.getLocationX()-getLocationX()).at(curBlock.getLocationY()-getLocationY()+1))
+        Block *tmp = shape->getBlock(i);
+        if (tmp->getLocationY()-1 < getLocationY() ||
+                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()-1))
         {
             can = false;
         }
@@ -91,9 +101,9 @@ bool PlayingField::canShiftLeft(Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block curBlock = shape->getBlock(i);
-        if (curBlock.getLocationX()-1 < getLocationX() ||
-                blocks.at(curBlock.getLocationX()-getLocationX()-1).at(curBlock.getLocationY()-getLocationY()))
+        Block *tmp = shape->getBlock(i);
+        if (tmp->getLocationX()-1 < getLocationX() ||
+                blocks.at(tmp->getLocationX()-getLocationX()-1).at(tmp->getLocationY()-getLocationY()))
         {
             can = false;
         }
@@ -106,9 +116,9 @@ bool PlayingField::canShiftRight(Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block curBlock = shape->getBlock(i);
-        if (curBlock.getLocationX()+1 >= getWidth()+getLocationX() ||
-                blocks.at(curBlock.getLocationX()-getLocationX()+1).at(curBlock.getLocationY()-getLocationY()))
+        Block *tmp = shape->getBlock(i);
+        if (tmp->getLocationX()+1 >= getWidth()+getLocationX() ||
+                blocks.at(tmp->getLocationX()-getLocationX()+1).at(tmp->getLocationY()-getLocationY()))
         {
             can = false;
         }
@@ -121,18 +131,18 @@ bool PlayingField::canRotateCW(Tetromino *t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
-        Block tmp = t->getBlock(i);
+        Block *tmp = t->getBlock(i);
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation(
-                t->getHeight()-(tmp.getLocationY()-t->getLocationY()+t->getOffsetY())-1+
+        tmp->setLocation(
+                t->getHeight()-(tmp->getLocationY()-t->getLocationY()+t->getOffsetY())-1+
                   t->getLocationX()-t->getOffsetX(),
-                (tmp.getLocationX()-t->getLocationX()+t->getOffsetX())+t->getLocationY()-t->getOffsetY());
+                (tmp->getLocationX()-t->getLocationX()+t->getOffsetX())+t->getLocationY()-t->getOffsetY());
         
         // Check that it isn't out-of-bounds or intersecting an existing Block
-        if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
-                tmp.getLocationY() < getLocationY() || tmp.getLocationY() >= getHeight()+getLocationY() ||
-                blocks.at(tmp.getLocationX()-getLocationX()).at(tmp.getLocationY()-getLocationY()))
+        if (tmp->getLocationX() < getLocationX() || tmp->getLocationX() >= getWidth()+getLocationX() || 
+                tmp->getLocationY() < getLocationY() || tmp->getLocationY() >= getHeight()+getLocationY() ||
+                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()))
         {
             can = false;
         }
@@ -145,17 +155,17 @@ bool PlayingField::canRotateCCW(Tetromino *t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
-        Block tmp = t->getBlock(i);
+        Block *tmp = t->getBlock(i);
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation((tmp.getLocationY()-t->getLocationY()+t->getOffsetY())+t->getLocationX()-t->getOffsetX(),
-                t->getWidth()-(tmp.getLocationX()-t->getLocationX()+t->getOffsetX())-1+
+        tmp->setLocation((tmp->getLocationY()-t->getLocationY()+t->getOffsetY())+t->getLocationX()-t->getOffsetX(),
+                t->getWidth()-(tmp->getLocationX()-t->getLocationX()+t->getOffsetX())-1+
                   t->getLocationY()-t->getOffsetY());
     
         // Check that it isn't out-of-bounds or intersecting an existing Block
-        if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
-                tmp.getLocationY() < getLocationY() || tmp.getLocationY() >= getHeight()+getLocationY() ||
-                blocks.at(tmp.getLocationX()-getLocationX()).at(tmp.getLocationY()-getLocationY()))
+        if (tmp->getLocationX() < getLocationX() || tmp->getLocationX() >= getWidth()+getLocationX() || 
+                tmp->getLocationY() < getLocationY() || tmp->getLocationY() >= getHeight()+getLocationY() ||
+                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()))
         {
             can = false;
         }

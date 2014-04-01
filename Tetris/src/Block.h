@@ -14,8 +14,8 @@
 
 class Block: public Drawable {
     public:
-        Block();
-        Block(int x, int y);
+        Block(GLUT_Plotter *g);
+        Block(GLUT_Plotter *g, int x, int y);
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

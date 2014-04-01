@@ -4,20 +4,31 @@
  * Assignment description:
  * Due date:               
  * Date created:           Mar 28, 2014
- * Date last modified:     Mar 28, 2014
+ * Date last modified:     Mar 31, 2014
  */
 
 #include "Drawable.h"
 
-Drawable::Drawable() {
+Drawable::Drawable(GLUT_Plotter *g) {
+    this->g = g;
     x = 0;
     y = 0;
-    width = 1;
-    height = 1;
-    color = white;
+    width = -1;
+    height = -1;
+    color = Color::WHITE;
 }
 
-Drawable::Drawable (int x, int y, int width, int height, ink color) {
+Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
+    this->g = g;
+    this->x = x;
+    this->y = y;
+    width = -1;
+    height = -1;
+    color = Color::WHITE;
+}
+
+Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, int color) {
+    this->g = g;
     this->x = x;
     this->y = y;
     this->width = width;
@@ -54,11 +65,11 @@ int Drawable::getLocationY() const {
     return y;
 }
 
-void Drawable::setColor (ink color) {
+void Drawable::setColor (unsigned int color) {
     this->color = color;
 }
 
-ink Drawable::getColor() const {
+unsigned int Drawable::getColor() const {
     return color;
 }
 
