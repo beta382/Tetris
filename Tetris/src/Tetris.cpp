@@ -93,6 +93,9 @@ void Tetris::Play (void) {
                 currentTetromino = field->spawnNewTetromino(3, 3, static_cast<TetrominoShape>(rand() % 7));
                 currentTetromino->draw();
                 break;
+            case 27: // ESC
+                exit(1);
+                break;
         }
     }
     

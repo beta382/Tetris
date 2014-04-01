@@ -27,13 +27,13 @@ int Shape::numBlocks() const {
 
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()-1);
+    setLocation(getLocationX(), getLocationY()+1);
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()+1);
+    setLocation(getLocationX(), getLocationY()-1);
     draw();
 }
 

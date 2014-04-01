@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <ctime>
 
-class Tetris: Drawable {
+class Tetris: public Drawable {
     public:
         //constructor
         Tetris(GLUT_Plotter *g);

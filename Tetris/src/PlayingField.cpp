@@ -72,8 +72,8 @@ bool PlayingField::canShiftUp(Shape *shape) const {
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         Block *tmp = shape->getBlock(i);
-        if (tmp->getLocationY()-1 < getLocationY() ||
-                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()-1))
+        if (tmp->getLocationY()+1 < getLocationY() ||
+                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()+1))
         {
             can = false;
         }
@@ -87,8 +87,8 @@ bool PlayingField::canShiftDown(Shape *shape) const {
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         Block *tmp = shape->getBlock(i);
-        if (tmp->getLocationY()+1 >= getHeight()+getLocationY() ||
-                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()+1))
+        if (tmp->getLocationY()-1 >= getHeight()+getLocationY() ||
+                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()-1))
         {
             can = false;
         }
