@@ -18,8 +18,9 @@
 
 class PlayingField: public Drawable {
     public:
-        PlayingField();
-        PlayingField(int x, int y, int width, int height);
+        PlayingField(GLUT_Plotter *g);
+        PlayingField(GLUT_Plotter *g, int x, int y);
+        PlayingField(GLUT_Plotter *g, int x, int y, int width, int height);
         ~PlayingField();
         
         Tetromino *spawnNewTetromino(int x, int y, TetrominoShape type);
@@ -41,7 +42,7 @@ class PlayingField: public Drawable {
         void draw();
         void erase();
     private:
-        myVector<myVector<Block *> > blocks;
+        myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
 };
 
 #endif /* PLAYINGFIELD_H_ */

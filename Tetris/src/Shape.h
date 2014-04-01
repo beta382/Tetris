@@ -16,11 +16,11 @@
 
 class Shape: public Drawable {
     public:
-        Shape();
-        Shape(int x, int y);
+        Shape(GLUT_Plotter *g);
+        Shape(GLUT_Plotter *g, int x, int y);
         ~Shape();
         
-        Block getBlock(int) const;
+        Block *getBlock(int) const;
         int numBlocks() const;
         
         void shiftUp();
@@ -30,13 +30,13 @@ class Shape: public Drawable {
         
         /* ---------- Inherited from Drawable ---------- */
         void setLocation(int, int);
-        void setColor (ink);
+        void setColor (unsigned int);
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();
         void erase();
     protected:
-        myVector<Block> blocks;
+        myVector<Block *> blocks;
 };
 
 #endif /* SHAPE_H_ */

@@ -9,11 +9,11 @@
 
 #include "Tetromino.h"
 
-Tetromino::Tetromino(): Shape(0, 0) {
+Tetromino::Tetromino(GLUT_Plotter *g): Shape(g) {
     initTetromino(S); // Picked by fair dice roll, guaranteed to be random
 }
 
-Tetromino::Tetromino (int x, int y, TetrominoShape type): Shape(x, y) {
+Tetromino::Tetromino (GLUT_Plotter *g, int x, int y, TetrominoShape type): Shape(g, x, y) {
     initTetromino(type);
 }
 
@@ -26,8 +26,8 @@ Tetromino::~Tetromino() {
 void Tetromino::rotateCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i].setLocation(getHeight()-(blocks[i].getLocationY()-getLocationY()+offsetY)-1+getLocationX()-offsetX,
-                (blocks[i].getLocationX()-getLocationX()+offsetX)+getLocationY()-offsetY);
+        blocks[i]->setLocation(getHeight()-(blocks[i]->getLocationY()-getLocationY()+offsetY)-1+getLocationX()-offsetX,
+                (blocks[i]->getLocationX()-getLocationX()+offsetX)+getLocationY()-offsetY);
     }
     draw();
     swap(width, height);
@@ -36,8 +36,8 @@ void Tetromino::rotateCW() {
 void Tetromino::rotateCCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i].setLocation((blocks[i].getLocationY()-getLocationY()+offsetY)+getLocationX()-offsetX,
-                getWidth()-(blocks[i].getLocationX()-getLocationX()+offsetX)-1+getLocationY()-offsetY);
+        blocks[i]->setLocation((blocks[i]->getLocationY()-getLocationY()+offsetY)+getLocationX()-offsetX,
+                getWidth()-(blocks[i]->getLocationX()-getLocationX()+offsetX)-1+getLocationY()-offsetY);
     }
     draw();
     swap(width, height);
@@ -54,102 +54,102 @@ int Tetromino::getOffsetY() const {
 /* ---------- Protected ---------- */
 
 void Tetromino::initTetromino (TetrominoShape type) {
-    Block block1, block2, block3, block4;
+    Block *block1, *block2, *block3, *block4;
     
     switch (type) {
         case I:
-            block1.setLocation(getLocationX(), getLocationY());
-            block2.setLocation(getLocationX()+1, getLocationY());
-            block3.setLocation(getLocationX()+2, getLocationY());
-            block4.setLocation(getLocationX()+3, getLocationY());
+            block1 = new Block(g, getLocationX(), getLocationY());
+            block2 = new Block(g, getLocationX()+1, getLocationY());
+            block3 = new Block(g, getLocationX()+2, getLocationY());
+            block4 = new Block(g, getLocationX()+3, getLocationY());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(cyan);
+            setColor(Color::CYAN);
             setWidth(4);
             setHeight(3); // Fudged
             offsetX = 0;
             offsetY = 1;
             break;
         case O:
-            block1.setLocation(getLocationX(), getLocationY());
-            block2.setLocation(getLocationX()+1, getLocationY());
-            block3.setLocation(getLocationX(), getLocationY()+1);
-            block4.setLocation(getLocationX()+1, getLocationY()+1);
+            block1 = new Block(g, getLocationX(), getLocationY());
+            block2 = new Block(g, getLocationX()+1, getLocationY());
+            block3 = new Block(g, getLocationX(), getLocationY()+1);
+            block4 = new Block(g, getLocationX()+1, getLocationY()+1);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(yellow);
+            setColor(Color::YELLOW);
             setWidth(2);
             setHeight(2);
             offsetX = 0;
             offsetY = 0;
             break;
         case T:
-            block1.setLocation(getLocationX(), getLocationY());
-            block2.setLocation(getLocationX()+1, getLocationY());
-            block3.setLocation(getLocationX()+2, getLocationY());
-            block4.setLocation(getLocationX()+1, getLocationY()+1);
+            block1 = new Block(g, getLocationX(), getLocationY());
+            block2 = new Block(g, getLocationX()+1, getLocationY());
+            block3 = new Block(g, getLocationX()+2, getLocationY());
+            block4 = new Block(g, getLocationX()+1, getLocationY()+1);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(magenta);
+            setColor(Color::MAGENTA);
             setWidth(3);
             setHeight(3); // Fudged
             offsetX = 0;
             offsetY = 1;
             break;
         case J:
-            block1.setLocation(getLocationX(), getLocationY());
-            block2.setLocation(getLocationX()+1, getLocationY());
-            block3.setLocation(getLocationX()+2, getLocationY());
-            block4.setLocation(getLocationX()+2, getLocationY()+1);
+            block1 = new Block(g, getLocationX(), getLocationY());
+            block2 = new Block(g, getLocationX()+1, getLocationY());
+            block3 = new Block(g, getLocationX()+2, getLocationY());
+            block4 = new Block(g, getLocationX()+2, getLocationY()+1);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(blue);
+            setColor(Color::BLUE);
             setWidth(3);
             setHeight(3); // Fudged
             offsetX = 0;
             offsetY = 1;
             break;
         case L:
-            block1.setLocation(getLocationX(), getLocationY());
-            block2.setLocation(getLocationX()+1, getLocationY());
-            block3.setLocation(getLocationX()+2, getLocationY());
-            block4.setLocation(getLocationX(), getLocationY()+1);
+            block1 = new Block(g, getLocationX(), getLocationY());
+            block2 = new Block(g, getLocationX()+1, getLocationY());
+            block3 = new Block(g, getLocationX()+2, getLocationY());
+            block4 = new Block(g, getLocationX(), getLocationY()+1);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(lightgrey);
+            setColor(Color::ORANGE);
             setWidth(3);
             setHeight(3); // Fudged
             offsetX = 0;
             offsetY = 1;
             break;
         case S:
-            block1.setLocation(getLocationX()+1, getLocationY());
-            block2.setLocation(getLocationX()+2, getLocationY());
-            block3.setLocation(getLocationX(), getLocationY()+1);
-            block4.setLocation(getLocationX()+1, getLocationY()+1);
+            block1 = new Block(g, getLocationX()+1, getLocationY());
+            block2 = new Block(g, getLocationX()+2, getLocationY());
+            block3 = new Block(g, getLocationX(), getLocationY()+1);
+            block4 = new Block(g, getLocationX()+1, getLocationY()+1);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(green);
+            setColor(Color::GREEN);
             setWidth(3);
             setHeight(2);
             offsetX = 0;
             offsetY = 0;
             break;
         case Z:
-            block1.setLocation(getLocationX(), getLocationY());
-            block2.setLocation(getLocationX()+1, getLocationY());
-            block3.setLocation(getLocationX()+1, getLocationY()+1);
-            block4.setLocation(getLocationX()+2, getLocationY()+1);
+            block1 = new Block(g, getLocationX(), getLocationY());
+            block2 = new Block(g, getLocationX()+1, getLocationY());
+            block3 = new Block(g, getLocationX()+1, getLocationY()+1);
+            block4 = new Block(g, getLocationX()+2, getLocationY()+1);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(red);
+            setColor(Color::RED);
             setWidth(3);
             setHeight(2);
             offsetX = 0;
