@@ -1,6 +1,6 @@
 .metadata/
 Tetris/.settings/
-Tetris/Debug/
+Tetris/Debug/src/
 
 .cproject
 .project
