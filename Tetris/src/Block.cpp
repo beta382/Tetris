@@ -15,7 +15,7 @@ Block::Block (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {}
 
 Block::Block (GLUT_Plotter *g, int x, int y, int size): Drawable(g, x, y, size, size) {}
 
-Block::Block (const Block& other): Drawable(other.g, other.x, other.y, other.getSide(), other.getSide(), other.color) {}
+Block::Block (const Block& other): Drawable(other) {}
 
 Block::~Block() {
     erase();

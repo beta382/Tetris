@@ -17,7 +17,6 @@ Tetromino::Tetromino (GLUT_Plotter *g, int x, int y, TetrominoShape type): Shape
     initTetromino(type);
 }
 
-// TODO: Make these work with arbitrarily sized Blocks
 void Tetromino::rotateCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {

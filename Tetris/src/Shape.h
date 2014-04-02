@@ -18,6 +18,8 @@ class Shape: public Drawable {
     public:
         Shape(GLUT_Plotter *g);
         Shape(GLUT_Plotter *g, int x, int y);
+        Shape(const Shape&);
+        Shape& operator =(const Shape&);
         ~Shape();
         
         Block *getBlock(int) const;

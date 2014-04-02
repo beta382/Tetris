@@ -21,6 +21,48 @@ PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height)
     init();
 }
 
+PlayingField::PlayingField(const PlayingField& other): Drawable(other) {
+    init();
+    
+    for (int i = 0; i < getWidth(); i++) {
+        for (int j = 0; j < getHeight(); j++) {
+            if (other.blocks.at(i).at(j)) {
+                blocks[i][i] = new Block(*(other.blocks.at(i).at(j)));
+            }
+        }
+    }
+}
+
+PlayingField& PlayingField::operator =(const PlayingField& rhs) {
+    if  (this != &rhs) {
+        erase();
+        
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (blocks[i][j]) {
+                    delete blocks[i][j];
+                }
+            }
+        }
+        
+        Drawable::operator =(rhs);
+        
+        init();
+        
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (rhs.blocks.at(i).at(j)) {
+                    blocks[i][i] = new Block(*(rhs.blocks.at(i).at(j)));
+                }
+            }
+        }
+        
+        draw();
+    }
+    
+    return *this;
+}
+
 PlayingField::~PlayingField() {
     erase();
     for (int i = 0; i < getWidth(); i++) {
@@ -129,7 +171,6 @@ bool PlayingField::canShiftRight(Shape *const shape) const {
     return can;
 }
 
-// TODO: Fix weird erasing
 bool PlayingField::canRotateCW(Tetromino *const t) const {
     bool can = true;
     

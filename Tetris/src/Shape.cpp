@@ -13,6 +13,36 @@ Shape::Shape(GLUT_Plotter *g): Drawable(g) {}
 
 Shape::Shape (GLUT_Plotter *g, int x, int y): Drawable(g, x, y) {}
 
+Shape::Shape(const Shape& other): Drawable(other) {
+    for (int i = 0; i < other.numBlocks(); i++) {
+        if (other.blocks.at(i)) {
+            blocks.pushBack(new Block(*(other.blocks.at(i))));
+        }
+    }
+}
+
+Shape& Shape::operator =(const Shape& rhs) {
+    if (this != &rhs) {
+        erase();
+        
+        for (int i = 0; i < blocks.getSize(); i++) {
+            delete blocks[i];
+        }
+        
+        Drawable::operator =(rhs);
+        
+        for (int i = 0; i < rhs.numBlocks(); i++) {
+            if (rhs.blocks.at(i)) {
+                blocks.pushBack(new Block(*(rhs.blocks.at(i))));
+            }
+        }
+        
+        draw();
+    }
+    
+    return *this;
+}
+
 Shape::~Shape() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {

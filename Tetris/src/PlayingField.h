@@ -21,6 +21,8 @@ class PlayingField: public Drawable {
         PlayingField(GLUT_Plotter *g);
         PlayingField(GLUT_Plotter *g, int x, int y);
         PlayingField(GLUT_Plotter *g, int x, int y, int width, int height);
+        PlayingField(const PlayingField&);
+        PlayingField& operator =(const PlayingField&);
         ~PlayingField();
         
         Tetromino *spawnNewTetromino(TetrominoShape type);

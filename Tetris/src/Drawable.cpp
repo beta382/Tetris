@@ -39,6 +39,30 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, int co
     isVisible = false;
 }
 
+Drawable::Drawable (const Drawable& other) {
+    g = other.g;
+    x = other.x;
+    y = other.y;
+    width = other.width;
+    height = other.height;
+    color = other.color;
+    isVisible = false;
+}
+
+Drawable& Drawable::operator =(const Drawable& rhs) {
+    if (this != &rhs) {
+        g = rhs.g;
+        x = rhs.x;
+        y = rhs.y;
+        width = rhs.width;
+        height = rhs.height;
+        color = rhs.color;
+        isVisible = false;
+    }
+    
+    return *this;
+}
+
 void Drawable::setWidth (int width) {
     this->width = width;
 }
