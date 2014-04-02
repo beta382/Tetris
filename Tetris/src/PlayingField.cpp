@@ -65,8 +65,7 @@ Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = new Block(*(shape->getBlock(i)));
-        blocks.at(curBlock->getLocationX()-getLocationX()).at(curBlock->getLocationY()-getLocationY()) = curBlock; 
-        // TODO: Make above work "correctly"
+        blocks[curBlock->getLocationX()-getLocationX()][curBlock->getLocationY()-getLocationY()] = curBlock;
     }
     
     delete shape;
@@ -137,23 +136,23 @@ bool PlayingField::canShiftRight(Shape *shape) const {
 bool PlayingField::canRotateCW(Tetromino *t) const {
     bool can = true;
     
-    /*for (int i = 0; i < t->numBlocks() && can; i++) {
-        Block *tmp = t->getBlock(i);
+    for (int i = 0; i < t->numBlocks() && can; i++) {
+        // Create a tmp duplicate, since we actually are applying transformations
+        Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp->setLocation(
-                t->getHeight()-(tmp->getLocationY()-t->getLocationY()+t->getOffsetY())-1+
-                  t->getLocationX()-t->getOffsetX(),
-                (tmp->getLocationX()-t->getLocationX()+t->getOffsetX())+t->getLocationY()-t->getOffsetY());
+        tmp.setLocation((tmp.getLocationY()-t->getLocationY()-t->getOffsetY())+t->getLocationX()-t->getOffsetX(),
+                t->getWidth()-(tmp.getLocationX()-t->getLocationX()+t->getOffsetX())-1+
+                  t->getLocationY()+t->getOffsetY());
         
         // Check that it isn't out-of-bounds or intersecting an existing Block
-        if (tmp->getLocationX() < getLocationX() || tmp->getLocationX() >= getWidth()+getLocationX() || 
-                tmp->getLocationY() < getLocationY() || tmp->getLocationY() >= getHeight()+getLocationY() ||
-                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()))
+        if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
+                tmp.getLocationY() < getLocationY() || tmp.getLocationY() >= getHeight()+getLocationY() ||
+                blocks.at(tmp.getLocationX()-getLocationX()).at(tmp.getLocationY()-getLocationY()))
         {
             can = false;
         }
-    }*/
+    }
     
     return can;
 }
@@ -161,22 +160,23 @@ bool PlayingField::canRotateCW(Tetromino *t) const {
 bool PlayingField::canRotateCCW(Tetromino *t) const {
     bool can = true;
     
-    /*for (int i = 0; i < t->numBlocks() && can; i++) {
-        Block *tmp = t->getBlock(i);
+    for (int i = 0; i < t->numBlocks() && can; i++) {
+        // Create a tmp duplicate
+        Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp->setLocation((tmp->getLocationY()-t->getLocationY()+t->getOffsetY())+t->getLocationX()-t->getOffsetX(),
-                t->getWidth()-(tmp->getLocationX()-t->getLocationX()+t->getOffsetX())-1+
-                  t->getLocationY()-t->getOffsetY());
+        tmp.setLocation(t->getHeight()-(tmp.getLocationY()-t->getLocationY()-t->getOffsetY())-1+
+                  t->getLocationX()-t->getOffsetX(),
+                (tmp.getLocationX()-t->getLocationX()+t->getOffsetX())+t->getLocationY()+t->getOffsetY());
     
         // Check that it isn't out-of-bounds or intersecting an existing Block
-        if (tmp->getLocationX() < getLocationX() || tmp->getLocationX() >= getWidth()+getLocationX() || 
-                tmp->getLocationY() < getLocationY() || tmp->getLocationY() >= getHeight()+getLocationY() ||
-                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()))
+        if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
+                tmp.getLocationY() < getLocationY() || tmp.getLocationY() >= getHeight()+getLocationY() ||
+                blocks.at(tmp.getLocationX()-getLocationX()).at(tmp.getLocationY()-getLocationY()))
         {
             can = false;
         }
-    }*/
+    }
     
     return can;
 }
