@@ -42,6 +42,8 @@ class PlayingField: public Drawable {
         void draw();
         void erase();
     private:
+        void init();
+        
         myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
 };
 

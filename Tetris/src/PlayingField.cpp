@@ -10,33 +10,15 @@
 #include "PlayingField.h"
 
 PlayingField::PlayingField(GLUT_Plotter *g): Drawable(g, 0, 0, 10, 20) {
-    for (int i = 0; i < getWidth(); i++) {
-        myVector<Block *> tmp;
-        blocks.pushBack(tmp);
-        for (int j = 0; j < getHeight(); j++) {
-            blocks[i].pushBack(NULL);
-        }
-    }
+    init();
 }
 
 PlayingField::PlayingField(GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 20) {
-    for (int i = 0; i < getWidth(); i++) {
-        myVector<Block *> tmp;
-        blocks.pushBack(tmp);
-        for (int j = 0; j < getHeight(); j++) {
-            blocks[i].pushBack(NULL);
-        }
-    }
+    init();
 }
 
 PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height): Drawable(g, x, y, width, height) {
-    for (int i = 0; i < getWidth(); i++) {
-        myVector<Block *> tmp;
-        blocks.pushBack(tmp);
-        for (int j = 0; j < getHeight(); j++) {
-            blocks[i].pushBack(NULL);
-        }
-    }
+    init();
 }
 
 PlayingField::~PlayingField() {
@@ -51,11 +33,12 @@ PlayingField::~PlayingField() {
 }
 
 Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(g, getLocationX()+getWidth()/2, getLocationY()+getHeight(), type);
+    Tetromino *tetromino = new Tetromino(g, getLocationX()+(getWidth()/2)*BLOCK_SIZE, 
+            getLocationY()+getHeight()*BLOCK_SIZE, type);
     
     // We spawn right above the field, to the right, this centers us and puts us at the top of the screen
-    tetromino->setLocation(tetromino->getLocationX()-tetromino->getWidth()/2,
-            tetromino->getLocationY()-tetromino->getHeight());
+    tetromino->setLocation(tetromino->getLocationX()-((tetromino->getWidth()/2)*BLOCK_SIZE),
+            tetromino->getLocationY()-tetromino->getHeight()*BLOCK_SIZE);
     
     // TODO: Later on, change the spawn point based on if it can actually spawn there.
     
@@ -65,7 +48,7 @@ Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = new Block(*(shape->getBlock(i)));
-        blocks[curBlock->getLocationX()-getLocationX()][curBlock->getLocationY()-getLocationY()] = curBlock;
+        blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getSize()][(curBlock->getLocationY()-getLocationY())/curBlock->getSize()] = curBlock;
     }
     
     delete shape;
@@ -78,8 +61,9 @@ bool PlayingField::canShiftUp(Shape *shape) const {
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         Block *tmp = shape->getBlock(i);
-        if (tmp->getLocationY()+1 >= getHeight()+getLocationY() ||
-                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()+1))
+        if ((tmp->getLocationY()-getLocationY())/tmp->getSize()+1 >= getHeight() ||
+                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize())
+                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()+1))
         {
             can = false;
         }
@@ -93,8 +77,9 @@ bool PlayingField::canShiftDown(Shape *shape) const {
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         Block *tmp = shape->getBlock(i);
-        if (tmp->getLocationY()-1 < getLocationY() ||
-                blocks.at(tmp->getLocationX()-getLocationX()).at(tmp->getLocationY()-getLocationY()-1))
+        if ((tmp->getLocationY()-getLocationY())/tmp->getSize()-1 < 0 ||
+                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize())
+                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()-1))
         {
             can = false;
         }
@@ -108,8 +93,9 @@ bool PlayingField::canShiftLeft(Shape *shape) const {
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         Block *tmp = shape->getBlock(i);
-        if (tmp->getLocationX()-1 < getLocationX() ||
-                blocks.at(tmp->getLocationX()-getLocationX()-1).at(tmp->getLocationY()-getLocationY()))
+        if ((tmp->getLocationX()-getLocationX())/tmp->getSize()-1 < 0 ||
+                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize()-1)
+                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()))
         {
             can = false;
         }
@@ -123,8 +109,9 @@ bool PlayingField::canShiftRight(Shape *shape) const {
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         Block *tmp = shape->getBlock(i);
-        if (tmp->getLocationX()+1 >= getWidth()+getLocationX() ||
-                blocks.at(tmp->getLocationX()-getLocationX()+1).at(tmp->getLocationY()-getLocationY()))
+        if ((tmp->getLocationX()-getLocationX())/tmp->getSize()+1 >= getWidth() ||
+                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize()+1)
+                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()))
         {
             can = false;
         }
@@ -133,6 +120,7 @@ bool PlayingField::canShiftRight(Shape *shape) const {
     return can;
 }
 
+// TODO: Make these work with arbitrarily sized Blocks
 bool PlayingField::canRotateCW(Tetromino *t) const {
     bool can = true;
     
@@ -161,7 +149,7 @@ bool PlayingField::canRotateCCW(Tetromino *t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
-        // Create a tmp duplicate
+        // Create a tmp duplicate, since we actually are applying transformations
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
@@ -179,6 +167,21 @@ bool PlayingField::canRotateCCW(Tetromino *t) const {
     }
     
     return can;
+}
+
+
+/* ---------- Private ---------- */
+
+void PlayingField::init() {
+    for (int i = 0; i < getWidth(); i++) {
+        myVector<Block *> tmp;
+        blocks.pushBack(tmp);
+        for (int j = 0; j < getHeight(); j++) {
+            // Everything that is a NULL pointer represents a blank space, makes checking for overlap super-simple,
+            // just gotta add checks everywhere. Initialize all Block pointers to NULL
+            blocks[i].pushBack(NULL);
+        }
+    }
 }
 
 
@@ -205,6 +208,7 @@ void PlayingField::setLocation(int x, int y) {
 
 
 /* ---------- Implemented from Drawable ---------- */
+
 void PlayingField::draw() {
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {

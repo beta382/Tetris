@@ -19,7 +19,6 @@ class Tetromino: public Shape {
     public:
         Tetromino(GLUT_Plotter *g);
         Tetromino(GLUT_Plotter *g, int x, int y, TetrominoShape type);
-        ~Tetromino();
         
         void rotateCW();
         void rotateCCW();

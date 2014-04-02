@@ -12,10 +12,16 @@
 
 #include "Drawable.h"
 
+const int BLOCK_SIZE = 10;
+
 class Block: public Drawable {
     public:
         Block(GLUT_Plotter *g);
         Block(GLUT_Plotter *g, int x, int y);
+        Block(GLUT_Plotter *g, int x, int y, int size);
+        ~Block();
+        
+        int getSize() const;
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

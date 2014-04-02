@@ -15,6 +15,9 @@ Shape::Shape (GLUT_Plotter *g, int x, int y): Drawable(g, x, y) {}
 
 Shape::~Shape() {
     erase();
+    for (int i = 0; i < blocks.getSize(); i++) {
+        delete blocks[i];
+    }
 }
 
 Block *Shape::getBlock(int index) const {
@@ -27,25 +30,25 @@ int Shape::numBlocks() const {
 
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()+1);
+    setLocation(getLocationX(), getLocationY()+blocks[0]->getSize());
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()-1);
+    setLocation(getLocationX(), getLocationY()-blocks[0]->getSize());
     draw();
 }
 
 void Shape::shiftLeft () {
     erase();
-    setLocation(getLocationX()-1, getLocationY());
+    setLocation(getLocationX()-blocks[0]->getSize(), getLocationY());
     draw();
 }
 
 void Shape::shiftRight () {
     erase();
-    setLocation(getLocationX()+1, getLocationY());
+    setLocation(getLocationX()+blocks[0]->getSize(), getLocationY());
     draw();
 }
 

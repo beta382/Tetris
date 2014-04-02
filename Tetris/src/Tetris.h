@@ -21,20 +21,18 @@ class Tetris: public Drawable {
         //constructor
         Tetris(GLUT_Plotter *g);
         Tetris(GLUT_Plotter *g, int x, int y);
-        
         ~Tetris();
-        
         // TODO Copy constructors EVERYWHERE, etc, cause even though I probably won't use them, gotta make Booth happy
         
-        void init();
-        
-        //Main GAIM FUNCTION
+        //Main game function
         void Play(void);
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();
         void erase();
     private:
+        void init();
+        
         PlayingField *field;
         Tetromino *currentTetromino;
 };

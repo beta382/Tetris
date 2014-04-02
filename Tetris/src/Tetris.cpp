@@ -24,15 +24,6 @@ Tetris::~Tetris() {
     delete currentTetromino;
 }
 
-void Tetris::init() {
-    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
-    currentTetromino = field->spawnNewTetromino(S);
-    currentTetromino->draw();
-    
-    srand(time(0));
-}
-
-
 //Tetris Main Game Loop
 void Tetris::Play (void) {
     
@@ -106,7 +97,19 @@ void Tetris::Play (void) {
     g->Draw();
 }
 
+
+/* ---------- Private ---------- */
+
+void Tetris::init() {
+    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
+    currentTetromino = field->spawnNewTetromino(S);
+    currentTetromino->draw();
+    
+    srand(time(0));
+}
+
 /* ---------- Implemented from Drawable ---------- */
+
 void Tetris::draw() {
     field->draw();
     currentTetromino->draw();
