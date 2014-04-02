@@ -15,11 +15,13 @@ Block::Block (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {}
 
 Block::Block (GLUT_Plotter *g, int x, int y, int size): Drawable(g, x, y, size, size) {}
 
+Block::Block (const Block& other): Drawable(other.g, other.x, other.y, other.getSide(), other.getSide(), other.color) {}
+
 Block::~Block() {
     erase();
 }
 
-int Block::getSize() const {
+int Block::getSide() const {
     return width;
 }
 
@@ -27,18 +29,24 @@ int Block::getSize() const {
 
 void Block::draw() {
     g->setColor(getColor());
-    for (int i = 0; i < getSize(); i++) {
-        for (int j = 0; j < getSize(); j++) {
+    for (int i = 0; i < getSide(); i++) {
+        for (int j = 0; j < getSide(); j++) {
             g->plot(getLocationX()+i, getLocationY()+j);
         }
     }
+    
+    isVisible = true;
 }
 
 void Block::erase() {
-    g->setColor(Color::BLACK);
-    for (int i = 0; i < getSize(); i++) {
-        for (int j = 0; j < getSize(); j++) {
-            g->plot(getLocationX()+i, getLocationY()+j);
+    if (isVisible) {
+        g->setColor(Color::BLACK);
+        for (int i = 0; i < getSide(); i++) {
+            for (int j = 0; j < getSide(); j++) {
+                g->plot(getLocationX()+i, getLocationY()+j);
+            }
         }
+
+        isVisible = false;
     }
 }

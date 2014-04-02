@@ -73,7 +73,6 @@ void Tetris::Play (void) {
                 break;
             case 'j':
                 field->merge(currentTetromino);
-                field->draw();
                 
                 currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
                 currentTetromino->draw();
@@ -113,9 +112,15 @@ void Tetris::init() {
 void Tetris::draw() {
     field->draw();
     currentTetromino->draw();
+    
+    isVisible = true;
 }
 
 void Tetris::erase() {
-    field->erase();
-    currentTetromino->erase();
+    if (isVisible) {
+        field->erase();
+        currentTetromino->erase();
+        
+        isVisible = false;
+    }
 }

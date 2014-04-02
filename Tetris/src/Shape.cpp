@@ -79,10 +79,16 @@ void Shape::draw() {
     for (int i = 0; i < blocks.getSize(); i++) {
         blocks[i]->draw();
     }
+    
+    isVisible = true;
 }
 
 void Shape::erase() {
-    for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->erase();
+    if (isVisible) {
+        for (int i = 0; i < blocks.getSize(); i++) {
+            blocks[i]->erase();
+        }
+        
+        isVisible = false;
     }
 }

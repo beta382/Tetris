@@ -48,7 +48,8 @@ Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = new Block(*(shape->getBlock(i)));
-        blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getSize()][(curBlock->getLocationY()-getLocationY())/curBlock->getSize()] = curBlock;
+        blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getSide()]
+              [(curBlock->getLocationY()-getLocationY())/curBlock->getSide()] = curBlock;
     }
     
     delete shape;
@@ -56,15 +57,17 @@ void PlayingField::merge (Shape *shape) {
     draw();
 }
 
-bool PlayingField::canShiftUp(Shape *shape) const {
+bool PlayingField::canShiftUp(Shape *const shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block *tmp = shape->getBlock(i);
-        if ((tmp->getLocationY()-getLocationY())/tmp->getSize()+1 >= getHeight() ||
-                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize())
-                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()+1))
-        {
+        // Create a tmp duplicate, since we actually are applying transformations
+        Block tmp = *(shape->getBlock(i));
+        
+        // Apply transformation to our tmp Block
+        tmp.setLocation(tmp.getLocationX(), tmp.getLocationY()+tmp.getSide());
+                
+        if (!couldAdd(&tmp)) {
             can = false;
         }
     }
@@ -72,15 +75,17 @@ bool PlayingField::canShiftUp(Shape *shape) const {
     return can;
 }
 
-bool PlayingField::canShiftDown(Shape *shape) const {
+bool PlayingField::canShiftDown(Shape *const shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block *tmp = shape->getBlock(i);
-        if ((tmp->getLocationY()-getLocationY())/tmp->getSize()-1 < 0 ||
-                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize())
-                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()-1))
-        {
+        // Create a tmp duplicate, since we actually are applying transformations
+        Block tmp = *(shape->getBlock(i));
+        
+        // Apply transformation to our tmp Block
+        tmp.setLocation(tmp.getLocationX(), tmp.getLocationY()-tmp.getSide());
+                
+        if (!couldAdd(&tmp)) {
             can = false;
         }
     }
@@ -88,15 +93,17 @@ bool PlayingField::canShiftDown(Shape *shape) const {
     return can;
 }
 
-bool PlayingField::canShiftLeft(Shape *shape) const {
+bool PlayingField::canShiftLeft(Shape *const shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block *tmp = shape->getBlock(i);
-        if ((tmp->getLocationX()-getLocationX())/tmp->getSize()-1 < 0 ||
-                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize()-1)
-                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()))
-        {
+        // Create a tmp duplicate, since we actually are applying transformations
+        Block tmp = *(shape->getBlock(i));
+        
+        // Apply transformation to our tmp Block
+        tmp.setLocation(tmp.getLocationX()-tmp.getSide(), tmp.getLocationY());
+                
+        if (!couldAdd(&tmp)) {
             can = false;
         }
     }
@@ -104,15 +111,17 @@ bool PlayingField::canShiftLeft(Shape *shape) const {
     return can;
 }
 
-bool PlayingField::canShiftRight(Shape *shape) const {
+bool PlayingField::canShiftRight(Shape *const shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
-        Block *tmp = shape->getBlock(i);
-        if ((tmp->getLocationX()-getLocationX())/tmp->getSize()+1 >= getWidth() ||
-                blocks.at((tmp->getLocationX()-getLocationX())/tmp->getSize()+1)
-                      .at((tmp->getLocationY()-getLocationY())/tmp->getSize()))
-        {
+        // Create a tmp duplicate, since we actually are applying transformations
+        Block tmp = *(shape->getBlock(i));
+        
+        // Apply transformation to our tmp Block
+        tmp.setLocation(tmp.getLocationX()+tmp.getSide(), tmp.getLocationY());
+                
+        if (!couldAdd(&tmp)) {
             can = false;
         }
     }
@@ -120,9 +129,8 @@ bool PlayingField::canShiftRight(Shape *shape) const {
     return can;
 }
 
-// TODO: Migrate bounds and existence checking to a central function
 // TODO: Fix weird erasing
-bool PlayingField::canRotateCW(Tetromino *t) const {
+bool PlayingField::canRotateCW(Tetromino *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -130,23 +138,19 @@ bool PlayingField::canRotateCW(Tetromino *t) const {
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation(((tmp.getLocationY()-t->getLocationY())/tmp.getSize()-t->getOffsetY()-t->getOffsetX())*tmp.getSize()+t->getLocationX(),
-                (t->getWidth()-((tmp.getLocationX()-t->getLocationX())/tmp.getSize()+t->getOffsetX())-1+t->getOffsetY())*tmp.getSize()+t->getLocationY());
+        tmp.setLocation(((tmp.getLocationY()-t->getLocationY())/tmp.getSide()-t->getOffsetY()-t->getOffsetX())*
+                  tmp.getSide()+t->getLocationX(),
+                (t->getWidth()-((tmp.getLocationX()-t->getLocationX())/tmp.getSide()+t->getOffsetX())-1+
+                  t->getOffsetY())*tmp.getSide()+t->getLocationY());
         
-        // Check that it isn't out-of-bounds or intersecting an existing Block
-        if ((tmp.getLocationX()-getLocationX())/tmp.getSize() < 0 || (tmp.getLocationX()-getLocationX())/tmp.getSize() >= getWidth() || 
-                (tmp.getLocationY()-getLocationY())/tmp.getSize() < 0 || (tmp.getLocationY()-getLocationY())/tmp.getSize() >= getHeight() ||
-                blocks.at((tmp.getLocationX()-getLocationX())/tmp.getSize())
-                      .at((tmp.getLocationY()-getLocationY())/tmp.getSize()))
-        {
+        if (!couldAdd(&tmp)) {
             can = false;
         }
     }
-    
     return can;
 }
 
-bool PlayingField::canRotateCCW(Tetromino *t) const {
+bool PlayingField::canRotateCCW(Tetromino *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -154,14 +158,12 @@ bool PlayingField::canRotateCCW(Tetromino *t) const {
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation((t->getHeight()-((tmp.getLocationY()-t->getLocationY())/tmp.getSize()-t->getOffsetY())-1-t->getOffsetX())*tmp.getSize()+t->getLocationX(),
-                ((tmp.getLocationX()-t->getLocationX())/tmp.getSize()+t->getOffsetX()+t->getOffsetY())*tmp.getSize()+t->getLocationY());
-    
-        // Check that it isn't out-of-bounds or intersecting an existing Block
-        if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
-                tmp.getLocationY() < getLocationY() || tmp.getLocationY() >= getHeight()+getLocationY() ||
-                blocks.at(tmp.getLocationX()-getLocationX()).at(tmp.getLocationY()-getLocationY()))
-        {
+        tmp.setLocation((t->getHeight()-((tmp.getLocationY()-t->getLocationY())/tmp.getSide()-t->getOffsetY())-1-
+                  t->getOffsetX())*tmp.getSide()+t->getLocationX(),
+                ((tmp.getLocationX()-t->getLocationX())/tmp.getSide()+t->getOffsetX()+t->getOffsetY())*
+                  tmp.getSide()+t->getLocationY());
+         
+        if (!couldAdd(&tmp)) {
             can = false;
         }
     }
@@ -184,6 +186,22 @@ void PlayingField::init() {
     }
 }
 
+bool PlayingField::couldAdd(Block *const block) const {
+    bool can = true;
+    
+    // Check that it isn't out-of-bounds or intersecting an existing Block
+    if ((block->getLocationX()-getLocationX())/block->getSide() < 0 || 
+        (block->getLocationX()-getLocationX())/block->getSide() >= getWidth() || 
+        (block->getLocationY()-getLocationY())/block->getSide() < 0 || 
+        (block->getLocationY()-getLocationY())/block->getSide() >= getHeight() ||
+         blocks.at((block->getLocationX()-getLocationX())/block->getSide())
+               .at((block->getLocationY()-getLocationY())/block->getSide()))
+    {
+        can = false;
+    }
+    
+    return can;
+}
 
 /* ---------- Inherited from Drawable ---------- */
 
@@ -217,14 +235,20 @@ void PlayingField::draw() {
             }
         }
     }
+    
+    isVisible = true;
 }
 
 void PlayingField::erase() {
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
-            if (blocks[i][j]) {
-                blocks[i][j]->erase();
+    if (isVisible) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                if (blocks[i][j]) {
+                    blocks[i][j]->erase();
+                }
             }
         }
+        
+        isVisible = false;
     }
 }

@@ -19,9 +19,10 @@ class Block: public Drawable {
         Block(GLUT_Plotter *g);
         Block(GLUT_Plotter *g, int x, int y);
         Block(GLUT_Plotter *g, int x, int y, int size);
+        Block(const Block&);
         ~Block();
         
-        int getSize() const;
+        int getSide() const;
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

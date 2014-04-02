@@ -27,13 +27,13 @@ class PlayingField: public Drawable {
         
         void merge(Shape *);
         
-        bool canShiftDown(Shape *) const;
-        bool canShiftUp(Shape *) const;
-        bool canShiftLeft(Shape *) const;
-        bool canShiftRight(Shape *) const;
+        bool canShiftDown(Shape *const) const;
+        bool canShiftUp(Shape *const) const;
+        bool canShiftLeft(Shape *const) const;
+        bool canShiftRight(Shape *const) const;
         
-        bool canRotateCW(Tetromino *) const;
-        bool canRotateCCW(Tetromino *) const;
+        bool canRotateCW(Tetromino *const) const;
+        bool canRotateCCW(Tetromino *const) const;
         
         /* ---------- Inherited from Drawable ---------- */
         void setLocation(int, int);
@@ -43,6 +43,7 @@ class PlayingField: public Drawable {
         void erase();
     private:
         void init();
+        bool couldAdd(Block *const) const;
         
         myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
 };

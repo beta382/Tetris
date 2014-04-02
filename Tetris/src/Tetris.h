@@ -11,7 +11,7 @@
 
 #include "Drawable.h"
 #include "PlayingField.h"
-#include "Tetris.h"
+#include "Tetromino.h"
 
 #include <cstdlib>
 #include <ctime>

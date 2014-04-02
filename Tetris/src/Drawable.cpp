@@ -16,6 +16,7 @@ Drawable::Drawable(GLUT_Plotter *g) {
     width = 0;
     height = 0;
     color = Color::WHITE;
+    isVisible = false;
 }
 
 Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
@@ -25,6 +26,7 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
     width = 0;
     height = 0;
     color = Color::WHITE;
+    isVisible = false;
 }
 
 Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, int color) {
@@ -34,6 +36,7 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, int co
     this->width = width;
     this->height = height;
     this->color = color;
+    isVisible = false;
 }
 
 void Drawable::setWidth (int width) {

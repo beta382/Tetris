@@ -21,8 +21,10 @@ Tetromino::Tetromino (GLUT_Plotter *g, int x, int y, TetrominoShape type): Shape
 void Tetromino::rotateCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getSize()-offsetY-offsetX)*blocks[i]->getSize()+getLocationX(),
-                (getWidth()-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getSize()+offsetX)-1+offsetY)*blocks[i]->getSize()+getLocationY());
+        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getSide()-getOffsetY()-
+                  getOffsetX())*blocks[i]->getSide()+getLocationX(),
+                (getWidth()-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getSide()+getOffsetX())-1+
+                  getOffsetY())*blocks[i]->getSide()+getLocationY());
     }
     draw();
     swap(width, height);
@@ -31,8 +33,10 @@ void Tetromino::rotateCW() {
 void Tetromino::rotateCCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->setLocation((getHeight()-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getSize()-offsetY)-1-offsetX)*blocks[i]->getSize()+getLocationX(),
-                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getSize()+offsetX+offsetY)*blocks[i]->getSize()+getLocationY());
+        blocks[i]->setLocation((getHeight()-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getSide()-
+                  getOffsetY())-1-getOffsetX())*blocks[i]->getSide()+getLocationX(),
+                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getSide()+getOffsetX()+getOffsetY())*
+                  blocks[i]->getSide()+getLocationY());
     }
     draw();
     swap(width, height);
