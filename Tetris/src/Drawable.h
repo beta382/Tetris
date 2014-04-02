@@ -51,7 +51,7 @@ class Drawable {
         
         int color;
         
-    public:bool isVisible;
+        bool isVisible;
 };
 
 #endif /* DRAWABLE_H_ */
