@@ -21,13 +21,11 @@ Tetromino::~Tetromino() {
     erase();
 }
 
-
-// TODO: Make these better, maybe fudge widths/heights?
 void Tetromino::rotateCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->setLocation(getHeight()-(blocks[i]->getLocationY()-getLocationY()+offsetY)-1+getLocationX()-offsetX,
-                (blocks[i]->getLocationX()-getLocationX()+offsetX)+getLocationY()-offsetY);
+        blocks[i]->setLocation((blocks[i]->getLocationY()-getLocationY()-offsetY)+getLocationX()-offsetX,
+                getWidth()-(blocks[i]->getLocationX()-getLocationX()+offsetX)-1+getLocationY()+offsetY);
     }
     draw();
     swap(width, height);
@@ -36,10 +34,8 @@ void Tetromino::rotateCW() {
 void Tetromino::rotateCCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
-//        blocks[i]->setLocation((blocks[i]->getLocationY()-getLocationY()+offsetY)+getLocationX()-offsetX,
-//                getWidth()-(blocks[i]->getLocationX()-getLocationX()+offsetX)-1+getLocationY()-offsetY);
-        blocks[i]->setLocation((blocks[i]->getLocationY()-getLocationY()+offsetY)-getHeight()-1+getLocationX()-offsetX,
-                (blocks[i]->getLocationX()-getLocationX()+offsetX)+getLocationY()-offsetY); // TODO: FIX!
+        blocks[i]->setLocation(getHeight()-(blocks[i]->getLocationY()-getLocationY()-offsetY)-1+getLocationX()-offsetX,
+                (blocks[i]->getLocationX()-getLocationX()+offsetX)+getLocationY()+offsetY);
     }
     draw();
     swap(width, height);
@@ -58,20 +54,23 @@ int Tetromino::getOffsetY() const {
 void Tetromino::initTetromino (TetrominoShape type) {
     Block *block1, *block2, *block3, *block4;
     
+    offsetX = 0;
+    offsetY = 0;
+    
+    // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired rotations.
     switch (type) {
         case I:
-            block1 = new Block(g, getLocationX(), getLocationY());
-            block2 = new Block(g, getLocationX()+1, getLocationY());
-            block3 = new Block(g, getLocationX()+2, getLocationY());
-            block4 = new Block(g, getLocationX()+3, getLocationY());
+            block1 = new Block(g, getLocationX(), getLocationY()+4);
+            block2 = new Block(g, getLocationX()+1, getLocationY()+4);
+            block3 = new Block(g, getLocationX()+2, getLocationY()+4);
+            block4 = new Block(g, getLocationX()+3, getLocationY()+4);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
             setColor(Color::CYAN);
             setWidth(4);
-            setHeight(3); // Fudged
-            offsetX = 0;
-            offsetY = 1;
+            setHeight(5); // Fudged
+            offsetY = 2;
             break;
         case O:
             block1 = new Block(g, getLocationX(), getLocationY());
@@ -84,66 +83,47 @@ void Tetromino::initTetromino (TetrominoShape type) {
             setColor(Color::YELLOW);
             setWidth(2);
             setHeight(2);
-            offsetX = 0;
-            offsetY = 0;
             break;
         case T:
-            block1 = new Block(g, getLocationX(), getLocationY());
-            block2 = new Block(g, getLocationX()+1, getLocationY());
-            block3 = new Block(g, getLocationX()+2, getLocationY());
-            block4 = new Block(g, getLocationX()+1, getLocationY()+1);
+            block1 = new Block(g, getLocationX()+1, getLocationY()+1);
+            block2 = new Block(g, getLocationX(), getLocationY()+2);
+            block3 = new Block(g, getLocationX()+1, getLocationY()+2);
+            block4 = new Block(g, getLocationX()+2, getLocationY()+2);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
             setColor(Color::MAGENTA);
             setWidth(3);
             setHeight(3); // Fudged
-            offsetX = 0;
             offsetY = 1;
             break;
         case J:
-            block1 = new Block(g, getLocationX(), getLocationY());
-            block2 = new Block(g, getLocationX()+1, getLocationY());
-            block3 = new Block(g, getLocationX()+2, getLocationY());
-            block4 = new Block(g, getLocationX()+2, getLocationY()+1);
+            block1 = new Block(g, getLocationX()+2, getLocationY()+1);
+            block2 = new Block(g, getLocationX(), getLocationY()+2);
+            block3 = new Block(g, getLocationX()+1, getLocationY()+2);
+            block4 = new Block(g, getLocationX()+2, getLocationY()+2);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
             setColor(Color::BLUE);
             setWidth(3);
             setHeight(3); // Fudged
-            offsetX = 0;
             offsetY = 1;
             break;
         case L:
-            block1 = new Block(g, getLocationX(), getLocationY());
-            block2 = new Block(g, getLocationX()+1, getLocationY());
-            block3 = new Block(g, getLocationX()+2, getLocationY());
-            block4 = new Block(g, getLocationX(), getLocationY()+1);
+            block1 = new Block(g, getLocationX(), getLocationY()+1);
+            block2 = new Block(g, getLocationX(), getLocationY()+2);
+            block3 = new Block(g, getLocationX()+1, getLocationY()+2);
+            block4 = new Block(g, getLocationX()+2, getLocationY()+2);
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
             setColor(Color::ORANGE);
             setWidth(3);
             setHeight(3); // Fudged
-            offsetX = 0;
             offsetY = 1;
             break;
         case S:
-            block1 = new Block(g, getLocationX()+1, getLocationY());
-            block2 = new Block(g, getLocationX()+2, getLocationY());
-            block3 = new Block(g, getLocationX(), getLocationY()+1);
-            block4 = new Block(g, getLocationX()+1, getLocationY()+1);
-            
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
-            
-            setColor(Color::GREEN);
-            setWidth(3);
-            setHeight(2);
-            offsetX = 0;
-            offsetY = 0;
-            break;
-        case Z:
             block1 = new Block(g, getLocationX(), getLocationY());
             block2 = new Block(g, getLocationX()+1, getLocationY());
             block3 = new Block(g, getLocationX()+1, getLocationY()+1);
@@ -151,11 +131,21 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
+            setColor(Color::GREEN);
+            setWidth(3);
+            setHeight(2);
+            break;
+        case Z:
+            block1 = new Block(g, getLocationX()+1, getLocationY());
+            block2 = new Block(g, getLocationX()+2, getLocationY());
+            block3 = new Block(g, getLocationX()+0, getLocationY()+1);
+            block4 = new Block(g, getLocationX()+1, getLocationY()+1);
+            
+            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            
             setColor(Color::RED);
             setWidth(3);
             setHeight(2);
-            offsetX = 0;
-            offsetY = 0;
             break;
     }
 }

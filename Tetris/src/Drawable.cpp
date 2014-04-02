@@ -13,8 +13,8 @@ Drawable::Drawable(GLUT_Plotter *g) {
     this->g = g;
     x = 0;
     y = 0;
-    width = -1;
-    height = -1;
+    width = 0;
+    height = 0;
     color = Color::WHITE;
 }
 
@@ -22,8 +22,8 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
     this->g = g;
     this->x = x;
     this->y = y;
-    width = -1;
-    height = -1;
+    width = 0;
+    height = 0;
     color = Color::WHITE;
 }
 

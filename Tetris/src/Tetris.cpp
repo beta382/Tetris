@@ -26,7 +26,7 @@ Tetris::~Tetris() {
 
 void Tetris::init() {
     field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
-    currentTetromino = field->spawnNewTetromino(3, 0, S);
+    currentTetromino = field->spawnNewTetromino(S);
     currentTetromino->draw();
     
     srand(time(0));
@@ -39,8 +39,6 @@ void Tetris::Play (void) {
     //Check for Keyboard Hit
     while(g->kbhit()){
         int k = g->getKey();
-        
-        int prevX, prevY;
         
         switch (k) {
             case 'w':
@@ -78,22 +76,19 @@ void Tetris::Play (void) {
                 }
                 break;
             case 'n':
-                prevX = currentTetromino->getLocationX();
-                prevY = currentTetromino->getLocationY();
-                
                 delete currentTetromino;
-                currentTetromino = field->spawnNewTetromino(prevX-field->getLocationX(), prevY-field->getLocationY(), 
-                        static_cast<TetrominoShape>(rand() % 7));
+                currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
                 currentTetromino->draw();
                 break;
             case 'j':
                 field->merge(currentTetromino);
                 field->draw();
                 
-                currentTetromino = field->spawnNewTetromino(3, 3, static_cast<TetrominoShape>(rand() % 7));
+                currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
                 currentTetromino->draw();
                 break;
             case 27: // ESC
+            case 'x':
                 exit(1);
                 break;
         }

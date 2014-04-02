@@ -23,7 +23,7 @@ class PlayingField: public Drawable {
         PlayingField(GLUT_Plotter *g, int x, int y, int width, int height);
         ~PlayingField();
         
-        Tetromino *spawnNewTetromino(int x, int y, TetrominoShape type);
+        Tetromino *spawnNewTetromino(TetrominoShape type);
         
         void merge(Shape *);
         

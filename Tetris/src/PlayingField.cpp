@@ -50,8 +50,14 @@ PlayingField::~PlayingField() {
     }
 }
 
-Tetromino *PlayingField::spawnNewTetromino (int x, int y, TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(g, getLocationX()+x, getLocationY()+y, type);
+Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
+    Tetromino *tetromino = new Tetromino(g, getLocationX()+getWidth()/2, getLocationY()+getHeight(), type);
+    
+    // We spawn right above the field, to the right, this centers us and puts us at the top of the screen
+    tetromino->setLocation(tetromino->getLocationX()-tetromino->getWidth()/2,
+            tetromino->getLocationY()-tetromino->getHeight());
+    
+    // TODO: Later on, change the spawn point based on if it can actually spawn there.
     
     return tetromino;
 }
@@ -59,7 +65,8 @@ Tetromino *PlayingField::spawnNewTetromino (int x, int y, TetrominoShape type) {
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = new Block(*(shape->getBlock(i)));
-        blocks.at(curBlock->getLocationX()-getLocationX()).at(curBlock->getLocationY()-getLocationY()) = curBlock;
+        blocks.at(curBlock->getLocationX()-getLocationX()).at(curBlock->getLocationY()-getLocationY()) = curBlock; 
+        // TODO: Make above work "correctly"
     }
     
     delete shape;
@@ -130,7 +137,7 @@ bool PlayingField::canShiftRight(Shape *shape) const {
 bool PlayingField::canRotateCW(Tetromino *t) const {
     bool can = true;
     
-    for (int i = 0; i < t->numBlocks() && can; i++) {
+    /*for (int i = 0; i < t->numBlocks() && can; i++) {
         Block *tmp = t->getBlock(i);
         
         // Apply rotation transformation to our tmp Block
@@ -146,7 +153,7 @@ bool PlayingField::canRotateCW(Tetromino *t) const {
         {
             can = false;
         }
-    }
+    }*/
     
     return can;
 }
@@ -154,7 +161,7 @@ bool PlayingField::canRotateCW(Tetromino *t) const {
 bool PlayingField::canRotateCCW(Tetromino *t) const {
     bool can = true;
     
-    for (int i = 0; i < t->numBlocks() && can; i++) {
+    /*for (int i = 0; i < t->numBlocks() && can; i++) {
         Block *tmp = t->getBlock(i);
         
         // Apply rotation transformation to our tmp Block
@@ -169,7 +176,7 @@ bool PlayingField::canRotateCCW(Tetromino *t) const {
         {
             can = false;
         }
-    }
+    }*/
     
     return can;
 }
