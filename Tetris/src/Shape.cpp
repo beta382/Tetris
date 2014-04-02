@@ -30,25 +30,25 @@ int Shape::numBlocks() const {
 
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()+blocks[0]->getSize());
+    setLocation(getLocationX(), getLocationY()+BLOCK_SIZE);
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()-blocks[0]->getSize());
+    setLocation(getLocationX(), getLocationY()-BLOCK_SIZE);
     draw();
 }
 
 void Shape::shiftLeft () {
     erase();
-    setLocation(getLocationX()-blocks[0]->getSize(), getLocationY());
+    setLocation(getLocationX()-BLOCK_SIZE, getLocationY());
     draw();
 }
 
 void Shape::shiftRight () {
     erase();
-    setLocation(getLocationX()+blocks[0]->getSize(), getLocationY());
+    setLocation(getLocationX()+BLOCK_SIZE, getLocationY());
     draw();
 }
 

@@ -120,7 +120,8 @@ bool PlayingField::canShiftRight(Shape *shape) const {
     return can;
 }
 
-// TODO: Make these work with arbitrarily sized Blocks
+// TODO: Migrate bounds and existence checking to a central function
+// TODO: Fix weird erasing
 bool PlayingField::canRotateCW(Tetromino *t) const {
     bool can = true;
     
@@ -129,14 +130,14 @@ bool PlayingField::canRotateCW(Tetromino *t) const {
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation((tmp.getLocationY()-t->getLocationY()-t->getOffsetY())+t->getLocationX()-t->getOffsetX(),
-                t->getWidth()-(tmp.getLocationX()-t->getLocationX()+t->getOffsetX())-1+
-                  t->getLocationY()+t->getOffsetY());
+        tmp.setLocation(((tmp.getLocationY()-t->getLocationY())/tmp.getSize()-t->getOffsetY()-t->getOffsetX())*tmp.getSize()+t->getLocationX(),
+                (t->getWidth()-((tmp.getLocationX()-t->getLocationX())/tmp.getSize()+t->getOffsetX())-1+t->getOffsetY())*tmp.getSize()+t->getLocationY());
         
         // Check that it isn't out-of-bounds or intersecting an existing Block
-        if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
-                tmp.getLocationY() < getLocationY() || tmp.getLocationY() >= getHeight()+getLocationY() ||
-                blocks.at(tmp.getLocationX()-getLocationX()).at(tmp.getLocationY()-getLocationY()))
+        if ((tmp.getLocationX()-getLocationX())/tmp.getSize() < 0 || (tmp.getLocationX()-getLocationX())/tmp.getSize() >= getWidth() || 
+                (tmp.getLocationY()-getLocationY())/tmp.getSize() < 0 || (tmp.getLocationY()-getLocationY())/tmp.getSize() >= getHeight() ||
+                blocks.at((tmp.getLocationX()-getLocationX())/tmp.getSize())
+                      .at((tmp.getLocationY()-getLocationY())/tmp.getSize()))
         {
             can = false;
         }
@@ -153,9 +154,8 @@ bool PlayingField::canRotateCCW(Tetromino *t) const {
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation(t->getHeight()-(tmp.getLocationY()-t->getLocationY()-t->getOffsetY())-1+
-                  t->getLocationX()-t->getOffsetX(),
-                (tmp.getLocationX()-t->getLocationX()+t->getOffsetX())+t->getLocationY()+t->getOffsetY());
+        tmp.setLocation((t->getHeight()-((tmp.getLocationY()-t->getLocationY())/tmp.getSize()-t->getOffsetY())-1-t->getOffsetX())*tmp.getSize()+t->getLocationX(),
+                ((tmp.getLocationX()-t->getLocationX())/tmp.getSize()+t->getOffsetX()+t->getOffsetY())*tmp.getSize()+t->getLocationY());
     
         // Check that it isn't out-of-bounds or intersecting an existing Block
         if (tmp.getLocationX() < getLocationX() || tmp.getLocationX() >= getWidth()+getLocationX() || 
