@@ -12,6 +12,7 @@ Game::Game(GLUT_Plotter *g): Drawable(g) {
 }
 
 Game::~Game() {
+    erase();
     delete field;
     delete currentTetromino;
 }
