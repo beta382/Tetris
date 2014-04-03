@@ -8,7 +8,7 @@
 #include "GLUT_Plotter.h"
 GLUT_Plotter* g;
 
-GLUT_Plotter::GLUT_Plotter(int w, int h) {
+GLUT_Plotter::GLUT_Plotter(int w, int h){
 
 	width  = w;
 	height = h;
@@ -30,7 +30,7 @@ void GLUT_Plotter::init(){
 
 	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutCreateWindow("FREAKING AWESOME TETRIS OMG!!!1!1");
+	glutCreateWindow("Tetris");
 	//glutFullScreen();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
