@@ -9,9 +9,15 @@
 
 #include "Shape.h"
 
-Shape::Shape(GLUT_Plotter *g): Drawable(g) {}
+Shape::Shape(GLUT_Plotter *g): Drawable(g) {
+    blockSize = 10;
+    padding = 0;
+}
 
-Shape::Shape (GLUT_Plotter *g, int x, int y): Drawable(g, x, y) {}
+Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding): Drawable(g, x, y) {
+    this->blockSize = blockSize;
+    this->padding = padding;
+}
 
 Shape::Shape(const Shape& other): Drawable(other) {
     for (int i = 0; i < other.numBlocks(); i++) {
@@ -19,6 +25,9 @@ Shape::Shape(const Shape& other): Drawable(other) {
             blocks.pushBack(new Block(*(other.blocks.at(i))));
         }
     }
+    
+    blockSize = other.blockSize;
+    padding = other.padding;
 }
 
 Shape& Shape::operator =(const Shape& rhs) {
@@ -30,6 +39,8 @@ Shape& Shape::operator =(const Shape& rhs) {
         }
         
         Drawable::operator =(rhs);
+        blockSize = rhs.blockSize;
+        padding = rhs.padding;
         
         for (int i = 0; i < rhs.numBlocks(); i++) {
             if (rhs.blocks.at(i)) {
@@ -58,27 +69,39 @@ int Shape::numBlocks() const {
     return blocks.getSize();
 }
 
+int Shape::getBlockSize() const {
+    return blockSize;
+}
+
+int Shape::getPadding() const {
+    return padding;
+}
+
+int Shape::getTotalBlockSize() const {
+    return getBlockSize()+getPadding();
+}
+
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()+BLOCK_SIZE);
+    setLocation(getLocationX(), getLocationY()+(getBlockSize()+getPadding()));
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()-BLOCK_SIZE);
+    setLocation(getLocationX(), getLocationY()-(getBlockSize()+getPadding()));
     draw();
 }
 
 void Shape::shiftLeft () {
     erase();
-    setLocation(getLocationX()-BLOCK_SIZE, getLocationY());
+    setLocation(getLocationX()-(getBlockSize()+getPadding()), getLocationY());
     draw();
 }
 
 void Shape::shiftRight () {
     erase();
-    setLocation(getLocationX()+BLOCK_SIZE, getLocationY());
+    setLocation(getLocationX()+(getBlockSize()+getPadding()), getLocationY());
     draw();
 }
 

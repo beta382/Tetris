@@ -75,14 +75,15 @@ PlayingField::~PlayingField() {
 }
 
 Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(g, getLocationX()+(getWidth()/2)*BLOCK_SIZE, 
-            getLocationY()+getHeight()*BLOCK_SIZE, type);
+    Tetromino *tetromino = new Tetromino(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*3, 
+            getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type);
     
-    // We spawn right above the field, to the right, this centers us and puts us at the top of the screen
-    tetromino->setLocation(tetromino->getLocationX()-((tetromino->getWidth()/2)*BLOCK_SIZE),
-            tetromino->getLocationY()-tetromino->getHeight()*BLOCK_SIZE);
+    // We spawn right above the field, this puts us at the top of the screen
+    tetromino->setLocation(tetromino->getLocationX(),
+            tetromino->getLocationY()-(tetromino->getBlockSize()+tetromino->getPadding())*tetromino->getHeight());
     
     // TODO: Later on, change the spawn point based on if it can actually spawn there.
+    // Probably return NULL if we can't spawn period, which would special-case a "game over"
     
     return tetromino;
 }
@@ -90,8 +91,8 @@ Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = new Block(*(shape->getBlock(i)));
-        blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getSide()]
-              [(curBlock->getLocationY()-getLocationY())/curBlock->getSide()] = curBlock;
+        blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize()]
+              [(curBlock->getLocationY()-getLocationY())/curBlock->getTotalSize()] = curBlock;
     }
     
     delete shape;
@@ -107,7 +108,7 @@ bool PlayingField::canShiftUp(Shape *const shape) const {
         Block tmp = *(shape->getBlock(i));
         
         // Apply transformation to our tmp Block
-        tmp.setLocation(tmp.getLocationX(), tmp.getLocationY()+tmp.getSide());
+        tmp.setLocation(tmp.getLocationX(), tmp.getLocationY()+tmp.getTotalSize());
                 
         if (!couldAdd(&tmp)) {
             can = false;
@@ -125,7 +126,7 @@ bool PlayingField::canShiftDown(Shape *const shape) const {
         Block tmp = *(shape->getBlock(i));
         
         // Apply transformation to our tmp Block
-        tmp.setLocation(tmp.getLocationX(), tmp.getLocationY()-tmp.getSide());
+        tmp.setLocation(tmp.getLocationX(), tmp.getLocationY()-tmp.getTotalSize());
                 
         if (!couldAdd(&tmp)) {
             can = false;
@@ -143,7 +144,7 @@ bool PlayingField::canShiftLeft(Shape *const shape) const {
         Block tmp = *(shape->getBlock(i));
         
         // Apply transformation to our tmp Block
-        tmp.setLocation(tmp.getLocationX()-tmp.getSide(), tmp.getLocationY());
+        tmp.setLocation(tmp.getLocationX()-tmp.getTotalSize(), tmp.getLocationY());
                 
         if (!couldAdd(&tmp)) {
             can = false;
@@ -161,7 +162,7 @@ bool PlayingField::canShiftRight(Shape *const shape) const {
         Block tmp = *(shape->getBlock(i));
         
         // Apply transformation to our tmp Block
-        tmp.setLocation(tmp.getLocationX()+tmp.getSide(), tmp.getLocationY());
+        tmp.setLocation(tmp.getLocationX()+tmp.getTotalSize(), tmp.getLocationY());
                 
         if (!couldAdd(&tmp)) {
             can = false;
@@ -179,10 +180,10 @@ bool PlayingField::canRotateCW(Tetromino *const t) const {
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation(((tmp.getLocationY()-t->getLocationY())/tmp.getSide()-t->getOffsetY()-t->getOffsetX())*
-                  tmp.getSide()+t->getLocationX(),
-                (t->getWidth()-((tmp.getLocationX()-t->getLocationX())/tmp.getSide()+t->getOffsetX())-1+
-                  t->getOffsetY())*tmp.getSide()+t->getLocationY());
+        tmp.setLocation(((tmp.getLocationY()-t->getLocationY())/tmp.getTotalSize()-t->getOffsetY()-t->getOffsetX())*
+                  tmp.getTotalSize()+t->getLocationX(),
+                (t->getWidth()-((tmp.getLocationX()-t->getLocationX())/tmp.getTotalSize()+t->getOffsetX())-1+
+                  t->getOffsetY())*tmp.getTotalSize()+t->getLocationY());
         
         if (!couldAdd(&tmp)) {
             can = false;
@@ -199,10 +200,10 @@ bool PlayingField::canRotateCCW(Tetromino *const t) const {
         Block tmp = *(t->getBlock(i));
         
         // Apply rotation transformation to our tmp Block
-        tmp.setLocation((t->getHeight()-((tmp.getLocationY()-t->getLocationY())/tmp.getSide()-t->getOffsetY())-1-
-                  t->getOffsetX())*tmp.getSide()+t->getLocationX(),
-                ((tmp.getLocationX()-t->getLocationX())/tmp.getSide()+t->getOffsetX()+t->getOffsetY())*
-                  tmp.getSide()+t->getLocationY());
+        tmp.setLocation((t->getHeight()-((tmp.getLocationY()-t->getLocationY())/tmp.getTotalSize()-t->getOffsetY())-1-
+                  t->getOffsetX())*tmp.getTotalSize()+t->getLocationX(),
+                ((tmp.getLocationX()-t->getLocationX())/tmp.getTotalSize()+t->getOffsetX()+t->getOffsetY())*
+                  tmp.getTotalSize()+t->getLocationY());
          
         if (!couldAdd(&tmp)) {
             can = false;
@@ -231,12 +232,12 @@ bool PlayingField::couldAdd(Block *const block) const {
     bool can = true;
     
     // Check that it isn't out-of-bounds or intersecting an existing Block
-    if ((block->getLocationX()-getLocationX())/block->getSide() < 0 || 
-        (block->getLocationX()-getLocationX())/block->getSide() >= getWidth() || 
-        (block->getLocationY()-getLocationY())/block->getSide() < 0 || 
-        (block->getLocationY()-getLocationY())/block->getSide() >= getHeight() ||
-         blocks.at((block->getLocationX()-getLocationX())/block->getSide())
-               .at((block->getLocationY()-getLocationY())/block->getSide()))
+    if ((block->getLocationX()-getLocationX())/block->getTotalSize() < 0 || 
+        (block->getLocationX()-getLocationX())/block->getTotalSize() >= getWidth() || 
+        (block->getLocationY()-getLocationY())/block->getTotalSize() < 0 || 
+        (block->getLocationY()-getLocationY())/block->getTotalSize() >= getHeight() ||
+         blocks.at((block->getLocationX()-getLocationX())/block->getTotalSize())
+               .at((block->getLocationY()-getLocationY())/block->getTotalSize()))
     {
         can = false;
     }

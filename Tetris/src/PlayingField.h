@@ -16,6 +16,9 @@
 #include "myVector.h"
 #include "Block.h"
 
+const int BLOCK_SIZE = 15;
+const int BLOCK_PADDING = 2;
+
 class PlayingField: public Drawable {
     public:
         PlayingField(GLUT_Plotter *g);

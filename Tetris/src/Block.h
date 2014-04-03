@@ -12,21 +12,24 @@
 
 #include "Drawable.h"
 
-const int BLOCK_SIZE = 10;
-
 class Block: public Drawable {
     public:
         Block(GLUT_Plotter *g);
         Block(GLUT_Plotter *g, int x, int y);
-        Block(GLUT_Plotter *g, int x, int y, int size);
+        Block(GLUT_Plotter *g, int x, int y, int size, int padding);
         Block(const Block&);
+        Block& operator =(const Block&);
         ~Block();
         
-        int getSide() const;
+        int getSize() const;
+        int getPadding() const;
+        int getTotalSize() const;
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();
         void erase();
+    private:
+        int padding;
 };
 
 #endif /* BLOCK_H_ */
