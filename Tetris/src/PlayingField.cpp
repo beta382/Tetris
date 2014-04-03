@@ -97,7 +97,7 @@ void PlayingField::merge (Shape *shape) {
     
     delete shape;
     
-    draw();
+    draw(); // TODO: Probably make a `void redraw()` eventually
 }
 
 bool PlayingField::canShiftUp(Shape *const shape) const {
