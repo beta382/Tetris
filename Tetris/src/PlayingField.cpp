@@ -75,17 +75,12 @@ PlayingField::~PlayingField() {
 }
 
 Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*3, 
+    Tetromino *tetromino = new Tetromino(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2), 
             getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type);
     
-    // We spawn right above the field, this puts us at the top of the screen
-    if (tetromino->getWidth() <= 2) {
-        tetromino->setLocation(tetromino->getLocationX()+tetromino->getTotalBlockSize(),
-                tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight());
-    } else {
-        tetromino->setLocation(tetromino->getLocationX(),
-                tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight());
-    }
+    // We spawn right above the field, this puts us at the top of the screen, properly centered
+    tetromino->setLocation(tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),
+            tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight());
     
     // TODO: Later on, change the spawn point based on if it can actually spawn there.
     // Probably return NULL if we can't spawn period, which would special-case a "game over"
