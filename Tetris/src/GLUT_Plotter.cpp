@@ -30,7 +30,7 @@ void GLUT_Plotter::init(){
 
 	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutCreateWindow("FREAKING AWESOME TETRIS OMG");
+	glutCreateWindow("FREAKING AWESOME TETRIS OMG!!!1!1");
 	//glutFullScreen();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
