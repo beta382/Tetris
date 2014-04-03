@@ -9,12 +9,56 @@
 
 #include "Shape.h"
 
-Shape::Shape(GLUT_Plotter *g): Drawable(g) {}
+Shape::Shape(GLUT_Plotter *g): Drawable(g) {
+    blockSize = 10;
+    padding = 0;
+}
 
-Shape::Shape (GLUT_Plotter *g, int x, int y): Drawable(g, x, y) {}
+Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding): Drawable(g, x, y) {
+    this->blockSize = blockSize;
+    this->padding = padding;
+}
+
+Shape::Shape(const Shape& other): Drawable(other) {
+    for (int i = 0; i < other.numBlocks(); i++) {
+        if (other.blocks.at(i)) {
+            blocks.pushBack(new Block(*(other.blocks.at(i))));
+        }
+    }
+    
+    blockSize = other.blockSize;
+    padding = other.padding;
+}
+
+Shape& Shape::operator =(const Shape& rhs) {
+    if (this != &rhs) {
+        erase();
+        
+        for (int i = 0; i < blocks.getSize(); i++) {
+            delete blocks[i];
+        }
+        
+        Drawable::operator =(rhs);
+        blockSize = rhs.blockSize;
+        padding = rhs.padding;
+        
+        for (int i = 0; i < rhs.numBlocks(); i++) {
+            if (rhs.blocks.at(i)) {
+                blocks.pushBack(new Block(*(rhs.blocks.at(i))));
+            }
+        }
+        
+        draw();
+    }
+    
+    return *this;
+}
 
 Shape::~Shape() {
     erase();
+    for (int i = 0; i < blocks.getSize(); i++) {
+        delete blocks[i];
+    }
 }
 
 Block *Shape::getBlock(int index) const {
@@ -25,27 +69,39 @@ int Shape::numBlocks() const {
     return blocks.getSize();
 }
 
+int Shape::getBlockSize() const {
+    return blockSize;
+}
+
+int Shape::getPadding() const {
+    return padding;
+}
+
+int Shape::getTotalBlockSize() const {
+    return getBlockSize()+getPadding();
+}
+
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()+1);
+    setLocation(getLocationX(), getLocationY()+(getBlockSize()+getPadding()));
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()-1);
+    setLocation(getLocationX(), getLocationY()-(getBlockSize()+getPadding()));
     draw();
 }
 
 void Shape::shiftLeft () {
     erase();
-    setLocation(getLocationX()-1, getLocationY());
+    setLocation(getLocationX()-(getBlockSize()+getPadding()), getLocationY());
     draw();
 }
 
 void Shape::shiftRight () {
     erase();
-    setLocation(getLocationX()+1, getLocationY());
+    setLocation(getLocationX()+(getBlockSize()+getPadding()), getLocationY());
     draw();
 }
 
@@ -76,10 +132,16 @@ void Shape::draw() {
     for (int i = 0; i < blocks.getSize(); i++) {
         blocks[i]->draw();
     }
+    
+    isVisible = true;
 }
 
 void Shape::erase() {
-    for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->erase();
+    if (isVisible) {
+        for (int i = 0; i < blocks.getSize(); i++) {
+            blocks[i]->erase();
+        }
+        
+        isVisible = false;
     }
 }

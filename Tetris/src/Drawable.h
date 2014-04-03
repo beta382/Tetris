@@ -13,6 +13,9 @@
 #include "GLUT_Plotter.h"
 #include "drawkit.h"
 
+#include <iostream>
+#include <iomanip>
+
 class Drawable {
     public:
         virtual void draw() = 0;
@@ -35,6 +38,8 @@ class Drawable {
         Drawable(GLUT_Plotter *g);
         Drawable(GLUT_Plotter *g, int x, int y);
         Drawable(GLUT_Plotter *g, int x, int y, int width, int height, int color = Color::WHITE);
+        Drawable(const Drawable&);
+        virtual Drawable& operator =(const Drawable&);
         
         GLUT_Plotter *g;
         
@@ -45,6 +50,8 @@ class Drawable {
         int height;
         
         int color;
+        
+        bool isVisible;
 };
 
 #endif /* DRAWABLE_H_ */

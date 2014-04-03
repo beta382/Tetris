@@ -16,24 +16,29 @@
 #include "myVector.h"
 #include "Block.h"
 
+const int BLOCK_SIZE = 15;
+const int BLOCK_PADDING = 2;
+
 class PlayingField: public Drawable {
     public:
         PlayingField(GLUT_Plotter *g);
         PlayingField(GLUT_Plotter *g, int x, int y);
         PlayingField(GLUT_Plotter *g, int x, int y, int width, int height);
+        PlayingField(const PlayingField&);
+        PlayingField& operator =(const PlayingField&);
         ~PlayingField();
         
-        Tetromino *spawnNewTetromino(int x, int y, TetrominoShape type);
+        Tetromino *spawnNewTetromino(TetrominoShape type);
         
         void merge(Shape *);
         
-        bool canShiftDown(Shape *) const;
-        bool canShiftUp(Shape *) const;
-        bool canShiftLeft(Shape *) const;
-        bool canShiftRight(Shape *) const;
+        bool canShiftDown(Shape *const) const;
+        bool canShiftUp(Shape *const) const;
+        bool canShiftLeft(Shape *const) const;
+        bool canShiftRight(Shape *const) const;
         
-        bool canRotateCW(Tetromino *) const;
-        bool canRotateCCW(Tetromino *) const;
+        bool canRotateCW(Tetromino *const) const;
+        bool canRotateCCW(Tetromino *const) const;
         
         /* ---------- Inherited from Drawable ---------- */
         void setLocation(int, int);
@@ -42,6 +47,9 @@ class PlayingField: public Drawable {
         void draw();
         void erase();
     private:
+        void init();
+        bool couldAdd(Block *const) const;
+        
         myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
 };
 

@@ -30,7 +30,7 @@ void GLUT_Plotter::init(){
 
 	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutCreateWindow("Dr. Booth's Plotter Class");
+	glutCreateWindow("Tetris");
 	//glutFullScreen();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

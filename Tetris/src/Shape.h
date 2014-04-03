@@ -17,16 +17,24 @@
 class Shape: public Drawable {
     public:
         Shape(GLUT_Plotter *g);
-        Shape(GLUT_Plotter *g, int x, int y);
+        Shape(GLUT_Plotter *g, int x, int y, int blockSize, int padding);
+        Shape(const Shape&);
+        Shape& operator =(const Shape&);
         ~Shape();
         
         Block *getBlock(int) const;
         int numBlocks() const;
         
+        int getBlockSize() const;
+        int getPadding() const;
+        int getTotalBlockSize() const;
+        
         void shiftUp();
         void shiftDown();
         void shiftLeft();
         void shiftRight();
+        
+        // TODO: Eventually make a `Shape& addBlock(Block *const);`
         
         /* ---------- Inherited from Drawable ---------- */
         void setLocation(int, int);
@@ -37,6 +45,9 @@ class Shape: public Drawable {
         void erase();
     protected:
         myVector<Block *> blocks;
+        
+        int blockSize;
+        int padding;
 };
 
 #endif /* SHAPE_H_ */
