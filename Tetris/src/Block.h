@@ -28,6 +28,7 @@ class Block: public Drawable {
         int getTotalSize() const;
         
         virtual void doOnClear(myVector<myVector<Block *> > *);
+        virtual Block *makeNewClone();
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

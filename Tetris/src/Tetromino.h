@@ -15,56 +15,67 @@
 
 enum TetrominoShape  {I, O, T, J, L, S, Z};
 
-template <typename BlockType>
-class Tetromino: public Shape {
+class TetrominoBase: public Shape {
     public:
-        Tetromino(GLUT_Plotter *g);
-        Tetromino(GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape);
-        Tetromino(const Tetromino&);
-        Tetromino& operator =(const Tetromino&);
-        
         void rotateCW();
         void rotateCCW();
         
         int getOffsetX() const;
         int getOffsetY() const;
-    private:
-        void initTetromino(TetrominoShape type);
+    protected:
+        TetrominoBase(GLUT_Plotter *g);
+        TetrominoBase(GLUT_Plotter *g, int x, int y, int blockSize, int padding);
+        TetrominoBase(const TetrominoBase&);
+        TetrominoBase& operator =(const TetrominoBase&);
+        
+        virtual void initTetromino(TetrominoShape type) = 0;
         
         int offsetX;
         int offsetY;
 };
 
 template <typename BlockType>
-Tetromino<BlockType>::Tetromino(GLUT_Plotter *g): Shape(g) {
+class Tetromino: public TetrominoBase {
+    public:
+        Tetromino(GLUT_Plotter *g);
+        Tetromino(GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape);
+        Tetromino(const Tetromino&);
+        Tetromino& operator =(const Tetromino&);
+        
+        //void rotateCW();
+        //void rotateCCW();
+        
+        //int getOffsetX() const;
+        //int getOffsetY() const;
+    private:
+        void initTetromino(TetrominoShape type);
+};
+
+template <typename BlockType>
+Tetromino<BlockType>::Tetromino(GLUT_Plotter *g): TetrominoBase(g) {
     initTetromino(S); // Picked by fair dice roll, guaranteed to be random
 }
 
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino (GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape): 
-        Shape(g, x, y, blockSize, padding)
+        TetrominoBase(g, x, y, blockSize, padding)
 {
     initTetromino(shape);
 }
 
 template <typename BlockType>
-Tetromino<BlockType>::Tetromino(const Tetromino<BlockType>& other): Shape(other) {
-    offsetX = other.offsetX;
-    offsetY = other.offsetY;
-}
+Tetromino<BlockType>::Tetromino(const Tetromino<BlockType>& other): TetrominoBase(other) {}
 
 template <typename BlockType>
 Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType>& rhs) {
     if (this != &rhs) {
-        Shape::operator =(rhs);
-        offsetX = rhs.offsetX;
-        offsetY = rhs.offsetY;
+        TetrominoBase::operator =(rhs);
     }
     
     return *this;
 }
 
-template <typename BlockType>
+/*template <typename BlockType>
 void Tetromino<BlockType>::rotateCW() {
     erase();
     for (int i = 0; i < blocks.getSize(); i++) {
@@ -98,14 +109,11 @@ int Tetromino<BlockType>::getOffsetX() const {
 template <typename BlockType>
 int Tetromino<BlockType>::getOffsetY() const {
     return offsetY;
-}
+}*/
 
 template <typename BlockType>
 void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
     Block *block1, *block2, *block3, *block4;
-    
-    offsetX = 0;
-    offsetY = 0;
     
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired rotations.
     switch (type) {

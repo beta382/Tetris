@@ -90,7 +90,7 @@ PlayingField::~PlayingField() {
 
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
-        Block *curBlock = new Block(*(shape->getBlock(i)));
+        Block *curBlock = shape->getBlock(i)->makeNewClone();
         blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize()]
               [(curBlock->getLocationY()-getLocationY())/curBlock->getTotalSize()] = curBlock;
     }
@@ -172,7 +172,7 @@ bool PlayingField::canShiftRight(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canRotateCW(Tetromino<Block> *const t) const {
+bool PlayingField::canRotateCW(TetrominoBase *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -192,7 +192,7 @@ bool PlayingField::canRotateCW(Tetromino<Block> *const t) const {
     return can;
 }
 
-bool PlayingField::canRotateCCW(Tetromino<Block> *const t) const {
+bool PlayingField::canRotateCCW(TetrominoBase *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {

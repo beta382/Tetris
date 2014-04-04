@@ -64,6 +64,11 @@ void Game::respondToKey(int key) {
             currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() % 7));
             currentTetromino->draw();
             break;
+        case 'g':
+            delete currentTetromino;
+            currentTetromino = field->spawnNewTetromino<GhostBlock>(static_cast<TetrominoShape>(rand() %7));
+            currentTetromino->draw();
+            break;
         case 27: // ESC
         case 'x':
             exit(1);

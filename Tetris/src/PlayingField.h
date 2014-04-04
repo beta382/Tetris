@@ -14,7 +14,7 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "myVector.h"
-#include "Block.h"
+#include "Blocks.h"
 
 const int BLOCK_SIZE = 15;
 const int BLOCK_PADDING = 2;
@@ -38,8 +38,8 @@ class PlayingField: public Drawable {
         bool canShiftLeft(Shape *const) const;
         bool canShiftRight(Shape *const) const;
         
-        bool canRotateCW(Tetromino<Block> *const) const;
-        bool canRotateCCW(Tetromino<Block> *const) const;
+        bool canRotateCW(TetrominoBase *const) const;
+        bool canRotateCCW(TetrominoBase *const) const;
         
         /* ---------- Inherited from Drawable ---------- */
         void setLocation(int, int);

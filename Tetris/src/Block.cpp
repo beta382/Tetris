@@ -54,6 +54,10 @@ void Block::doOnClear(myVector<myVector<Block *> > *blockField) {
     // Do nothing
 }
 
+Block *Block::makeNewClone() {
+    return new Block(*this);
+}
+
 /* ---------- Implemented from Drawable ---------- */
 
 void Block::draw() {
