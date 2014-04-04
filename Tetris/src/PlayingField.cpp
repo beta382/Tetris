@@ -74,7 +74,7 @@ PlayingField::~PlayingField() {
     }
 }
 
-Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
+/*Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
     Tetromino *tetromino = new Tetromino(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2), 
             getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type);
     
@@ -86,7 +86,7 @@ Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
     // Probably return NULL if we can't spawn period, which would special-case a "game over"
     
     return tetromino;
-}
+}*/
 
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
@@ -172,7 +172,7 @@ bool PlayingField::canShiftRight(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canRotateCW(Tetromino *const t) const {
+bool PlayingField::canRotateCW(Tetromino<Block> *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -192,7 +192,7 @@ bool PlayingField::canRotateCW(Tetromino *const t) const {
     return can;
 }
 
-bool PlayingField::canRotateCCW(Tetromino *const t) const {
+bool PlayingField::canRotateCCW(Tetromino<Block> *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {

@@ -32,7 +32,7 @@ class Game: public Drawable {
         void init();
         
         PlayingField *field;
-        Tetromino *currentTetromino;
+        Tetromino<Block> *currentTetromino;
 };
 
 

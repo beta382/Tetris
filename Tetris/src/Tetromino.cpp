@@ -7,16 +7,16 @@
  * Date last modified:     Mar 29, 2014
  */
 
-#include "Tetromino.h"
+//#include "Tetromino.h"
 
-Tetromino::Tetromino(GLUT_Plotter *g): Shape(g) {
-    initTetromino(S); // Picked by fair dice roll, guaranteed to be random
+/*Tetromino::Tetromino(GLUT_Plotter *g): Shape(g) {
+    initTetromino<Block>(S); // Picked by fair dice roll, guaranteed to be random
 }
 
-Tetromino::Tetromino (GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape type): 
+Tetromino::Tetromino (GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape type, class BlockType): 
         Shape(g, x, y, blockSize, padding)
 {
-    initTetromino(type);
+    initTetromino<BlockType>(type);
 }
 
 Tetromino::Tetromino(const Tetromino& other): Shape(other) {
@@ -64,12 +64,12 @@ int Tetromino::getOffsetX() const {
 
 int Tetromino::getOffsetY() const {
     return offsetY;
-}
+}*/
 
 
 /* ---------- Protected ---------- */
 
-void Tetromino::initTetromino (TetrominoShape type) {
+/*void Tetromino::initTetromino (TetrominoShape type) {
     Block *block1, *block2, *block3, *block4;
     
     offsetX = 0;
@@ -78,13 +78,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired rotations.
     switch (type) {
         case I:
-            block1 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize()*4, 
+            block1 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize()*4, 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*4, 
+            block2 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*4, 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*4, 
+            block3 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*4, 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize()*3, getLocationY()+getTotalBlockSize()*4, 
+            block4 = new T(g, getLocationX()+getTotalBlockSize()*3, getLocationY()+getTotalBlockSize()*4, 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -95,13 +95,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
             offsetY = 2;
             break;
         case O:
-            block1 = new Block(g, getLocationX(), getLocationY(), 
+            block1 = new T(g, getLocationX(), getLocationY(), 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
+            block2 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
+            block3 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block4 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -111,13 +111,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
             setHeight(2);
             break;
         case T:
-            block1 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block1 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
+            block2 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
+            block3 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
+            block4 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -128,13 +128,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
             offsetY = 1;
             break;
         case J:
-            block1 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
+            block1 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
+            block2 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
+            block3 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
+            block4 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -145,13 +145,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
             offsetY = 1;
             break;
         case L:
-            block1 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
+            block1 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
+            block2 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
+            block3 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
+            block4 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -162,13 +162,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
             offsetY = 1;
             break;
         case S:
-            block1 = new Block(g, getLocationX(), getLocationY(), 
+            block1 = new T(g, getLocationX(), getLocationY(), 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
+            block2 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block3 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
+            block4 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -178,13 +178,13 @@ void Tetromino::initTetromino (TetrominoShape type) {
             setHeight(2);
             break;
         case Z:
-            block1 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
+            block1 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
                     getBlockSize(), getPadding());
-            block2 = new Block(g, getLocationX()+getTotalBlockSize()*2, getLocationY(), 
+            block2 = new T(g, getLocationX()+getTotalBlockSize()*2, getLocationY(), 
                     getBlockSize(), getPadding());
-            block3 = new Block(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
+            block3 = new T(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
-            block4 = new Block(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block4 = new T(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
@@ -194,16 +194,5 @@ void Tetromino::initTetromino (TetrominoShape type) {
             setHeight(2);
             break;
     }
-}
-
-
-
-
-
-
-
-
-
-
-
+}*/
 

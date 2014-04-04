@@ -55,13 +55,13 @@ void Game::respondToKey(int key) {
             break;
         case 'n':
             delete currentTetromino;
-            currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
+            currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() % 7));
             currentTetromino->draw();
             break;
         case 'j':
             field->merge(currentTetromino);
             
-            currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
+            currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() % 7));
             currentTetromino->draw();
             break;
         case 27: // ESC
@@ -76,7 +76,7 @@ void Game::respondToKey(int key) {
 
 void Game::init() {
     field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
-    currentTetromino = field->spawnNewTetromino(S);
+    currentTetromino = field->spawnNewTetromino<Block>(S);
     currentTetromino->draw();
     
     srand(time(0));

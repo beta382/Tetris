@@ -11,7 +11,9 @@
 #define BLOCK_H_
 
 #include "Drawable.h"
+#include "myVector.h"
 
+// TODO: Make child classes for different blocks, i.e. GhostBlock, special Blocks, etc.
 class Block: public Drawable {
     public:
         Block(GLUT_Plotter *g);
@@ -25,10 +27,12 @@ class Block: public Drawable {
         int getPadding() const;
         int getTotalSize() const;
         
+        virtual void doOnClear(myVector<myVector<Block *> > *);
+        
         /* ---------- Implemented from Drawable ---------- */
         void draw();
         void erase();
-    private:
+    protected:
         int padding;
 };
 
