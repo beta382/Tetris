@@ -34,9 +34,9 @@ class Shape: public Drawable {
         void shiftLeft();
         void shiftRight();
         
-        // TODO: Eventually make a `Shape& addBlock(Block *const);`
+        Shape& addBlock(Block *const);
         
-        /* ---------- Inherited from Drawable ---------- */
+        /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);
         void setColor (unsigned int);
         

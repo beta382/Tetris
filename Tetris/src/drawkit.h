@@ -26,4 +26,6 @@ namespace Color {
     
 }
 
+// More stuff later, maybe
+
 #endif /* DRAWKIT_H_ */

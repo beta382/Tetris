@@ -14,7 +14,7 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "myVector.h"
-#include "Blocks.h"
+#include "Blocks.h" // In turn includes all of our special blocks
 
 const int BLOCK_SIZE = 15;
 const int BLOCK_PADDING = 2;
@@ -41,7 +41,7 @@ class PlayingField: public Drawable {
         bool canRotateCW(TetrominoBase *const) const;
         bool canRotateCCW(TetrominoBase *const) const;
         
-        /* ---------- Inherited from Drawable ---------- */
+        /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);
         
         /* ---------- Implemented from Drawable ---------- */
@@ -53,6 +53,8 @@ class PlayingField: public Drawable {
         
         myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
 };
+
+/* ---------- spawnNewTetromino method template implementation ---------- */
 
 template <typename BlockType>
 Tetromino<BlockType> *PlayingField::spawnNewTetromino (TetrominoShape type) {

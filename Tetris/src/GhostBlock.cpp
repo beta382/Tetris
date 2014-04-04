@@ -28,9 +28,9 @@ GhostBlock::~GhostBlock() {
 }
 
 
-/* ---------- Inherited from Block ---------- */
+/* ---------- Overriding from Block ---------- */
 
-void GhostBlock::doOnClear(myVector<myVector<Block *> > *) {
+void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField) {
     // Do nothing
 }
 

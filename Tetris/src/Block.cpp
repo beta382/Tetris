@@ -50,7 +50,7 @@ int Block::getTotalSize() const {
     return getSize()+getPadding();
 }
 
-void Block::doOnClear(myVector<myVector<Block *> > *blockField) {
+void Block::doOnClear(myVector<myVector<Block *> >& blockField) {
     // Do nothing
 }
 

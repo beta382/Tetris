@@ -15,6 +15,8 @@
 
 enum TetrominoShape  {I, O, T, J, L, S, Z};
 
+
+// Provides a specialized base class for all possible Tetromino<type> classes
 class TetrominoBase: public Shape {
     public:
         void rotateCW();
@@ -22,6 +24,7 @@ class TetrominoBase: public Shape {
         
         int getOffsetX() const;
         int getOffsetY() const;
+        
     protected:
         TetrominoBase(GLUT_Plotter *g);
         TetrominoBase(GLUT_Plotter *g, int x, int y, int blockSize, int padding);
@@ -42,14 +45,14 @@ class Tetromino: public TetrominoBase {
         Tetromino(const Tetromino&);
         Tetromino& operator =(const Tetromino&);
         
-        //void rotateCW();
-        //void rotateCCW();
-        
-        //int getOffsetX() const;
-        //int getOffsetY() const;
     private:
+        
+        /* ---------- Implemented from TetrominoBase -------- */
         void initTetromino(TetrominoShape type);
 };
+
+
+/* ---------- Tetromino class template implementation ---------- */
 
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino(GLUT_Plotter *g): TetrominoBase(g) {
@@ -75,42 +78,6 @@ Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType
     return *this;
 }
 
-/*template <typename BlockType>
-void Tetromino<BlockType>::rotateCW() {
-    erase();
-    for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-getOffsetY()-
-                  getOffsetX())*blocks[i]->getTotalSize()+getLocationX(),
-                (getWidth()-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+getOffsetX())-1+
-                  getOffsetY())*blocks[i]->getTotalSize()+getLocationY());
-    }
-    draw();
-    swap(width, height);
-}
-
-template <typename BlockType>
-void Tetromino<BlockType>::rotateCCW() {
-    erase();
-    for (int i = 0; i < blocks.getSize(); i++) {
-        blocks[i]->setLocation((getHeight()-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-
-                  getOffsetY())-1-getOffsetX())*blocks[i]->getTotalSize()+getLocationX(),
-                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+getOffsetX()+getOffsetY())*
-                  blocks[i]->getTotalSize()+getLocationY());
-    }
-    draw();
-    swap(width, height);
-}
-
-template <typename BlockType>
-int Tetromino<BlockType>::getOffsetX() const {
-    return offsetX;
-}
-
-template <typename BlockType>
-int Tetromino<BlockType>::getOffsetY() const {
-    return offsetY;
-}*/
-
 template <typename BlockType>
 void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
     Block *block1, *block2, *block3, *block4;
@@ -127,7 +94,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*3, getLocationY()+getTotalBlockSize()*4, 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::CYAN);
             setWidth(4);
@@ -144,7 +111,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::YELLOW);
             setWidth(2);
@@ -160,7 +127,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::MAGENTA);
             setWidth(3);
@@ -177,7 +144,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::BLUE);
             setWidth(3);
@@ -194,7 +161,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::ORANGE);
             setWidth(3);
@@ -211,7 +178,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::GREEN);
             setWidth(3);
@@ -227,7 +194,7 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             block4 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
                     getBlockSize(), getPadding());
             
-            blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
+            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
             setColor(Color::RED);
             setWidth(3);

@@ -8,10 +8,11 @@
 #ifndef BLOCKS_H_
 #define BLOCKS_H_
 
+// Just a convenience header
+
 #include "Block.h"
 #include "GhostBlock.h"
 
-// include more block subclasses here, then just include this file instead of all the subclases
-
+// Include more Block subclasses here, then just include this file instead of all the subclasses
 
 #endif /* BLOCKS_H_ */

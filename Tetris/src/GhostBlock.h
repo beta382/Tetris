@@ -20,8 +20,8 @@ class GhostBlock: public Block {
         GhostBlock& operator =(const GhostBlock&);
         ~GhostBlock();
         
-        /* ---------- Inherited from Block ---------- */
-        void doOnClear(myVector<myVector<Block *> > *);
+        /* ---------- Overriding from Block ---------- */
+        void doOnClear(myVector<myVector<Block *> >&);
         GhostBlock *makeNewClone(); // Covariant overload
         
         void draw();

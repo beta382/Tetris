@@ -27,7 +27,7 @@ PlayingField::PlayingField(const PlayingField& other): Drawable(other) {
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             if (other.blocks.at(i).at(j)) {
-                blocks[i][i] = new Block(*(other.blocks.at(i).at(j)));
+                blocks[i][i] = other.blocks.at(i).at(j)->makeNewClone();
             }
         }
     }
@@ -52,7 +52,7 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 if (rhs.blocks.at(i).at(j)) {
-                    blocks[i][i] = new Block(*(rhs.blocks.at(i).at(j)));
+                    blocks[i][i] = rhs.blocks.at(i).at(j)->makeNewClone();
                 }
             }
         }
@@ -73,20 +73,6 @@ PlayingField::~PlayingField() {
         }
     }
 }
-
-/*Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2), 
-            getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type);
-    
-    // We spawn right above the field, this puts us at the top of the screen, properly centered
-    tetromino->setLocation(tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),
-            tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight());
-    
-    // TODO: Later on, change the spawn point based on if it can actually spawn there.
-    // Probably return NULL if we can't spawn period, which would special-case a "game over"
-    
-    return tetromino;
-}*/
 
 void PlayingField::merge (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
@@ -245,7 +231,8 @@ bool PlayingField::couldAdd(Block *const block) const {
     return can;
 }
 
-/* ---------- Inherited from Drawable ---------- */
+
+/* ---------- Overriding from Drawable ---------- */
 
 void PlayingField::setLocation(int x, int y) {
     int dX = x - getLocationX();
