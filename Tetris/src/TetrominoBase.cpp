@@ -5,7 +5,7 @@
  *      Author: Austin
  */
 
-#include "Tetromino.h"
+#include "TetrominoBase.h"
 
 TetrominoBase::TetrominoBase(GLUT_Plotter *g): Shape(g) {
     offsetX = 0;

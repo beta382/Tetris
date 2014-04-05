@@ -9,7 +9,6 @@
 #define GHOSTBLOCK_H_
 
 #include "Block.h"
-#include "GLUT_Plotter.h"
 
 class GhostBlock: public Block {
     public:

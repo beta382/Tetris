@@ -14,7 +14,6 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "myVector.h"
-#include "Blocks.h" // In turn includes all of our special blocks
 
 const int BLOCK_SIZE = 15;
 const int BLOCK_PADDING = 2;

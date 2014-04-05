@@ -10,44 +10,17 @@
 #ifndef TETROMINO_H_
 #define TETROMINO_H_
 
-#include "Drawable.h"
-#include "Shape.h"
-
-enum TetrominoShape  {I, O, T, J, L, S, Z};
-
-
-// Provides a specialized base class for all possible Tetromino<type> classes
-class TetrominoBase: public Shape {
-    public:
-        void rotateCW();
-        void rotateCCW();
-        
-        int getOffsetX() const;
-        int getOffsetY() const;
-        
-    protected:
-        TetrominoBase(GLUT_Plotter *g);
-        TetrominoBase(GLUT_Plotter *g, int x, int y, int blockSize, int padding);
-        TetrominoBase(const TetrominoBase&);
-        TetrominoBase& operator =(const TetrominoBase&);
-        
-        virtual void initTetromino(TetrominoShape type) = 0;
-        
-        int offsetX;
-        int offsetY;
-};
+#include "TetrominoBase.h"
 
 template <typename BlockType>
 class Tetromino: public TetrominoBase {
     public:
         Tetromino(GLUT_Plotter *g);
         Tetromino(GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape);
-        Tetromino(const Tetromino&);
-        Tetromino& operator =(const Tetromino&);
-        
+        Tetromino(const Tetromino<BlockType>&);
+        Tetromino<BlockType>& operator =(const Tetromino<BlockType>&);
     private:
-        
-        /* ---------- Implemented from TetrominoBase -------- */
+        /* ---------- Implemented from TetrominoBase ---------- */
         void initTetromino(TetrominoShape type);
 };
 

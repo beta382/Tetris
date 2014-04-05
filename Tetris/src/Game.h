@@ -10,7 +10,8 @@
 
 #include "Drawable.h"
 #include "PlayingField.h"
-#include "Tetromino.h"
+#include "TetrominoBase.h"
+#include "Blocks.h" // In turn includes all of our special blocks
 
 #include <cstdlib>
 #include <ctime>
