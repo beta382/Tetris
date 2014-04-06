@@ -80,11 +80,11 @@ void Game::respondToKey(int key) {
 /* ---------- Private ---------- */
 
 void Game::init() {
-    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
-    currentTetromino = field->spawnNewTetromino<Block>(S);
-    currentTetromino->draw();
-    
     srand(time(0));
+    
+    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
+    currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
+    currentTetromino->draw();
 }
 
 

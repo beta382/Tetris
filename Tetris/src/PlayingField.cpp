@@ -250,8 +250,10 @@ void PlayingField::doLineClear() {
         }
     }
     
-    // Repeat three times if we have clearable lines
+    // If there are lines to clear
     if (clearableLines.getSize() > 0) {
+        
+        // Blink three times
         for (int r = 0; r < 3; r++) {
             clock_t start;
             
@@ -261,7 +263,7 @@ void PlayingField::doLineClear() {
             
             for (int i = 0; i < clearableLines.getSize(); i++) {
                 for (int j = 0; j < getWidth(); j++) {
-                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but whatever
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                         blocks[j][clearableLines[i]]->erase();
                     }
                 }
@@ -275,7 +277,7 @@ void PlayingField::doLineClear() {
             
             for (int i = 0; i < clearableLines.getSize(); i++) {
                 for (int j = 0; j < getWidth(); j++) {
-                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but whatever
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                         blocks[j][clearableLines[i]]->draw();
                     }
                 }
@@ -283,7 +285,21 @@ void PlayingField::doLineClear() {
             
             g->Draw(); // Force screen redraw
         }
+        
+        // Delete and NULL the Blocks
+        for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                    delete blocks[j][clearableLines[i]];
+                    blocks[j][clearableLines[i]] = NULL;
+                }
+            }
+        }
+        
+        // Next up, an awesome grouping algorithm that creates contiguous shapes, and then falling
+        
     }
+    
     
 }
 
