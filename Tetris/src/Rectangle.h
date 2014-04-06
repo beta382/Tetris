@@ -13,21 +13,17 @@
 #include "Drawable.h"
 #include "myVector.h"
 
-class Rectangle: public Drawable {
+class MyRectangle: public Drawable {
     public:
-        Rectangle(GLUT_Plotter *g);
-        Rectangle(GLUT_Plotter *g, int x, int y);
-        Rectangle(GLUT_Plotter *g, int x, int y, int size, int padding);
-        Rectangle(const Rectangle&);
-        Rectangle& operator =(const Rectangle&);
-        ~Rectangle();
+        MyRectangle(GLUT_Plotter *g);
+        MyRectangle(GLUT_Plotter *g, int x, int y);
+        MyRectangle(GLUT_Plotter *g, int x, int y, int width, int height, int color = Color::WHITE);
+        MyRectangle(const MyRectangle&);
+        MyRectangle& operator =(const MyRectangle&);
+        ~MyRectangle();
         
-        int getSize() const;
-        int getPadding() const;
-        int getTotalSize() const;
-        
-        virtual void doOnClear(myVector<myVector<Rectangle *> >&);
-        virtual Rectangle *makeNewClone();
+        int getWidth() const;
+        int getHeight() const;
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

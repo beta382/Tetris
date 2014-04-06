@@ -9,61 +9,48 @@
 
 #include "Rectangle.h"
 
-Rectangle::Rectangle (GLUT_Plotter *g): Drawable(g, 0, 0, 10, 10) {
-    padding = 0;
+MyRectangle::MyRectangle (GLUT_Plotter *g): Drawable(g, 0, 0, 10, 10) {
+    
 }
 
-Rectangle::Rectangle (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {
-    padding = 0;
+MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {
+    
 }
 
-Rectangle::Rectangle (GLUT_Plotter *g, int x, int y, int size, int padding): Drawable(g, x, y, size, size) {
-    this->padding = padding;
+MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y, int width, int height, int color): Drawable(g, x, y, width, height, color) {
+    
 }
 
-Rectangle::Rectangle (const Rectangle& other): Drawable(other) {
-    padding = other.padding;
+MyRectangle::MyRectangle (const MyRectangle& other): Drawable(other) {
+    
 }
 
-Rectangle& Rectangle::operator =(const Rectangle& rhs) {
+MyRectangle& MyRectangle::operator =(const MyRectangle& rhs) {
     if (this != &rhs) {
         Drawable::operator =(rhs);
-        padding = rhs.padding;
     }
     
     return *this;
 }
 
-Rectangle::~Rectangle() {
+MyRectangle::~MyRectangle() {
     erase();
 }
 
-int Rectangle::getSize() const {
+int MyRectangle::getWidth() const {
     return width;
 }
 
-int Rectangle::getPadding() const {
-    return padding;
-}
-
-int Rectangle::getTotalSize() const {
-    return getSize()+getPadding();
-}
-
-void Rectangle::doOnClear(myVector<myVector<Rectangle *> >& blockField) {
-    // Do nothing
-}
-
-Rectangle *Rectangle::makeNewClone() {
-    return new Rectangle(*this);
+int MyRectangle::getHeight() const {
+    return height;
 }
 
 /* ---------- Implemented from Drawable ---------- */
 
-void Rectangle::draw() {
+void MyRectangle::draw() {
     g->setColor(getColor());
-    for (int i = 0; i < getSize(); i++) {
-        for (int j = 0; j < getSize(); j++) {
+    for (int i = 0; i < getWidth(); i++) {
+        for (int j = 0; j < getHeight(); j++) {
             g->plot(getLocationX()+i, getLocationY()+j);
         }
     }
@@ -71,11 +58,11 @@ void Rectangle::draw() {
     isVisible = true;
 }
 
-void Rectangle::erase() {
+void MyRectangle::erase() {
     if (isVisible) {
         g->setColor(Color::BLACK);
-        for (int i = 0; i < getSize(); i++) {
-            for (int j = 0; j < getSize(); j++) {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
                 g->plot(getLocationX()+i, getLocationY()+j);
             }
         }
