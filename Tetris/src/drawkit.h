@@ -14,16 +14,16 @@
 
 namespace Color {
     
-    const unsigned int WHITE   = 0xFFFFFF;
-    const unsigned int BLACK   = 0x000000;
-    const unsigned int RED     = 0xFF0000;
-    const unsigned int GREEN   = 0x00FF00;
-    const unsigned int BLUE    = 0x0000FF;
-    const unsigned int CYAN    = 0x00FFFF;
-    const unsigned int MAGENTA = 0xFF00FF;
-    const unsigned int YELLOW  = 0xFFFF00;
-    const unsigned int ORANGE  = 0xFFA500;
-    
+    const unsigned int WHITE      = 0xFFFFFF;
+    const unsigned int BLACK      = 0x000000;
+    const unsigned int BLUE       = 0x358fa1;
+    const unsigned int BROWN      = 0xab9c6d;
+    const unsigned int GREEN      = 0xa6c238;
+    const unsigned int GRAY       = 0x52656b;
+    const unsigned int RED        = 0xb04747;
+    const unsigned int TAN        = 0xe3decd;
+    const unsigned int DARK_GREEN = 0x69803e;
+    const unsigned int CYAN       = 0x3cad91;
 }
 
 // More stuff later, maybe
