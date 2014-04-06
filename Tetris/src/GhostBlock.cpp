@@ -32,6 +32,47 @@ GhostBlock::~GhostBlock() {
 
 void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
     // Do nothing
+    
+    // ExplodingBlock example
+    /*for (int i = x-1; i <= x+1; i++) {
+        for (int j = y-1; j <= y+1; j++) {
+            if (i >= 0 && i < blockField.getSize() && j >= 0 && j < blockField[i].getSize() && blockField[i][j]) {
+                delete blockField[i][j];
+                blockField[i][j] = NULL;
+            }
+        }
+    }*/
+    
+    // GravityBlock example, needs <ctime>
+    /*bool didFall = true;
+    while (didFall) {
+        didFall = false;
+        
+        for (int i = 0; i < blockField.getSize(); i++) {
+            for (int j = 0; j < blockField[i].getSize(); j++) {
+                if (j-1 >= 0 && blockField[i][j] && !blockField[i][j-1]) {
+                    blockField[i][j-1] = blockField[i][j]->makeNewClone();
+
+                    delete blockField[i][j];
+                    blockField[i][j] = NULL;
+                    
+                    blockField[i][j-1]->setLocation(blockField[i][j-1]->getLocationX(), 
+                            blockField[i][j-1]->getLocationY()-blockField[i][j-1]->getTotalSize());
+                    blockField[i][j-1]->draw();
+                    
+                    didFall = true;
+                }
+            }
+        }
+        
+        g->Draw();
+        
+        if (didFall) {
+            clock_t start = clock();
+            
+            while (clock() < start + 250);
+        }
+    }*/
 }
 
 GhostBlock *GhostBlock::makeNewClone() {
