@@ -296,13 +296,53 @@ void PlayingField::doLineClear() {
             }
         }
         
-        // Next up, an awesome grouping algorithm that creates contiguous shapes, and then falling
+        // Take what's left over, form it into individual shapes, and then 
+        myVector<Shape *> shapes = formShapes();
         
+        for (int i = 0; i < shapes.getSize(); i++) {
+            while (canShiftDown(shapes[i])) {
+                shapes[i]->shiftDown();
+            }
+            
+            mergeAndDelete(shapes[i]);
+        }
     }
-    
-    
 }
 
+myVector<Shape *> PlayingField::formShapes() {
+    myVector<Shape *> shapes;
+    
+    for (int i = 0; i < getWidth(); i++) {
+        for (int j = 0; j < getHeight(); j++) {
+            if (blocks[i][j]) {
+                Shape *curShape = new Shape(g, blocks[i][j]->getLocationX(), blocks[i][j]->getLocationY(), 
+                        blocks[i][j]->getSize(), blocks[i][j]->getPadding());
+                
+                makeShapeRecursively(curShape, i, j);
+                
+                shapes.pushBack(curShape);
+            }
+        }
+    }
+    
+    return shapes;
+}
+
+void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
+    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blocks[x][y]) {
+        return;
+    }
+    
+    shape->addBlock(blocks[x][y]->makeNewClone());
+    
+    delete blocks[x][y];
+    blocks[x][y] = NULL;
+    
+    makeShapeRecursively(shape, x+1, y);
+    makeShapeRecursively(shape, x, y+1);
+    makeShapeRecursively(shape, x-1, y);
+    makeShapeRecursively(shape, x, y-1);
+}
 
 /* ---------- Overriding from Drawable ---------- */
 

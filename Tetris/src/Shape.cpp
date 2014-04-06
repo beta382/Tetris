@@ -83,25 +83,25 @@ int Shape::getTotalBlockSize() const {
 
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()+(getBlockSize()+getPadding()));
+    setLocation(getLocationX(), getLocationY()+getTotalBlockSize());
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()-(getBlockSize()+getPadding()));
+    setLocation(getLocationX(), getLocationY()-getTotalBlockSize());
     draw();
 }
 
 void Shape::shiftLeft () {
     erase();
-    setLocation(getLocationX()-(getBlockSize()+getPadding()), getLocationY());
+    setLocation(getLocationX()-getTotalBlockSize(), getLocationY());
     draw();
 }
 
 void Shape::shiftRight () {
     erase();
-    setLocation(getLocationX()+(getBlockSize()+getPadding()), getLocationY());
+    setLocation(getLocationX()+getTotalBlockSize(), getLocationY());
     draw();
 }
 

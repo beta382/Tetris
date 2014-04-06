@@ -53,6 +53,8 @@ class PlayingField: public Drawable {
         bool couldAdd(Block *const) const;
         
         void doLineClear();
+        myVector<Shape *> formShapes();
+        void makeShapeRecursively(Shape *, int x, int y);
         
         myVector<myVector<Block *> > blocks; // TODO: Make a better data structure, or are we allowed to use STL?
 };
