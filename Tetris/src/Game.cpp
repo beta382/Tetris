@@ -20,21 +20,25 @@ Game::~Game() {
 void Game::respondToKey(int key) {
     switch (key) {
         case 'w':
+        case 165: // UP
             if (field->canShiftUp(currentTetromino)) {
                 currentTetromino->shiftUp();
             }
             break;
         case 'a':
+        case 164: // LEFT
             if (field->canShiftLeft(currentTetromino)) {
                 currentTetromino->shiftLeft();
             }
             break;
         case 's':
+        case 167: // DOWN
             if (field->canShiftDown(currentTetromino)) {
                 currentTetromino->shiftDown();
             }
             break;
         case 'd':
+        case 166: // RIGHT
             if (field->canShiftRight(currentTetromino)) {
                 currentTetromino->shiftRight();
             }
@@ -73,6 +77,8 @@ void Game::respondToKey(int key) {
         case 'x':
             exit(1);
             break;
+        default:
+            cout << key << endl;
     }
 }
 
