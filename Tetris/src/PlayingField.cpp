@@ -286,6 +286,28 @@ void PlayingField::doLineClear() {
             g->Draw(); // Force screen redraw
         }
         
+        // Erase the lines for good
+        for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                    blocks[j][clearableLines[i]]->erase();
+                }
+            }
+        }
+        
+        // Perform each block's special effect, should probably find a way to convert the remainder of the special 
+        // tetromino to a normal tetromino
+        // TODO: This is totally not tested, since there isn't really anything to test it with, so...
+        // I'll probably hack up an "exploding block" to test this with
+        for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                    blocks[j][clearableLines[i]]->doOnClear(blocks, j, clearableLines[i]);
+                }
+            }
+        }
+        
+        
         // Delete and NULL the Blocks
         for (int i = 0; i < clearableLines.getSize(); i++) {
             for (int j = 0; j < getWidth(); j++) {

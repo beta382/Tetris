@@ -20,7 +20,7 @@ class GhostBlock: public Block {
         ~GhostBlock();
         
         /* ---------- Overriding from Block ---------- */
-        void doOnClear(myVector<myVector<Block *> >&);
+        void doOnClear(myVector<myVector<Block *> >&, int x, int y);
         GhostBlock *makeNewClone(); // Covariant overload
         
         void draw();

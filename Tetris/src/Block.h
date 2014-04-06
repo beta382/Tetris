@@ -26,7 +26,7 @@ class Block: public Drawable {
         int getPadding() const;
         int getTotalSize() const;
         
-        virtual void doOnClear(myVector<myVector<Block *> >&);
+        virtual void doOnClear(myVector<myVector<Block *> >&, int x, int y);
         virtual Block *makeNewClone();
         
         /* ---------- Implemented from Drawable ---------- */

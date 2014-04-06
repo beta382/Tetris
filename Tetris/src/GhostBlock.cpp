@@ -30,7 +30,7 @@ GhostBlock::~GhostBlock() {
 
 /* ---------- Overriding from Block ---------- */
 
-void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField) {
+void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
     // Do nothing
 }
 
