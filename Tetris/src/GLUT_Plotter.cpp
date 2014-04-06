@@ -48,7 +48,7 @@ void GLUT_Plotter::init(int *argc, char **argv){
 	glutInitWindowSize(width, height);
 	glutInit(argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutCreateWindow("Dr. Booth's Plotter Class");
+	glutCreateWindow("Tetris");
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -171,12 +171,11 @@ void GLUT_Plotter::addClick(Click c){
 	mouseQueue.push(c);
 }
 
-
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 
 void keyboardFunction(unsigned char k, int x, int y) {
-	g->addKeyHit(k);
+    g->addKeyHit(k);
 }
 
 void SpecialKeyboardFunction(int k, int x, int y) {
@@ -185,15 +184,14 @@ void SpecialKeyboardFunction(int k, int x, int y) {
 }
 
 void mouseFunction(int button, int state,int x, int y){
-	Click c;
-	c.button = button;
-	c.state = state;
-	c.x = x;
-	c.y = y;
-	if(state == 0){
-		g->addClick(c);
-	}
-
+    Click c;
+    c.button = button;
+    c.state = state;
+    c.x = x;
+    c.y = y;
+    if(state == 0){
+        g->addClick(c);
+    }
 }
 
 void drawFunction(void){

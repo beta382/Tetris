@@ -10,7 +10,9 @@
 
 #include "Drawable.h"
 #include "PlayingField.h"
-#include "Tetromino.h"
+#include "TetrominoBase.h"
+#include "Blocks.h" // In turn includes all of our special blocks
+#include "Rectangle.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -32,7 +34,7 @@ class Game: public Drawable {
         void init();
         
         PlayingField *field;
-        Tetromino *currentTetromino;
+        TetrominoBase *currentTetromino;
 };
 
 

@@ -55,13 +55,18 @@ void Game::respondToKey(int key) {
             break;
         case 'n':
             delete currentTetromino;
-            currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
+            currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() % 7));
             currentTetromino->draw();
             break;
         case 'j':
-            field->merge(currentTetromino);
+            field->mergeAndDelete(currentTetromino);
             
-            currentTetromino = field->spawnNewTetromino(static_cast<TetrominoShape>(rand() % 7));
+            currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() % 7));
+            currentTetromino->draw();
+            break;
+        case 'g':
+            delete currentTetromino;
+            currentTetromino = field->spawnNewTetromino<GhostBlock>(static_cast<TetrominoShape>(rand() %7));
             currentTetromino->draw();
             break;
         case 27: // ESC
@@ -75,11 +80,14 @@ void Game::respondToKey(int key) {
 /* ---------- Private ---------- */
 
 void Game::init() {
-    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
-    currentTetromino = field->spawnNewTetromino(S);
-    currentTetromino->draw();
-    
     srand(time(0));
+    
+    MyRectangle *background = new MyRectangle(g, 10, 10, BLOCK_SIZE * 10 + BLOCK_PADDING * 9, BLOCK_SIZE * 20 + BLOCK_PADDING * 19, Color::WHITE);
+    background->draw();
+    
+    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
+    currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
+    currentTetromino->draw();
 }
 
 

@@ -9,6 +9,7 @@
 #ifndef TETRIS_H_
 #define TETRIS_H_
 
+#include "GLUT_Plotter.h"
 #include "Game.h"
 
 class Tetris {

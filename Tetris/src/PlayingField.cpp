@@ -27,7 +27,7 @@ PlayingField::PlayingField(const PlayingField& other): Drawable(other) {
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             if (other.blocks.at(i).at(j)) {
-                blocks[i][i] = new Block(*(other.blocks.at(i).at(j)));
+                blocks[i][i] = other.blocks.at(i).at(j)->makeNewClone();
             }
         }
     }
@@ -52,7 +52,7 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 if (rhs.blocks.at(i).at(j)) {
-                    blocks[i][i] = new Block(*(rhs.blocks.at(i).at(j)));
+                    blocks[i][i] = rhs.blocks.at(i).at(j)->makeNewClone();
                 }
             }
         }
@@ -74,23 +74,9 @@ PlayingField::~PlayingField() {
     }
 }
 
-Tetromino *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino *tetromino = new Tetromino(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2), 
-            getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type);
-    
-    // We spawn right above the field, this puts us at the top of the screen, properly centered
-    tetromino->setLocation(tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),
-            tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight());
-    
-    // TODO: Later on, change the spawn point based on if it can actually spawn there.
-    // Probably return NULL if we can't spawn period, which would special-case a "game over"
-    
-    return tetromino;
-}
-
-void PlayingField::merge (Shape *shape) {
+void PlayingField::mergeAndDelete (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
-        Block *curBlock = new Block(*(shape->getBlock(i)));
+        Block *curBlock = shape->getBlock(i)->makeNewClone();
         blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize()]
               [(curBlock->getLocationY()-getLocationY())/curBlock->getTotalSize()] = curBlock;
     }
@@ -98,6 +84,8 @@ void PlayingField::merge (Shape *shape) {
     delete shape;
     
     draw(); // TODO: Probably make a `void redraw()` eventually
+    
+    doLineClear();
 }
 
 bool PlayingField::canShiftUp(Shape *const shape) const {
@@ -172,7 +160,7 @@ bool PlayingField::canShiftRight(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canRotateCW(Tetromino *const t) const {
+bool PlayingField::canRotateCW(TetrominoBase *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -192,7 +180,7 @@ bool PlayingField::canRotateCW(Tetromino *const t) const {
     return can;
 }
 
-bool PlayingField::canRotateCCW(Tetromino *const t) const {
+bool PlayingField::canRotateCCW(TetrominoBase *const t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -245,7 +233,132 @@ bool PlayingField::couldAdd(Block *const block) const {
     return can;
 }
 
-/* ---------- Inherited from Drawable ---------- */
+void PlayingField::doLineClear() {
+    myVector<int> clearableLines;
+    
+    // Find which lines can be cleared
+    for (int i = 0; i < getHeight(); i++) {
+        bool isClearable = true;
+        for (int j = 0; j < getWidth() && isClearable; j++) {
+            if (!blocks[j][i]) {
+                isClearable = false;
+            }
+        }
+        
+        if (isClearable) {
+            clearableLines.pushBack(i);
+        }
+    }
+    
+    // If there are lines to clear
+    if (clearableLines.getSize() > 0) {
+        
+        // Blink three times
+        for (int r = 0; r < 3; r++) {
+            clock_t start;
+            
+            start = clock();
+            
+            while (clock() < start+150); // Wait 150ms
+            
+            for (int i = 0; i < clearableLines.getSize(); i++) {
+                for (int j = 0; j < getWidth(); j++) {
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                        blocks[j][clearableLines[i]]->erase();
+                    }
+                }
+            }
+            
+            g->Draw(); // Force screen redraw
+            
+            start = clock();
+            
+            while (clock() < start+150); // Wait 150ms
+            
+            for (int i = 0; i < clearableLines.getSize(); i++) {
+                for (int j = 0; j < getWidth(); j++) {
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                        blocks[j][clearableLines[i]]->draw();
+                    }
+                }
+            }
+            
+            g->Draw(); // Force screen redraw
+        }
+        
+        // Delete and NULL the Blocks
+        for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                    delete blocks[j][clearableLines[i]];
+                    blocks[j][clearableLines[i]] = NULL;
+                }
+            }
+        }
+        
+        // Take what's left over, form it into individual shapes
+        myVector<Shape *> shapes = formShapes();
+        // Note that after this, the field is entirely NULL
+        
+        // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
+        // formShapes() starts it's search at (0,0) and works it's way up, so the first shapes should always be entirely
+        // lower than the next shape
+        bool didShift = true;
+        // While we are still shifting down...
+        while(didShift) {
+            didShift = false;
+            // For each shape...
+            for (int i = 0; shapes[i] && i < shapes.getSize(); i++) {
+                // Shift down once if we can
+                if (canShiftDown(shapes[i])) {
+                    shapes[i]->shiftDown(); // TODO: Add pretty timing to this.
+                    didShift = true;
+                } else {
+                    mergeAndDelete(shapes[i]);
+                    shapes[i] = NULL; // For existence checking
+                }
+            }
+        }
+    }
+}
+
+myVector<Shape *> PlayingField::formShapes() {
+    myVector<Shape *> shapes;
+    
+    for (int i = 0; i < getHeight(); i++) {
+        for (int j = 0; j < getWidth(); j++) {
+            if (blocks[j][i]) {
+                Shape *curShape = new Shape(g, blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(), 
+                        blocks[j][i]->getSize(), blocks[j][i]->getPadding());
+                
+                makeShapeRecursively(curShape, j, i);
+                
+                shapes.pushBack(curShape);
+            }
+        }
+    }
+    
+    return shapes;
+}
+
+// TODO: Better name? Idk.
+void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
+    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blocks[x][y]) {
+        return;
+    }
+    
+    shape->addBlock(blocks[x][y]->makeNewClone());
+    
+    delete blocks[x][y];
+    blocks[x][y] = NULL;
+    
+    makeShapeRecursively(shape, x+1, y);
+    makeShapeRecursively(shape, x, y+1);
+    makeShapeRecursively(shape, x-1, y);
+    makeShapeRecursively(shape, x, y-1);
+}
+
+/* ---------- Overriding from Drawable ---------- */
 
 void PlayingField::setLocation(int x, int y) {
     int dX = x - getLocationX();

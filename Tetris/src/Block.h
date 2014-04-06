@@ -11,6 +11,7 @@
 #define BLOCK_H_
 
 #include "Drawable.h"
+#include "myVector.h"
 
 class Block: public Drawable {
     public:
@@ -25,10 +26,13 @@ class Block: public Drawable {
         int getPadding() const;
         int getTotalSize() const;
         
+        virtual void doOnClear(myVector<myVector<Block *> >&);
+        virtual Block *makeNewClone();
+        
         /* ---------- Implemented from Drawable ---------- */
         void draw();
         void erase();
-    private:
+    protected:
         int padding;
 };
 

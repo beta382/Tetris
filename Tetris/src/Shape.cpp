@@ -22,7 +22,7 @@ Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding): Drawab
 Shape::Shape(const Shape& other): Drawable(other) {
     for (int i = 0; i < other.numBlocks(); i++) {
         if (other.blocks.at(i)) {
-            blocks.pushBack(new Block(*(other.blocks.at(i))));
+            addBlock(other.blocks.at(i)->makeNewClone());
         }
     }
     
@@ -44,7 +44,7 @@ Shape& Shape::operator =(const Shape& rhs) {
         
         for (int i = 0; i < rhs.numBlocks(); i++) {
             if (rhs.blocks.at(i)) {
-                blocks.pushBack(new Block(*(rhs.blocks.at(i))));
+                addBlock(rhs.blocks.at(i)->makeNewClone());
             }
         }
         
@@ -83,30 +83,35 @@ int Shape::getTotalBlockSize() const {
 
 void Shape::shiftUp () {
     erase();
-    setLocation(getLocationX(), getLocationY()+(getBlockSize()+getPadding()));
+    setLocation(getLocationX(), getLocationY()+getTotalBlockSize());
     draw();
 }
 
 void Shape::shiftDown () {
     erase();
-    setLocation(getLocationX(), getLocationY()-(getBlockSize()+getPadding()));
+    setLocation(getLocationX(), getLocationY()-getTotalBlockSize());
     draw();
 }
 
 void Shape::shiftLeft () {
     erase();
-    setLocation(getLocationX()-(getBlockSize()+getPadding()), getLocationY());
+    setLocation(getLocationX()-getTotalBlockSize(), getLocationY());
     draw();
 }
 
 void Shape::shiftRight () {
     erase();
-    setLocation(getLocationX()+(getBlockSize()+getPadding()), getLocationY());
+    setLocation(getLocationX()+getTotalBlockSize(), getLocationY());
     draw();
 }
 
+Shape& Shape::addBlock(Block *const block) {
+    blocks.pushBack(block);
+    
+    return *this;
+}
 
-/* ---------- Inherited from Drawable ---------- */
+/* ---------- Overriding from Drawable ---------- */
 
 void Shape::setLocation(int x, int y) {
     int dX = x - getLocationX();

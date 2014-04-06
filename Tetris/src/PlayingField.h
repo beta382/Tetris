@@ -14,7 +14,9 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "myVector.h"
-#include "Block.h"
+#include "drawkit.h"
+
+#include <ctime>
 
 const int BLOCK_SIZE = 15;
 const int BLOCK_PADDING = 2;
@@ -28,19 +30,20 @@ class PlayingField: public Drawable {
         PlayingField& operator =(const PlayingField&);
         ~PlayingField();
         
-        Tetromino *spawnNewTetromino(TetrominoShape type);
+        template <typename BlockType>
+        Tetromino<BlockType> *spawnNewTetromino(TetrominoShape type);
         
-        void merge(Shape *);
+        void mergeAndDelete(Shape *);
         
         bool canShiftDown(Shape *const) const;
         bool canShiftUp(Shape *const) const;
         bool canShiftLeft(Shape *const) const;
         bool canShiftRight(Shape *const) const;
         
-        bool canRotateCW(Tetromino *const) const;
-        bool canRotateCCW(Tetromino *const) const;
+        bool canRotateCW(TetrominoBase *const) const;
+        bool canRotateCCW(TetrominoBase *const) const;
         
-        /* ---------- Inherited from Drawable ---------- */
+        /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);
         
         /* ---------- Implemented from Drawable ---------- */
@@ -50,7 +53,28 @@ class PlayingField: public Drawable {
         void init();
         bool couldAdd(Block *const) const;
         
-        myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
+        void doLineClear();
+        myVector<Shape *> formShapes();
+        void makeShapeRecursively(Shape *, int x, int y);
+        
+        myVector<myVector<Block *> > blocks; // TODO: Make a better data structure, or are we allowed to use STL?
 };
+
+/* ---------- spawnNewTetromino method template implementation ---------- */
+
+template <typename BlockType>
+Tetromino<BlockType> *PlayingField::spawnNewTetromino (TetrominoShape type) {
+    Tetromino<BlockType> *tetromino = new Tetromino<BlockType>(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2), 
+            getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type);
+    
+    // We spawn right above the field, this puts us at the top of the screen, properly centered
+    tetromino->setLocation(tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),
+            tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight());
+    
+    // TODO: Later on, change the spawn point based on if it can actually spawn there.
+    // Probably return NULL if we can't spawn period, which would special-case a "game over"
+    
+    return tetromino;
+}
 
 #endif /* PLAYINGFIELD_H_ */
