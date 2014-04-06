@@ -308,14 +308,16 @@ void PlayingField::doLineClear() {
         while(didShift) {
             didShift = false;
             // For each shape...
-            for (int i = 0; shapes[i] && i < shapes.getSize(); i++) {
+            for (int i = 0; i < shapes.getSize(); i++) {
                 // Shift down once if we can
-                if (canShiftDown(shapes[i])) {
-                    shapes[i]->shiftDown(); // TODO: Add pretty timing to this.
-                    didShift = true;
-                } else {
-                    mergeAndDelete(shapes[i]);
-                    shapes[i] = NULL; // For existence checking
+                if (shapes[i]) {
+                    if (canShiftDown(shapes[i])) {
+                        shapes[i]->shiftDown(); // TODO: Add pretty timing to this.
+                        didShift = true;
+                    } else {
+                        mergeAndDelete(shapes[i]);
+                        shapes[i] = NULL; // For existence checking
+                    }
                 }
             }
         }
