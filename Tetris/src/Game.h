@@ -12,6 +12,7 @@
 #include "PlayingField.h"
 #include "TetrominoBase.h"
 #include "Blocks.h" // In turn includes all of our special blocks
+#include "Rectangle.h"
 
 #include <cstdlib>
 #include <ctime>
