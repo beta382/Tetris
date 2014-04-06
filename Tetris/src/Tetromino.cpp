@@ -89,7 +89,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::CYAN);
+            setColor(Color::BLUE);
             setWidth(4);
             setHeight(5); // Fudged
             offsetY = 2;
@@ -106,7 +106,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::YELLOW);
+            setColor(Color::GREEN);
             setWidth(2);
             setHeight(2);
             break;
@@ -122,7 +122,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::MAGENTA);
+            setColor(Color::BROWN);
             setWidth(3);
             setHeight(3); // Fudged
             offsetY = 1;
@@ -139,7 +139,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::BLUE);
+            setColor(Color::GRAY);
             setWidth(3);
             setHeight(3); // Fudged
             offsetY = 1;
@@ -156,7 +156,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::ORANGE);
+            setColor(Color::RED);
             setWidth(3);
             setHeight(3); // Fudged
             offsetY = 1;
@@ -173,7 +173,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::GREEN);
+            setColor(Color::DARK_GREEN);
             setWidth(3);
             setHeight(2);
             break;
@@ -189,7 +189,7 @@ void Tetromino::initTetromino (TetrominoShape type) {
             
             blocks.pushBack(block1).pushBack(block2).pushBack(block3).pushBack(block4);
             
-            setColor(Color::RED);
+            setColor(Color::CYAN);
             setWidth(3);
             setHeight(2);
             break;
