@@ -14,6 +14,7 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "myVector.h"
+#include "drawkit.h"
 
 #include <ctime>
 

@@ -88,6 +88,9 @@ void Game::respondToKey(int key) {
 void Game::init() {
     srand(time(0));
     
+    MyRectangle *background = new MyRectangle(g, 10, 10, BLOCK_SIZE * 10 + BLOCK_PADDING * 9, BLOCK_SIZE * 20 + BLOCK_PADDING * 19, Color::WHITE);
+    background->draw();
+    
     field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
     currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
     currentTetromino->draw();
