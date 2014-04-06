@@ -296,15 +296,28 @@ void PlayingField::doLineClear() {
             }
         }
         
-        // Take what's left over, form it into individual shapes, and then 
+        // Take what's left over, form it into individual shapes
         myVector<Shape *> shapes = formShapes();
+        // Note that after this, the field is entirely NULL
         
-        for (int i = 0; i < shapes.getSize(); i++) {
-            while (canShiftDown(shapes[i])) {
-                shapes[i]->shiftDown();
+        // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
+        // formShapes() starts it's search at (0,0) and works it's way up, so the first shapes should always be entirely
+        // lower than the next shape
+        bool didShift = true;
+        // While we are still shifting down...
+        while(didShift) {
+            didShift = false;
+            // For each shape...
+            for (int i = 0; shapes[i] && i < shapes.getSize(); i++) {
+                // Shift down once if we can
+                if (canShiftDown(shapes[i])) {
+                    shapes[i]->shiftDown(); // TODO: Add pretty timing to this.
+                    didShift = true;
+                } else {
+                    mergeAndDelete(shapes[i]);
+                    shapes[i] = NULL; // For existence checking
+                }
             }
-            
-            mergeAndDelete(shapes[i]);
         }
     }
 }
@@ -312,13 +325,13 @@ void PlayingField::doLineClear() {
 myVector<Shape *> PlayingField::formShapes() {
     myVector<Shape *> shapes;
     
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
-            if (blocks[i][j]) {
-                Shape *curShape = new Shape(g, blocks[i][j]->getLocationX(), blocks[i][j]->getLocationY(), 
-                        blocks[i][j]->getSize(), blocks[i][j]->getPadding());
+    for (int i = 0; i < getHeight(); i++) {
+        for (int j = 0; j < getWidth(); j++) {
+            if (blocks[j][i]) {
+                Shape *curShape = new Shape(g, blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(), 
+                        blocks[j][i]->getSize(), blocks[j][i]->getPadding());
                 
-                makeShapeRecursively(curShape, i, j);
+                makeShapeRecursively(curShape, j, i);
                 
                 shapes.pushBack(curShape);
             }
@@ -328,6 +341,7 @@ myVector<Shape *> PlayingField::formShapes() {
     return shapes;
 }
 
+// TODO: Better name? Idk.
 void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
     if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blocks[x][y]) {
         return;
