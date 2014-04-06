@@ -59,7 +59,7 @@ void Game::respondToKey(int key) {
             currentTetromino->draw();
             break;
         case 'j':
-            field->merge(currentTetromino);
+            field->mergeAndDelete(currentTetromino);
             
             currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() % 7));
             currentTetromino->draw();

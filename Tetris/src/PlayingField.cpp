@@ -74,7 +74,7 @@ PlayingField::~PlayingField() {
     }
 }
 
-void PlayingField::merge (Shape *shape) {
+void PlayingField::mergeAndDelete (Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = shape->getBlock(i)->makeNewClone();
         blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize()]
@@ -84,6 +84,8 @@ void PlayingField::merge (Shape *shape) {
     delete shape;
     
     draw(); // TODO: Probably make a `void redraw()` eventually
+    
+    doLineClear();
 }
 
 bool PlayingField::canShiftUp(Shape *const shape) const {
@@ -229,6 +231,60 @@ bool PlayingField::couldAdd(Block *const block) const {
     }
     
     return can;
+}
+
+void PlayingField::doLineClear() {
+    myVector<int> clearableLines;
+    
+    // Find which lines can be cleared
+    for (int i = 0; i < getHeight(); i++) {
+        bool isClearable = true;
+        for (int j = 0; j < getWidth() && isClearable; j++) {
+            if (!blocks[j][i]) {
+                isClearable = false;
+            }
+        }
+        
+        if (isClearable) {
+            clearableLines.pushBack(i);
+        }
+    }
+    
+    // Repeat three times if we have clearable lines
+    if (clearableLines.getSize() > 0) {
+        for (int r = 0; r < 3; r++) {
+            clock_t start;
+            
+            start = clock();
+            
+            while (clock() < start+150); // Wait 150ms
+            
+            for (int i = 0; i < clearableLines.getSize(); i++) {
+                for (int j = 0; j < getWidth(); j++) {
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but whatever
+                        blocks[j][clearableLines[i]]->erase();
+                    }
+                }
+            }
+            
+            g->Draw(); // Force screen redraw
+            
+            start = clock();
+            
+            while (clock() < start+150); // Wait 150ms
+            
+            for (int i = 0; i < clearableLines.getSize(); i++) {
+                for (int j = 0; j < getWidth(); j++) {
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but whatever
+                        blocks[j][clearableLines[i]]->draw();
+                    }
+                }
+            }
+            
+            g->Draw(); // Force screen redraw
+        }
+    }
+    
 }
 
 

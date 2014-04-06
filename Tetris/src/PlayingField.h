@@ -15,6 +15,8 @@
 #include "Shape.h"
 #include "myVector.h"
 
+#include <ctime>
+
 const int BLOCK_SIZE = 15;
 const int BLOCK_PADDING = 2;
 
@@ -30,7 +32,7 @@ class PlayingField: public Drawable {
         template <typename BlockType>
         Tetromino<BlockType> *spawnNewTetromino(TetrominoShape type);
         
-        void merge(Shape *);
+        void mergeAndDelete(Shape *);
         
         bool canShiftDown(Shape *const) const;
         bool canShiftUp(Shape *const) const;
@@ -50,7 +52,9 @@ class PlayingField: public Drawable {
         void init();
         bool couldAdd(Block *const) const;
         
-        myVector<myVector<Block *> > blocks; // TODO: Make a better data structure
+        void doLineClear();
+        
+        myVector<myVector<Block *> > blocks; // TODO: Make a better data structure, or are we allowed to use STL?
 };
 
 /* ---------- spawnNewTetromino method template implementation ---------- */

@@ -75,7 +75,6 @@ class GLUT_Plotter {
         void RegisterIdleFunc(void (*func)(void));
 
         void MainLoop();
-
 };
 
 void drawFunction(void);
