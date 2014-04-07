@@ -17,7 +17,9 @@ MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 
     
 }
 
-MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y, int width, int height, int color): Drawable(g, x, y, width, height, color) {
+MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y, int width, int height, int color): 
+        Drawable(g, x, y, width, height, color)
+{
     
 }
 
@@ -48,7 +50,7 @@ int MyRectangle::getHeight() const {
 /* ---------- Implemented from Drawable ---------- */
 
 void MyRectangle::draw() {
-    g->setColor(getColor());
+    g->setColor(getForeground());
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             g->plot(getLocationX()+i, getLocationY()+j);

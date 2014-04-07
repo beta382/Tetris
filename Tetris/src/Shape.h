@@ -17,7 +17,7 @@
 class Shape: public Drawable {
     public:
         Shape(GLUT_Plotter *g);
-        Shape(GLUT_Plotter *g, int x, int y, int blockSize, int padding);
+        Shape(GLUT_Plotter *g, int x, int y, int blockSize, int padding, unsigned int background = Color::BLACK);
         Shape(const Shape&);
         Shape& operator =(const Shape&);
         ~Shape();
@@ -38,7 +38,8 @@ class Shape: public Drawable {
         
         /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);
-        void setColor (unsigned int);
+        void setForeground (unsigned int);
+        void setBackground (unsigned int);
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

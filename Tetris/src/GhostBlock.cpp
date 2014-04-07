@@ -81,7 +81,7 @@ GhostBlock *GhostBlock::makeNewClone() {
 
 
 void GhostBlock::draw() {
-    g->setColor(getColor());
+    g->setColor(getForeground());
     for (int i = 0; i < getWidth(); i++) {
         g->plot(getLocationX()+i, getLocationY());
         g->plot(getLocationX()+i, getLocationY()+getHeight()-1);

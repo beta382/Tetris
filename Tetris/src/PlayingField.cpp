@@ -17,7 +17,9 @@ PlayingField::PlayingField(GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10,
     init();
 }
 
-PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height): Drawable(g, x, y, width, height) {
+PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int background): 
+        Drawable(g, x, y, width, height, Color::BLACK, background)
+{
     init();
 }
 
@@ -72,6 +74,8 @@ PlayingField::~PlayingField() {
             }
         }
     }
+    
+    delete bgRect;
 }
 
 void PlayingField::mergeAndDelete (Shape *shape) {
@@ -83,7 +87,7 @@ void PlayingField::mergeAndDelete (Shape *shape) {
     
     delete shape;
     
-    draw(); // TODO: Probably make a `void redraw()` eventually
+    draw();
     
     doLineClear();
 }
@@ -214,6 +218,10 @@ void PlayingField::init() {
             blocks[i].pushBack(NULL);
         }
     }
+    
+    bgRect = new MyRectangle(g, getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1), 
+            BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getBackground());
+    bgRect->draw();
 }
 
 bool PlayingField::couldAdd(Block *const block) const {
@@ -436,6 +444,8 @@ void PlayingField::erase() {
                 }
             }
         }
+        
+        bgRect->erase();
         
         isVisible = false;
     }

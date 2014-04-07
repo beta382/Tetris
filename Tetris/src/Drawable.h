@@ -21,23 +21,26 @@ class Drawable {
         virtual void draw() = 0;
         virtual void erase() = 0;
         
-        void setWidth (int);
-        int getWidth () const;
-        void setHeight (int);
-        int getHeight () const;
+        void setWidth(int);
+        int getWidth() const;
+        void setHeight(int);
+        int getHeight() const;
         
-        virtual void setLocation (int x, int y);
+        virtual void setLocation(int x, int y);
         int getLocationX() const;
         int getLocationY() const;
         
-        virtual void setColor (unsigned int color);
-        unsigned int getColor() const;
+        virtual void setForeground(unsigned int color);
+        unsigned int getForeground() const;
+        virtual void setBackground(unsigned int color);
+        unsigned int getBackground();
         
         virtual ~Drawable() {};
     protected:
         Drawable(GLUT_Plotter *g);
         Drawable(GLUT_Plotter *g, int x, int y);
-        Drawable(GLUT_Plotter *g, int x, int y, int width, int height, int color = Color::WHITE);
+        Drawable(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int foreground = Color::WHITE, 
+                unsigned int background = Color::BLACK);
         Drawable(const Drawable&);
         virtual Drawable& operator =(const Drawable&);
         
@@ -49,7 +52,8 @@ class Drawable {
         int width;
         int height;
         
-        int color;
+        unsigned int foreground;
+        unsigned int background;
         
         bool isVisible;
 };

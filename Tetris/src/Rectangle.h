@@ -28,8 +28,6 @@ class MyRectangle: public Drawable {
         /* ---------- Implemented from Drawable ---------- */
         void draw();
         void erase();
-    protected:
-        int padding;
 };
 
 #endif /* RECTANGLE_H_ */

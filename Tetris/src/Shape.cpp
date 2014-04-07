@@ -14,7 +14,9 @@ Shape::Shape(GLUT_Plotter *g): Drawable(g) {
     padding = 0;
 }
 
-Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding): Drawable(g, x, y) {
+Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding, unsigned int background): 
+        Drawable(g, x, y, 0, 0, Color::WHITE, background)
+{
     this->blockSize = blockSize;
     this->padding = padding;
 }
@@ -124,10 +126,20 @@ void Shape::setLocation(int x, int y) {
     this->y = y;
 }
 
-void Shape::setColor (unsigned int color) {
+void Shape::setForeground (unsigned int foreground) {
     for (int i = 0; i < blocks.getSize(); i++){
-        blocks[i]->setColor(color);
+        blocks[i]->setForeground(foreground);
     }
+    
+    this->foreground = foreground;
+}
+
+void Shape::setBackground(unsigned int background) {
+    for (int i = 0; i < blocks.getSize(); i++){
+        blocks[i]->setBackground(background);
+    }
+    
+    this->background = background;
 }
 
 
