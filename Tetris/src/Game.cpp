@@ -20,27 +20,31 @@ Game::~Game() {
 void Game::respondToKey(int key) {
     switch (key) {
         case 'w':
+        case 165: // UP
             if (field->canShiftUp(currentTetromino)) {
                 currentTetromino->shiftUp();
             }
             break;
         case 'a':
+        case 164: // LEFT
             if (field->canShiftLeft(currentTetromino)) {
                 currentTetromino->shiftLeft();
             }
             break;
         case 's':
+        case 167: // DOWN
             if (field->canShiftDown(currentTetromino)) {
                 currentTetromino->shiftDown();
             }
             break;
         case 'd':
+        case 166: // RIGHT
             if (field->canShiftRight(currentTetromino)) {
                 currentTetromino->shiftRight();
             }
             break;
         case 'c':
-            currentTetromino->setColor(rand() % 16);
+            currentTetromino->setForeground(rand() % 16);
             currentTetromino->draw();
             break;
         case 'q':
@@ -73,6 +77,8 @@ void Game::respondToKey(int key) {
         case 'x':
             exit(1);
             break;
+        default:
+            cout << key << endl;
     }
 }
 
@@ -82,10 +88,7 @@ void Game::respondToKey(int key) {
 void Game::init() {
     srand(time(0));
     
-    MyRectangle *background = new MyRectangle(g, 10, 10, BLOCK_SIZE * 10 + BLOCK_PADDING * 9, BLOCK_SIZE * 20 + BLOCK_PADDING * 19, Color::WHITE);
-    background->draw();
-    
-    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY());
+    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY(), 10, 20, Color::WHITE);
     currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
     currentTetromino->draw();
 }

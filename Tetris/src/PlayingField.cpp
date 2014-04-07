@@ -17,7 +17,9 @@ PlayingField::PlayingField(GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10,
     init();
 }
 
-PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height): Drawable(g, x, y, width, height) {
+PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int background): 
+        Drawable(g, x, y, width, height, Color::BLACK, background)
+{
     init();
 }
 
@@ -72,6 +74,8 @@ PlayingField::~PlayingField() {
             }
         }
     }
+    
+    delete bgRect;
 }
 
 void PlayingField::mergeAndDelete (Shape *shape) {
@@ -83,7 +87,7 @@ void PlayingField::mergeAndDelete (Shape *shape) {
     
     delete shape;
     
-    draw(); // TODO: Probably make a `void redraw()` eventually
+    draw();
     
     doLineClear();
 }
@@ -214,6 +218,10 @@ void PlayingField::init() {
             blocks[i].pushBack(NULL);
         }
     }
+    
+    bgRect = new MyRectangle(g, getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1), 
+            BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getBackground());
+    bgRect->draw();
 }
 
 bool PlayingField::couldAdd(Block *const block) const {
@@ -235,6 +243,10 @@ bool PlayingField::couldAdd(Block *const block) const {
 
 void PlayingField::doLineClear() {
     myVector<int> clearableLines;
+    myVector<Block *> clearedBlocks;
+    myVector<Shape *> remainingShapes;
+    
+    clock_t start;
     
     // Find which lines can be cleared
     for (int i = 0; i < getHeight(); i++) {
@@ -255,8 +267,6 @@ void PlayingField::doLineClear() {
         
         // Blink three times
         for (int r = 0; r < 3; r++) {
-            clock_t start;
-            
             start = clock();
             
             while (clock() < start+150); // Wait 150ms
@@ -286,37 +296,68 @@ void PlayingField::doLineClear() {
             g->Draw(); // Force screen redraw
         }
         
-        // Delete and NULL the Blocks
+        // Erase the lines for good
         for (int i = 0; i < clearableLines.getSize(); i++) {
             for (int j = 0; j < getWidth(); j++) {
                 if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                    blocks[j][clearableLines[i]]->erase();
+                }
+            }
+        }
+        
+        // Clone, store, and then clear the blocks
+        for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                    clearedBlocks.pushBack(blocks[j][clearableLines[i]]->makeNewClone());
                     delete blocks[j][clearableLines[i]];
                     blocks[j][clearableLines[i]] = NULL;
                 }
             }
         }
         
+        // Perform each block's special effect and delete the copy, should probably find a way to convert the remainder
+        // of the special tetromino to a normal tetromino
+        // TODO: Above
+        for (int i = 0; i < clearedBlocks.getSize(); i++) {
+            clearedBlocks[i]->doOnClear(blocks, 
+                    (clearedBlocks[i]->getLocationX()-getLocationX())/clearedBlocks[i]->getTotalSize(),
+                    (clearedBlocks[i]->getLocationY()-getLocationY())/clearedBlocks[i]->getTotalSize());
+            delete clearedBlocks[i];
+        }
+        
+        
         // Take what's left over, form it into individual shapes
-        myVector<Shape *> shapes = formShapes();
+        remainingShapes = formShapes();
         // Note that after this, the field is entirely NULL
         
         // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
         // formShapes() starts it's search at (0,0) and works it's way up, so the first shapes should always be entirely
         // lower than the next shape
-        bool didShift = true;
+        bool didFall = true;
         // While we are still shifting down...
-        while(didShift) {
-            didShift = false;
+        while(didFall) {
+            didFall = false;
             // For each shape...
-            for (int i = 0; shapes[i] && i < shapes.getSize(); i++) {
+            for (int i = 0; i < remainingShapes.getSize(); i++) {
                 // Shift down once if we can
-                if (canShiftDown(shapes[i])) {
-                    shapes[i]->shiftDown(); // TODO: Add pretty timing to this.
-                    didShift = true;
-                } else {
-                    mergeAndDelete(shapes[i]);
-                    shapes[i] = NULL; // For existence checking
+                if (remainingShapes[i]) {
+                    if (canShiftDown(remainingShapes[i])) {
+                        remainingShapes[i]->shiftDown();
+                        didFall = true;
+                    } else {
+                        mergeAndDelete(remainingShapes[i]);
+                        remainingShapes[i] = NULL; // For existence checking
+                    }
                 }
+            }
+            
+            g->Draw();
+            
+            if (didFall) {
+                start = clock();
+                
+                while (clock() < start + 250);
             }
         }
     }
@@ -403,6 +444,8 @@ void PlayingField::erase() {
                 }
             }
         }
+        
+        bgRect->erase();
         
         isVisible = false;
     }

@@ -16,7 +16,8 @@ template <typename BlockType>
 class Tetromino: public TetrominoBase {
     public:
         Tetromino(GLUT_Plotter *g);
-        Tetromino(GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape);
+        Tetromino(GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape, 
+                unsigned int background = Color::BLACK);
         Tetromino(const Tetromino<BlockType>&);
         Tetromino<BlockType>& operator =(const Tetromino<BlockType>&);
     private:
@@ -33,8 +34,8 @@ Tetromino<BlockType>::Tetromino(GLUT_Plotter *g): TetrominoBase(g) {
 }
 
 template <typename BlockType>
-Tetromino<BlockType>::Tetromino (GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape): 
-        TetrominoBase(g, x, y, blockSize, padding)
+Tetromino<BlockType>::Tetromino (GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape,
+        unsigned int background): TetrominoBase(g, x, y, blockSize, padding, background)
 {
     initTetromino(shape);
 }
@@ -69,7 +70,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::CYAN);
+            setForeground(Color::BLUE);
+            setBackground(getBackground());
             setWidth(4);
             setHeight(5); // Fudged
             offsetY = 2;
@@ -86,7 +88,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::YELLOW);
+            setForeground(Color::GREEN);
+            setBackground(getBackground());
             setWidth(2);
             setHeight(2);
             break;
@@ -102,7 +105,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::MAGENTA);
+            setForeground(Color::BROWN);
+            setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
             offsetY = 1;
@@ -119,7 +123,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::BLUE);
+            setForeground(Color::GRAY);
+            setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
             offsetY = 1;
@@ -136,7 +141,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::ORANGE);
+            setForeground(Color::RED);
+            setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
             offsetY = 1;
@@ -153,7 +159,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::GREEN);
+            setForeground(Color::DARK_GREEN);
+            setBackground(getBackground());
             setWidth(3);
             setHeight(2);
             break;
@@ -169,7 +176,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
             
-            setColor(Color::RED);
+            setForeground(Color::CYAN);
+            setBackground(getBackground());
             setWidth(3);
             setHeight(2);
             break;

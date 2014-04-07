@@ -17,7 +17,8 @@ class Block: public Drawable {
     public:
         Block(GLUT_Plotter *g);
         Block(GLUT_Plotter *g, int x, int y);
-        Block(GLUT_Plotter *g, int x, int y, int size, int padding);
+        Block(GLUT_Plotter *g, int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
+                unsigned int background = Color::BLACK);
         Block(const Block&);
         Block& operator =(const Block&);
         ~Block();
@@ -26,7 +27,7 @@ class Block: public Drawable {
         int getPadding() const;
         int getTotalSize() const;
         
-        virtual void doOnClear(myVector<myVector<Block *> >&);
+        virtual void doOnClear(myVector<myVector<Block *> >&, int x, int y);
         virtual Block *makeNewClone();
         
         /* ---------- Implemented from Drawable ---------- */

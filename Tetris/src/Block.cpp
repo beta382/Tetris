@@ -17,7 +17,8 @@ Block::Block (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {
     padding = 0;
 }
 
-Block::Block (GLUT_Plotter *g, int x, int y, int size, int padding): Drawable(g, x, y, size, size) {
+Block::Block (GLUT_Plotter *g, int x, int y, int size, int padding, unsigned int foreground, unsigned int background): 
+        Drawable(g, x, y, size, size, foreground, background) {
     this->padding = padding;
 }
 
@@ -50,7 +51,7 @@ int Block::getTotalSize() const {
     return getSize()+getPadding();
 }
 
-void Block::doOnClear(myVector<myVector<Block *> >& blockField) {
+void Block::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
     // Do nothing
 }
 
@@ -61,7 +62,7 @@ Block *Block::makeNewClone() {
 /* ---------- Implemented from Drawable ---------- */
 
 void Block::draw() {
-    g->setColor(getColor());
+    g->setColor(getForeground());
     for (int i = 0; i < getSize(); i++) {
         for (int j = 0; j < getSize(); j++) {
             g->plot(getLocationX()+i, getLocationY()+j);
@@ -73,7 +74,7 @@ void Block::draw() {
 
 void Block::erase() {
     if (isVisible) {
-        g->setColor(Color::BLACK);
+        g->setColor(getBackground());
         for (int i = 0; i < getSize(); i++) {
             for (int j = 0; j < getSize(); j++) {
                 g->plot(getLocationX()+i, getLocationY()+j);

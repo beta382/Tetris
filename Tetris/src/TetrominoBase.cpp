@@ -12,8 +12,8 @@ TetrominoBase::TetrominoBase(GLUT_Plotter *g): Shape(g) {
     offsetY = 0;
 }
 
-TetrominoBase::TetrominoBase (GLUT_Plotter *g, int x, int y, int blockSize, int padding): 
-        Shape(g, x, y, blockSize, padding) 
+TetrominoBase::TetrominoBase (GLUT_Plotter *g, int x, int y, int blockSize, int padding, unsigned int background):
+        Shape(g, x, y, blockSize, padding, background) 
 {
     offsetX = 0;
     offsetY = 0;

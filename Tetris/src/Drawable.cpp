@@ -15,7 +15,8 @@ Drawable::Drawable(GLUT_Plotter *g) {
     y = 0;
     width = 0;
     height = 0;
-    color = Color::WHITE;
+    foreground = Color::WHITE;
+    background = Color::BLACK;
     isVisible = false;
 }
 
@@ -25,17 +26,21 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
     this->y = y;
     width = 0;
     height = 0;
-    color = Color::WHITE;
+    foreground = Color::WHITE;
+    background = Color::BLACK;
     isVisible = false;
 }
 
-Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, int color) {
+Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, unsigned int foreground, 
+        unsigned int background)
+{
     this->g = g;
     this->x = x;
     this->y = y;
     this->width = width;
     this->height = height;
-    this->color = color;
+    this->foreground = foreground;
+    this->background = background;
     isVisible = false;
 }
 
@@ -45,7 +50,8 @@ Drawable::Drawable (const Drawable& other) {
     y = other.y;
     width = other.width;
     height = other.height;
-    color = other.color;
+    foreground = other.foreground;
+    background = other.background;
     isVisible = false;
 }
 
@@ -56,7 +62,8 @@ Drawable& Drawable::operator =(const Drawable& rhs) {
         y = rhs.y;
         width = rhs.width;
         height = rhs.height;
-        color = rhs.color;
+        foreground = rhs.foreground;
+        background = rhs.background;
         isVisible = false;
     }
     
@@ -92,14 +99,21 @@ int Drawable::getLocationY() const {
     return y;
 }
 
-void Drawable::setColor (unsigned int color) {
-    this->color = color;
+void Drawable::setForeground (unsigned int color) {
+    foreground = color;
 }
 
-unsigned int Drawable::getColor() const {
-    return color;
+unsigned int Drawable::getForeground() const {
+    return foreground;
 }
 
+void Drawable::setBackground(unsigned int color) {
+    background = color;
+}
+
+unsigned int Drawable::getBackground() {
+    return background;
+}
 
 
 
