@@ -47,6 +47,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
             }
         }
         
+        delete bgRect;
+        
         Drawable::operator =(rhs);
         
         init();
@@ -413,6 +415,8 @@ void PlayingField::setLocation(int x, int y) {
             }
         }
     }
+    
+    bgRect->setLocation(bgRect->getLocationX()+dX, getLocationY()+dY);
     
     draw();
     
