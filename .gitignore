@@ -1,7 +1,7 @@
 ## Eclipse
 .metadata/
-Tetris/.settings/
-Tetris/Debug/
+.settings/
+Debug/
 
 .cproject
 .project
