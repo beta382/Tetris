@@ -30,7 +30,7 @@ GhostBlock::~GhostBlock() {
 
 /* ---------- Overriding from Block ---------- */
 
-void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
+void GhostBlock::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
     
     // ExplodingBlock example
@@ -70,7 +70,7 @@ void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField, int x, int 
         if (didFall) {
             clock_t start = clock();
             
-            while (clock() < start + 250);
+            while (clock() < start + 100);
         }
     }*/
 }

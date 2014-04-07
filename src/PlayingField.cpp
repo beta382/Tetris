@@ -212,12 +212,12 @@ bool PlayingField::canRotateCCW(TetrominoBase *const t) const {
 
 void PlayingField::init() {
     for (int i = 0; i < getWidth(); i++) {
-        myVector<Block *> tmp;
-        blocks.pushBack(tmp);
+        vector<Block *> tmp;
+        blocks.push_back(tmp);
         for (int j = 0; j < getHeight(); j++) {
             // Everything that is a NULL pointer represents a blank space, makes checking for overlap super-simple,
             // just gotta add checks everywhere. Initialize all Block pointers to NULL
-            blocks[i].pushBack(NULL);
+            blocks[i].push_back(NULL);
         }
     }
     
@@ -244,9 +244,9 @@ bool PlayingField::couldAdd(Block *const block) const {
 }
 
 void PlayingField::doLineClear() {
-    myVector<int> clearableLines;
-    myVector<Block *> clearedBlocks;
-    myVector<Shape *> remainingShapes;
+    vector<int> clearableLines;
+    vector<Block *> clearedBlocks;
+    vector<Shape *> remainingShapes;
     
     clock_t start;
     
@@ -260,12 +260,12 @@ void PlayingField::doLineClear() {
         }
         
         if (isClearable) {
-            clearableLines.pushBack(i);
+            clearableLines.push_back(i);
         }
     }
     
     // If there are lines to clear
-    if (clearableLines.getSize() > 0) {
+    if (clearableLines.size() > 0) {
         
         // Blink three times
         for (int r = 0; r < 3; r++) {
@@ -273,7 +273,7 @@ void PlayingField::doLineClear() {
             
             while (clock() < start+150); // Wait 150ms
             
-            for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (unsigned int i = 0; i < clearableLines.size(); i++) {
                 for (int j = 0; j < getWidth(); j++) {
                     if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                         blocks[j][clearableLines[i]]->erase();
@@ -287,7 +287,7 @@ void PlayingField::doLineClear() {
             
             while (clock() < start+150); // Wait 150ms
             
-            for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (unsigned int i = 0; i < clearableLines.size(); i++) {
                 for (int j = 0; j < getWidth(); j++) {
                     if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                         blocks[j][clearableLines[i]]->draw();
@@ -299,7 +299,7 @@ void PlayingField::doLineClear() {
         }
         
         // Erase the lines for good
-        for (int i = 0; i < clearableLines.getSize(); i++) {
+        for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
                 if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                     blocks[j][clearableLines[i]]->erase();
@@ -308,10 +308,10 @@ void PlayingField::doLineClear() {
         }
         
         // Clone, store, and then clear the blocks
-        for (int i = 0; i < clearableLines.getSize(); i++) {
+        for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
                 if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                    clearedBlocks.pushBack(blocks[j][clearableLines[i]]->makeNewClone());
+                    clearedBlocks.push_back(blocks[j][clearableLines[i]]->makeNewClone());
                     delete blocks[j][clearableLines[i]];
                     blocks[j][clearableLines[i]] = NULL;
                 }
@@ -320,8 +320,8 @@ void PlayingField::doLineClear() {
         
         // Perform each block's special effect and delete the copy, should probably find a way to convert the remainder
         // of the special tetromino to a normal tetromino
-        // TODO: Above
-        for (int i = 0; i < clearedBlocks.getSize(); i++) {
+        // TODO: Above, maybe have some sort of unique id for each Tetromino's blocks
+        for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
             clearedBlocks[i]->doOnClear(blocks, 
                     (clearedBlocks[i]->getLocationX()-getLocationX())/clearedBlocks[i]->getTotalSize(),
                     (clearedBlocks[i]->getLocationY()-getLocationY())/clearedBlocks[i]->getTotalSize());
@@ -341,7 +341,7 @@ void PlayingField::doLineClear() {
         while(didFall) {
             didFall = false;
             // For each shape...
-            for (int i = 0; i < remainingShapes.getSize(); i++) {
+            for (unsigned int i = 0; i < remainingShapes.size(); i++) {
                 // Shift down once if we can
                 if (remainingShapes[i]) {
                     if (canShiftDown(remainingShapes[i])) {
@@ -359,14 +359,14 @@ void PlayingField::doLineClear() {
             if (didFall) {
                 start = clock();
                 
-                while (clock() < start + 250);
+                while (clock() < start + 100);
             }
         }
     }
 }
 
-myVector<Shape *> PlayingField::formShapes() {
-    myVector<Shape *> shapes;
+vector<Shape *> PlayingField::formShapes() {
+    vector<Shape *> shapes;
     
     for (int i = 0; i < getHeight(); i++) {
         for (int j = 0; j < getWidth(); j++) {
@@ -376,7 +376,7 @@ myVector<Shape *> PlayingField::formShapes() {
                 
                 makeShapeRecursively(curShape, j, i);
                 
-                shapes.pushBack(curShape);
+                shapes.push_back(curShape);
             }
         }
     }

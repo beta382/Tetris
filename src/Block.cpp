@@ -51,7 +51,7 @@ int Block::getTotalSize() const {
     return getSize()+getPadding();
 }
 
-void Block::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
+void Block::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
 }
 

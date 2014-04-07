@@ -13,7 +13,7 @@
 #include "Drawable.h"
 #include "Tetromino.h"
 #include "Shape.h"
-#include "myVector.h"
+#include <vector>
 #include "drawkit.h"
 #include "Rectangle.h"
 
@@ -55,12 +55,12 @@ class PlayingField: public Drawable {
         bool couldAdd(Block *const) const;
         
         void doLineClear();
-        myVector<Shape *> formShapes();
+        vector<Shape *> formShapes();
         void makeShapeRecursively(Shape *, int x, int y);
         
         MyRectangle *bgRect;
         
-        myVector<myVector<Block *> > blocks; // TODO: Make a better data structure, or are we allowed to use STL?
+        vector<vector<Block *> > blocks; // TODO: Make a better data structure, or are we allowed to use STL?
 };
 
 /* ---------- spawnNewTetromino method template implementation ---------- */

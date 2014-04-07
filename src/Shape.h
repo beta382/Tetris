@@ -11,7 +11,7 @@
 #define SHAPE_H_
 
 #include "Drawable.h"
-#include "myVector.h"
+#include <vector>
 #include "Block.h"
 
 class Shape: public Drawable {
@@ -45,7 +45,7 @@ class Shape: public Drawable {
         void draw();
         void erase();
     protected:
-        myVector<Block *> blocks;
+        vector<Block *> blocks;
         
         int blockSize;
         int padding;

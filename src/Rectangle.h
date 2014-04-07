@@ -11,7 +11,6 @@
 #define RECTANGLE_H_
 
 #include "Drawable.h"
-#include "myVector.h"
 
 class MyRectangle: public Drawable {
     public:
