@@ -9,13 +9,13 @@
 
 #include "Shape.h"
 
-Shape::Shape(GLUT_Plotter *g): Drawable(g) {
+Shape::Shape(): Drawable() {
     blockSize = 10;
     padding = 0;
 }
 
-Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding, unsigned int background): 
-        Drawable(g, x, y, 0, 0, Color::WHITE, background)
+Shape::Shape (int x, int y, int blockSize, int padding, unsigned int background):
+		Drawable(x, y, 0, 0, Color::WHITE, background)
 {
     this->blockSize = blockSize;
     this->padding = padding;

@@ -7,7 +7,7 @@
 
 #include "Game.h"
 
-Game::Game(GLUT_Plotter *g): Drawable(g) {
+Game::Game(): Drawable() {
     init();
 }
 
@@ -88,7 +88,7 @@ void Game::respondToKey(int key) {
 void Game::init() {
     srand(time(0));
     
-    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY(), 10, 20, Color::WHITE);
+    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, Color::WHITE);
     currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
     currentTetromino->draw();
 }

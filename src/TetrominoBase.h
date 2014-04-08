@@ -21,8 +21,8 @@ class TetrominoBase: public Shape {
         int getOffsetX() const;
         int getOffsetY() const;
     protected:
-        TetrominoBase(GLUT_Plotter *g);
-        TetrominoBase(GLUT_Plotter *g, int x, int y, int blockSize, int padding,
+        TetrominoBase();
+        TetrominoBase(int x, int y, int blockSize, int padding,
                 unsigned int background = Color::BLACK);
         TetrominoBase(const TetrominoBase&);
         TetrominoBase& operator =(const TetrominoBase&);

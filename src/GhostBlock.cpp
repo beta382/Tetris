@@ -7,11 +7,11 @@
 
 #include "GhostBlock.h"
 
-GhostBlock::GhostBlock(GLUT_Plotter *g): Block(g) {}
+GhostBlock::GhostBlock(): Block() {}
 
-GhostBlock::GhostBlock(GLUT_Plotter *g, int x, int y): Block(g, x, y) {}
+GhostBlock::GhostBlock(int x, int y): Block(x, y) {}
 
-GhostBlock::GhostBlock(GLUT_Plotter *g, int x, int y, int size, int padding): Block(g, x, y, size, padding) {}
+GhostBlock::GhostBlock(int x, int y, int size, int padding): Block(x, y, size, padding) {}
 
 GhostBlock::GhostBlock(const GhostBlock& other): Block(other) {}
 

@@ -22,7 +22,7 @@
 
 class Game: public Drawable {
     public:
-        Game(GLUT_Plotter *g);
+        Game();
         ~Game();
         
         void respondToKey(int key);

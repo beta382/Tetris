@@ -15,10 +15,10 @@
 
 class Block: public Drawable {
     public:
-        Block(GLUT_Plotter *g);
-        Block(GLUT_Plotter *g, int x, int y);
-        Block(GLUT_Plotter *g, int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
+        Block();
+        Block(int x, int y);
+        Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
+        		unsigned int background = Color::BLACK);
         Block(const Block&);
         Block& operator =(const Block&);
         ~Block();

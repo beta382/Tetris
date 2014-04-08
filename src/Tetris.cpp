@@ -12,7 +12,7 @@
 
 Tetris::Tetris(GLUT_Plotter *g) {
     this->g = g;
-    screen = new Game(g); // This is temporary, change it to whatever you need to test
+    screen = new Game(); // This is temporary, change it to whatever you need to test
 }
 
 Tetris::~Tetris() {

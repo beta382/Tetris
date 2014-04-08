@@ -7,6 +7,7 @@
 //============================================================================
 
 #include <iostream>
+#include "Drawable.h"
 #include "Tetris.h"
 using namespace std;
 
@@ -15,6 +16,7 @@ Tetris *game;
 
 int main() {
     GLUT_Plotter *g = new GLUT_Plotter(); //Create plotter 
+    Drawable::setG(g);                    //Give all drawable objects the same static GLUT_Plotter
     game = new Tetris(g);                 //Create Game (Tetris)
     g->RegisterIdleFunc(Player);          //Register Callback 
     g->MainLoop();                        //Enter main loop

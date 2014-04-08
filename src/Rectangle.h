@@ -14,9 +14,9 @@
 
 class MyRectangle: public Drawable {
     public:
-        MyRectangle(GLUT_Plotter *g);
-        MyRectangle(GLUT_Plotter *g, int x, int y);
-        MyRectangle(GLUT_Plotter *g, int x, int y, int width, int height, int color = Color::WHITE);
+        MyRectangle();
+        MyRectangle(int x, int y);
+        MyRectangle(int x, int y, int width, int height, int color = Color::WHITE);
         MyRectangle(const MyRectangle&);
         MyRectangle& operator =(const MyRectangle&);
         ~MyRectangle();

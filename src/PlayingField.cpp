@@ -9,16 +9,16 @@
 
 #include "PlayingField.h"
 
-PlayingField::PlayingField(GLUT_Plotter *g): Drawable(g, 0, 0, 10, 20) {
+PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
     init();
 }
 
-PlayingField::PlayingField(GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 20) {
+PlayingField::PlayingField(int x, int y): Drawable(x, y, 10, 20) {
     init();
 }
 
-PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int background): 
-        Drawable(g, x, y, width, height, Color::BLACK, background)
+PlayingField::PlayingField(int x, int y, int width, int height, unsigned int background):
+        Drawable(x, y, width, height, Color::BLACK, background)
 {
     init();
 }
@@ -221,7 +221,7 @@ void PlayingField::init() {
         }
     }
     
-    bgRect = new MyRectangle(g, getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1), 
+    bgRect = new MyRectangle(getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1),
             BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getBackground());
     bgRect->draw();
 }
@@ -371,7 +371,7 @@ vector<Shape *> PlayingField::formShapes() {
     for (int i = 0; i < getHeight(); i++) {
         for (int j = 0; j < getWidth(); j++) {
             if (blocks[j][i]) {
-                Shape *curShape = new Shape(g, blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(), 
+                Shape *curShape = new Shape(blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(),
                         blocks[j][i]->getSize(), blocks[j][i]->getPadding());
                 
                 makeShapeRecursively(curShape, j, i);

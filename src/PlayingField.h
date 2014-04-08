@@ -24,9 +24,9 @@ const int BLOCK_PADDING = 2;
 
 class PlayingField: public Drawable {
     public:
-        PlayingField(GLUT_Plotter *g);
-        PlayingField(GLUT_Plotter *g, int x, int y);
-        PlayingField(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int background = Color::BLACK);
+        PlayingField();
+        PlayingField(int x, int y);
+        PlayingField(int x, int y, int width, int height, unsigned int background = Color::BLACK);
         PlayingField(const PlayingField&);
         PlayingField& operator =(const PlayingField&);
         ~PlayingField();
@@ -67,8 +67,7 @@ class PlayingField: public Drawable {
 
 template <typename BlockType>
 Tetromino<BlockType> *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino<BlockType> *tetromino = new Tetromino<BlockType>(g, getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*
-              (getWidth()/2), 
+    Tetromino<BlockType> *tetromino = new Tetromino<BlockType>(getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2),
             getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type, getBackground());
     
     // We spawn right above the field, this puts us at the top of the screen, properly centered

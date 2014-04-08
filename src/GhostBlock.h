@@ -12,9 +12,9 @@
 
 class GhostBlock: public Block {
     public:
-        GhostBlock(GLUT_Plotter *g);
-        GhostBlock(GLUT_Plotter *g, int x, int y);
-        GhostBlock(GLUT_Plotter *g, int x, int y, int size, int padding);
+        GhostBlock();
+        GhostBlock(int x, int y);
+        GhostBlock(int x, int y, int size, int padding);
         GhostBlock(const GhostBlock&);
         GhostBlock& operator =(const GhostBlock&);
         ~GhostBlock();
