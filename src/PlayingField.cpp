@@ -17,8 +17,8 @@ PlayingField::PlayingField(int x, int y): Drawable(x, y, 10, 20) {
     init();
 }
 
-PlayingField::PlayingField(int x, int y, int width, int height, unsigned int background):
-        Drawable(x, y, width, height, Color::BLACK, background)
+PlayingField::PlayingField(int x, int y, int width, int height, unsigned int foreground, unsigned int background):
+        Drawable(x, y, width, height, foreground, background)
 {
     init();
 }
@@ -222,8 +222,9 @@ void PlayingField::init() {
     }
     
     bgRect = new MyRectangle(getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1),
-            BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getBackground());
-    bgRect->draw();
+            BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getForeground(), getBackground());
+
+    draw();
 }
 
 bool PlayingField::couldAdd(Block *const block) const {
@@ -428,6 +429,8 @@ void PlayingField::setLocation(int x, int y) {
 /* ---------- Implemented from Drawable ---------- */
 
 void PlayingField::draw() {
+    bgRect->draw();
+
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             if (blocks[i][j]) {
@@ -435,7 +438,7 @@ void PlayingField::draw() {
             }
         }
     }
-    
+
     isVisible = true;
 }
 

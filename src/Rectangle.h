@@ -16,7 +16,8 @@ class MyRectangle: public Drawable {
     public:
         MyRectangle();
         MyRectangle(int x, int y);
-        MyRectangle(int x, int y, int width, int height, int color = Color::WHITE);
+        MyRectangle(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
+        		unsigned int background = Color::BLACK);
         MyRectangle(const MyRectangle&);
         MyRectangle& operator =(const MyRectangle&);
         ~MyRectangle();

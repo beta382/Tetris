@@ -26,7 +26,14 @@ void Tetris::Play (void) {
     while (g->kbhit()) {
         int k = g->getKey();
         
-        screen->respondToKey(k);
+        switch (k) {
+            case 27: // ESC
+            case 'x':
+                exit(1);
+                break;
+            default:
+                screen->respondToKey(k);
+        }
     }
     
     
