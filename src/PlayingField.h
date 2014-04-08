@@ -26,12 +26,14 @@
  *
  * PlayingField is intended to represent the field of blocks in play, and provide methods for general core gameplay,
  *   including generating and merging tetrominos and checking whether or not a shape can move or rotate within the block
- *   field. PlayingField is not intended to be inherited from.
+ *   field. PlayingField IS NOT intended to be inherited from.
  *
- * Member data:
+ * Private member data:
  *    `vector<vector<Block *> > blocks`: A two-dimensional array of pointers to dynamically allocated Blocks,
- *      representing the blocks currently on the field. Entries that don't contain a Block address will contain NULL.
+ *      representing the Blocks currently on the field. The index of the Block DOES directly correlate to its on-screen
+ *      location. Entries that don't contain a Block address will contain NULL.
  *    `MyRectangle *bgRect`: A rectangle fill representing the background of the playing field.
+ *    `int blockSize`/`int padding`: The size of the Blocks and padding between Blocks.
  *
  * Public functions:
  *     `Tetromino<BlockType> *spawnNewTetromino(TetrominoShape)`: Allocates a new Tetromino<BlockType> with the
@@ -47,7 +49,7 @@
  *
  * Private functions:
  *     `void init()`: Initializes member data, draws the initial state to the screen.
- *     `bool couldAdd(Shape *)`: Determines whether or not the specified Block could be added to the block field without
+ *     `bool couldAdd(Block *)`: Determines whether or not the specified Block could be added to the block field without
  *       conflict.
  *     `void doLineClear()`: Determines whether or not there needs to occur a line clear, and if so, performs the line
  *       clear.
@@ -60,7 +62,7 @@
  *     `void draw()`
  *     `void erase()`
  *
- * Functions overriden from Drawable:
+ * Functions overridden from Drawable:
  *     `void SetLocation(int, int)`
  *
  */

@@ -24,10 +24,10 @@
  *
  * Inherits from Drawable.
  *
- * Game is intended to represent the game screen, and be a wrapper for everything that the game screen contains. Game is
- *   not intended to be inherited from.
+ * Game is intended to represent the game screen, and be a wrapper for everything that the game screen contains. Game IS
+ *   NOT intended to be inherited from.
  *
- * Member data:
+ * Private member data:
  *     `PlayingField *field`: Pointer to a PlayingField object representing the main gameplay area.
  *     `TetrominoBase *currentTetromino`: Pointer to a TetrominoBase object (which can be any Tetromino<BlockType>)
  *       representing the currently falling tetromino.

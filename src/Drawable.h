@@ -22,7 +22,7 @@
  * Drawable is intended to be the abstract base class of all objects that are to be drawn to the screen. You MAY NOT
  *   independantly instantiate a Drawable object, this is enforced by making the constructors protected.
  *
- * Member data:
+ * Protected member data:
  *     `int x`/`int y`: Are intended to define the pixel-location of the bottom-left corner of the Drawable's bounding
  *       rectangle. Descendants of Drawable MAY define and interpret these values however best suits its purpose.
  *     `int width`/`int height`: Are intended to define the number of pixels wide/tall the Drawable's bounding rectangle
@@ -54,7 +54,7 @@
  *     Override `void setBackground(unsigned int)`
  *     Override `void setLocation(int, int)`
  *
- * All objects that directly inherit from Drawable are STRONGLY ENGOURAGED to:
+ * All objects that directly or indirectly inherit from Drawable are STRONGLY ENGOURAGED to:
  *     Define a proper copy constructor that calls `Drawable(const Drawable&)`, even if there is no memory management
  *     Define a proper assignment operator that calls `Drawable::operator =(const Drawable&)`, even if there is not
  *       memory management

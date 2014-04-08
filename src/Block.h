@@ -13,6 +13,38 @@
 #include "Drawable.h"
 #include <vector>
 
+/*
+ * Block:
+ *
+ * Inherits from Drawable.
+ *
+ * Block is intended to represent a single block, and define behaviors specific to that block. Block IS intended to be
+ *   inherited from.
+ *
+ * Protected member data:
+ *    `int padding`: The padding the Block should have in addition to it's visible representation. Specifically, defines
+ *      the number of pixels above and to the right the Block technically occupies, but not visibly.
+ *
+ * Public functions:
+ *     `int getSize()`/`int getPadding()`/`int getTotalSize()`: Getters for `int width`, `int padding`, and the sum
+ *       of both.
+ *     `void doOnClear(vector<vector<Bock *> >&, int, int)`: Defines what special effect should happen to the given
+ *       block field at the given index when the Block is cleared.
+ *     `void Block *makeNewClone()`: Allows for proper copying of a Block or one of its descendants into a polymorphic
+ *       Block pointer without knowing whether the object being copied is a Block or one of its descendants. This MUST
+ *       be properly overridden by all descendants of Block.
+ *
+ * Functions implimented from Drawable:
+ *     `void draw()`
+ *     `void erase()`
+ *
+ * All objects that directly or indirectly inherit from Block MAY:
+ *     Override `void doOnClear(vector<vector<Bock *> >&, int, int)`
+ *
+ * All objects that directly or indirectly inherit from Block MUST:
+ *     Override `Block *makeNewClone();`
+ */
+
 class Block: public Drawable {
     public:
         Block();
