@@ -36,9 +36,9 @@
  *     `void respondToKey(int)`: Performs a gameplay action based on the pressed key.
  *
  * Private functions:
- *     `void init()`: Initializes member data and the RNG.
+ *     `void init()`: Initializes member data and the RNG, draws the initial state to the screen.
  *
- * Functions inherited from Drawable:
+ * Functions implimented from Drawable:
  *     `void draw()`
  *     `void erase()`
  */

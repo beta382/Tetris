@@ -31,16 +31,38 @@
  * Member data:
  *    `vector<vector<Block *> > blocks`: A two-dimensional array of pointers to dynamically allocated Blocks,
  *      representing the blocks currently on the field. Entries that don't contain a Block address will contain NULL.
+ *    `MyRectangle *bgRect`: A rectangle fill representing the background of the playing field.
  *
  * Public functions:
- *
+ *     `Tetromino<BlockType> *spawnNewTetromino(TetrominoShape)`: Allocates a new Tetromino<BlockType> with the
+ *       specified shape and BlockType within the block field, and returns the address of the allocated
+ *       Tetromino<BlockType>.
+ *     `void mergeAndDelete(Shape *)`: Merges a copy of the Shape into the block field, and then de-allocates the Shape.
+ *     `bool canShiftUp(Shape *)`/`bool canShiftDown(Shape *)`/`bool canShiftLeft(Shape *)`/`bool
+ *       canShiftRight(Shape *)`: Determines whether or not the specified Shape can shift in the respective direction
+ *       within the block field, without actually shifting the Shape.
+ *     `bool canRotateCW(TetrominoBase *)`/`bool canRotateCCW(TetrominoBase *)`: Determines whether or not the specified
+ *       TetrominoBase can rotate in the respective direction within the block field, without actually rotating the
+ *       TetrominoBase.
  *
  * Private functions:
- *     `void init()`:
+ *     `void init()`: Initializes member data, draws the initial state to the screen.
+ *     `bool couldAdd(Shape *)`: Determines whether or not the specified Block could be added to the block field without
+ *       conflict.
+ *     `void doLineClear()`: Determines whether or not there needs to occur a line clear, and if so, performs the line
+ *       clear.
+ *     `vector<Shape *> formShapes()`: Disassembles the block field and groups contiguous groups of Blocks into distinct
+ *       Shapes, returning those Shapes. After running this, `vector<vector<Block *> > blocks` will be entirely NULL.
+ *     `void makeShapeRecursively(Shape *, int, int)`: Starting at the specified location in the block field, adds
+ *       adjacent blocks to the Shape until all contiguous Blocks are added to the Shape.
  *
- * Functions inherited from Drawable:
+ * Functions implimented from Drawable:
  *     `void draw()`
  *     `void erase()`
+ *
+ * Functions overriden from Drawable:
+ *     `void SetLocation(int, int)`
+ *
  */
 
 const int BLOCK_SIZE = 15;
@@ -60,9 +82,9 @@ class PlayingField: public Drawable {
         Tetromino<BlockType> *spawnNewTetromino(TetrominoShape type);
         
         void mergeAndDelete(Shape *);
-        
-        bool canShiftDown(Shape *const) const;
+
         bool canShiftUp(Shape *const) const;
+        bool canShiftDown(Shape *const) const;
         bool canShiftLeft(Shape *const) const;
         bool canShiftRight(Shape *const) const;
         
