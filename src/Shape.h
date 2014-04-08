@@ -16,8 +16,8 @@
 
 class Shape: public Drawable {
     public:
-        Shape(GLUT_Plotter *g);
-        Shape(GLUT_Plotter *g, int x, int y, int blockSize, int padding, unsigned int background = Color::BLACK);
+        Shape();
+        Shape(int x, int y, int blockSize, int padding, unsigned int background = Color::BLACK);
         Shape(const Shape&);
         Shape& operator =(const Shape&);
         ~Shape();

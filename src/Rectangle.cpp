@@ -9,16 +9,16 @@
 
 #include "Rectangle.h"
 
-MyRectangle::MyRectangle (GLUT_Plotter *g): Drawable(g, 0, 0, 10, 10) {
+MyRectangle::MyRectangle (): Drawable(0, 0, 10, 10) {
     
 }
 
-MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {
+MyRectangle::MyRectangle (int x, int y): Drawable(x, y, 10, 10) {
     
 }
 
-MyRectangle::MyRectangle (GLUT_Plotter *g, int x, int y, int width, int height, int color): 
-        Drawable(g, x, y, width, height, color)
+MyRectangle::MyRectangle (int x, int y, int width, int height, unsigned int foreground, unsigned int background):
+		Drawable(x, y, width, height, foreground, background)
 {
     
 }
@@ -62,7 +62,7 @@ void MyRectangle::draw() {
 
 void MyRectangle::erase() {
     if (isVisible) {
-        g->setColor(Color::BLACK);
+        g->setColor(getBackground());
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 g->plot(getLocationX()+i, getLocationY()+j);

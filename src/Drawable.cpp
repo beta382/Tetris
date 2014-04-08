@@ -9,8 +9,9 @@
 
 #include "Drawable.h"
 
-Drawable::Drawable(GLUT_Plotter *g) {
-    this->g = g;
+GLUT_Plotter *Drawable::g = NULL;
+
+Drawable::Drawable() {
     x = 0;
     y = 0;
     width = 0;
@@ -20,8 +21,7 @@ Drawable::Drawable(GLUT_Plotter *g) {
     isVisible = false;
 }
 
-Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
-    this->g = g;
+Drawable::Drawable (int x, int y) {
     this->x = x;
     this->y = y;
     width = 0;
@@ -31,10 +31,7 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y) {
     isVisible = false;
 }
 
-Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, unsigned int foreground, 
-        unsigned int background)
-{
-    this->g = g;
+Drawable::Drawable (int x, int y, int width, int height, unsigned int foreground, unsigned int background) {
     this->x = x;
     this->y = y;
     this->width = width;
@@ -45,7 +42,6 @@ Drawable::Drawable (GLUT_Plotter *g, int x, int y, int width, int height, unsign
 }
 
 Drawable::Drawable (const Drawable& other) {
-    g = other.g;
     x = other.x;
     y = other.y;
     width = other.width;
@@ -57,7 +53,6 @@ Drawable::Drawable (const Drawable& other) {
 
 Drawable& Drawable::operator =(const Drawable& rhs) {
     if (this != &rhs) {
-        g = rhs.g;
         x = rhs.x;
         y = rhs.y;
         width = rhs.width;
@@ -115,8 +110,9 @@ unsigned int Drawable::getBackground() {
     return background;
 }
 
-
-
+void Drawable::setG(GLUT_Plotter *plotter) {
+	g = plotter;
+}
 
 
 

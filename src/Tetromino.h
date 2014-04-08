@@ -15,8 +15,8 @@
 template <typename BlockType>
 class Tetromino: public TetrominoBase {
     public:
-        Tetromino(GLUT_Plotter *g);
-        Tetromino(GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape, 
+        Tetromino();
+        Tetromino(int x, int y, int blockSize, int padding, TetrominoShape shape,
                 unsigned int background = Color::BLACK);
         Tetromino(const Tetromino<BlockType>&);
         Tetromino<BlockType>& operator =(const Tetromino<BlockType>&);
@@ -29,13 +29,13 @@ class Tetromino: public TetrominoBase {
 /* ---------- Tetromino class template implementation ---------- */
 
 template <typename BlockType>
-Tetromino<BlockType>::Tetromino(GLUT_Plotter *g): TetrominoBase(g) {
+Tetromino<BlockType>::Tetromino(): TetrominoBase() {
     initTetromino(S); // Picked by fair dice roll, guaranteed to be random
 }
 
 template <typename BlockType>
-Tetromino<BlockType>::Tetromino (GLUT_Plotter *g, int x, int y, int blockSize, int padding, TetrominoShape shape,
-        unsigned int background): TetrominoBase(g, x, y, blockSize, padding, background)
+Tetromino<BlockType>::Tetromino (int x, int y, int blockSize, int padding, TetrominoShape shape,
+		unsigned int background): TetrominoBase(x, y, blockSize, padding, background)
 {
     initTetromino(shape);
 }
@@ -59,13 +59,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired rotations.
     switch (type) {
         case I:
-            block1 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize()*4, 
+            block1 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*4,
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*4, 
+            block2 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*4,
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*4, 
+            block3 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*4,
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*3, getLocationY()+getTotalBlockSize()*4, 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize()*3, getLocationY()+getTotalBlockSize()*4,
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
@@ -77,13 +77,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             offsetY = 2;
             break;
         case O:
-            block1 = new BlockType(g, getLocationX(), getLocationY(), 
+            block1 = new BlockType(getLocationX(), getLocationY(),
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
+            block2 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
+            block3 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
@@ -94,13 +94,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             setHeight(2);
             break;
         case T:
-            block1 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block1 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
+            block2 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
+            block3 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
@@ -112,13 +112,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             offsetY = 1;
             break;
         case J:
-            block1 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
+            block1 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
+            block2 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
+            block3 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
@@ -130,13 +130,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             offsetY = 1;
             break;
         case L:
-            block1 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
+            block1 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize()*2, 
+            block2 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2, 
+            block3 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2, 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize()*2,
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
@@ -148,13 +148,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             offsetY = 1;
             break;
         case S:
-            block1 = new BlockType(g, getLocationX(), getLocationY(), 
+            block1 = new BlockType(getLocationX(), getLocationY(),
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
+            block2 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block3 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(), 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
@@ -165,13 +165,13 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             setHeight(2);
             break;
         case Z:
-            block1 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY(), 
+            block1 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
                     getBlockSize(), getPadding());
-            block2 = new BlockType(g, getLocationX()+getTotalBlockSize()*2, getLocationY(), 
+            block2 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY(),
                     getBlockSize(), getPadding());
-            block3 = new BlockType(g, getLocationX(), getLocationY()+getTotalBlockSize(), 
+            block3 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
-            block4 = new BlockType(g, getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(), 
+            block4 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY()+getTotalBlockSize(),
                     getBlockSize(), getPadding());
             
             addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);

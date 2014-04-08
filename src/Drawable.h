@@ -81,16 +81,16 @@ class Drawable {
         virtual void setBackground(unsigned int color);
         unsigned int getBackground();
 
+        static void setG(GLUT_Plotter *);
+
         virtual ~Drawable() {};
     protected:
-        Drawable(GLUT_Plotter *g);
-        Drawable(GLUT_Plotter *g, int x, int y);
-        Drawable(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int foreground = Color::WHITE, 
-                unsigned int background = Color::BLACK);
+        Drawable();
+        Drawable(int x, int y);
+        Drawable(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
+        		unsigned int background = Color::BLACK);
         Drawable(const Drawable&);
-        virtual Drawable& operator =(const Drawable&);
-        
-        GLUT_Plotter *g;
+        Drawable& operator =(const Drawable&);
         
         int x;
         int y;
@@ -102,6 +102,8 @@ class Drawable {
         unsigned int background;
         
         bool isVisible;
+
+        static GLUT_Plotter *g;
 };
 
 #endif /* DRAWABLE_H_ */

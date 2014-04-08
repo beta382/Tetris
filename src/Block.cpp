@@ -9,16 +9,16 @@
 
 #include "Block.h"
 
-Block::Block (GLUT_Plotter *g): Drawable(g, 0, 0, 10, 10) {
+Block::Block (): Drawable(0, 0, 10, 10) {
     padding = 0;
 }
 
-Block::Block (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {
+Block::Block (int x, int y): Drawable(x, y, 10, 10) {
     padding = 0;
 }
 
-Block::Block (GLUT_Plotter *g, int x, int y, int size, int padding, unsigned int foreground, unsigned int background): 
-        Drawable(g, x, y, size, size, foreground, background) {
+Block::Block (int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+        Drawable(x, y, size, size, foreground, background) {
     this->padding = padding;
 }
 

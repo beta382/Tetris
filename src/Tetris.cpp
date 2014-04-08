@@ -12,7 +12,7 @@
 
 Tetris::Tetris(GLUT_Plotter *g) {
     this->g = g;
-    screen = new Game(g); // This is temporary, change it to whatever you need to test
+    screen = new Game(); // This is temporary, change it to whatever you need to test
 }
 
 Tetris::~Tetris() {
@@ -26,7 +26,14 @@ void Tetris::Play (void) {
     while (g->kbhit()) {
         int k = g->getKey();
         
-        screen->respondToKey(k);
+        switch (k) {
+            case 27: // ESC
+            case 'x':
+                exit(1);
+                break;
+            default:
+                screen->respondToKey(k);
+        }
     }
     
     

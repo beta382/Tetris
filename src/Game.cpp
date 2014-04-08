@@ -9,7 +9,7 @@
 
 #include "Game.h"
 
-Game::Game(GLUT_Plotter *g): Drawable(g) {
+Game::Game(): Drawable() {
     init();
 }
 
@@ -75,10 +75,6 @@ void Game::respondToKey(int key) {
             currentTetromino = field->spawnNewTetromino<GhostBlock>(static_cast<TetrominoShape>(rand() %7));
             currentTetromino->draw();
             break;
-        case 27: // ESC
-        case 'x':
-            exit(1);
-            break;
         default:
             cout << key << endl;
     }
@@ -90,9 +86,10 @@ void Game::respondToKey(int key) {
 void Game::init() {
     srand(time(0));
     
-    field = new PlayingField(g, 10+getLocationX(), 10+getLocationY(), 10, 20, Color::WHITE);
+    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, Color::WHITE, Color::RED);
     currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
-    currentTetromino->draw();
+
+    draw();
 }
 
 
@@ -107,8 +104,8 @@ void Game::draw() {
 
 void Game::erase() {
     if (isVisible) {
-        field->erase();
         currentTetromino->erase();
+        field->erase();
         
         isVisible = false;
     }
