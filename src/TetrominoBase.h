@@ -1,8 +1,10 @@
 /*
- * TetrominoBase.h
- *
- *  Created on: Apr 5, 2014
- *      Author: Austin
+ * Author:                 Austin Hash
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
+ * Date created:           Apr  5, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #ifndef TETROMINOBASE_H_

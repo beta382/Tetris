@@ -1,10 +1,10 @@
 /*
  * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Mar 31, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #ifndef DRAWABLE_H_
@@ -15,6 +15,30 @@
 
 #include <iostream>
 #include <iomanip>
+
+/*
+ * Drawable:
+ *
+ * Drawable is intended to be the abstract base class of all objects that are to be drawn to the screen. You MAY NOT
+ *   independantly instantiate a Drawable object, this is enforced by making the constructors protected.
+ *
+ * All objects that directly inherit from Drawable MUST:
+ *     Implement `void draw()`
+ *     Implement `void erase()`
+ *
+ * All objects that directly inherit from Drawable MAY:
+ *     Override `void setForeground(unsigned int)`
+ *     Override `void setBackground(unsigned int)`
+ *     Override `void setLocation(int, int)`
+ *
+ * Member data:
+ *     `GLUT_Plotter *g`: Intended to be passed down
+ *     `int x`/`int y`: Are intended to define the pixel-location of the bottom-left corner of the Drawable's bounding
+ *         rectangle. Descendants of Drawable MAY define and interpret these values however best suits its purpose.
+ *     `int width`/`int height`: Are intended to define the number of pixels wide/tall the Drawable's bounding rectangle
+ *         is. Descendants of Drawable MAY define and interpret these values however best suits its purpose.
+ *
+ */
 
 class Drawable {
     public:
@@ -34,7 +58,7 @@ class Drawable {
         unsigned int getForeground() const;
         virtual void setBackground(unsigned int color);
         unsigned int getBackground();
-        
+
         virtual ~Drawable() {};
     protected:
         Drawable(GLUT_Plotter *g);

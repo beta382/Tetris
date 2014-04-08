@@ -1,10 +1,10 @@
 /*
  * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Mar 27, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #ifndef RECTANGLE_H_
