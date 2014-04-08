@@ -19,6 +19,30 @@
 
 #include <ctime>
 
+/*
+ * PlayingField:
+ *
+ * Inherits from Drawable.
+ *
+ * PlayingField is intended to represent the field of blocks in play, and provide methods for general core gameplay,
+ *   including generating and merging tetrominos and checking whether or not a shape can move or rotate within the block
+ *   field. PlayingField is not intended to be inherited from.
+ *
+ * Member data:
+ *    `vector<vector<Block *> > blocks`: A two-dimensional array of pointers to dynamically allocated Blocks,
+ *      representing the blocks currently on the field. Entries that don't contain a Block address will contain NULL.
+ *
+ * Public functions:
+ *
+ *
+ * Private functions:
+ *     `void init()`:
+ *
+ * Functions inherited from Drawable:
+ *     `void draw()`
+ *     `void erase()`
+ */
+
 const int BLOCK_SIZE = 15;
 const int BLOCK_PADDING = 2;
 
