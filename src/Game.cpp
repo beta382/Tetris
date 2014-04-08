@@ -84,7 +84,7 @@ void Game::respondToKey(int key) {
 void Game::init() {
     srand(time(0));
     
-    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, Color::WHITE, Color::RED);
+    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, 15, 2, Color::WHITE, Color::RED);
     currentTetromino = field->spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand() %7));
 
     draw();

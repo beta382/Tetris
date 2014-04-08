@@ -19,15 +19,12 @@
 
 #include <ctime>
 
-const int BLOCK_SIZE = 15;
-const int BLOCK_PADDING = 2;
-
 class PlayingField: public Drawable {
     public:
         PlayingField();
         PlayingField(int x, int y);
-        PlayingField(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
+        PlayingField(int x, int y, int width, int height, int blockSize, int padding,
+                unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK);
         PlayingField(const PlayingField&);
         PlayingField& operator =(const PlayingField&);
         ~PlayingField();
@@ -61,15 +58,18 @@ class PlayingField: public Drawable {
         
         MyRectangle *bgRect;
         
-        vector<vector<Block *> > blocks; // TODO: Make a better data structure, or are we allowed to use STL?
+        vector<vector<Block *> > blocks;
+
+        int blockSize;
+        int padding;
 };
 
 /* ---------- spawnNewTetromino method template implementation ---------- */
 
 template <typename BlockType>
 Tetromino<BlockType> *PlayingField::spawnNewTetromino (TetrominoShape type) {
-    Tetromino<BlockType> *tetromino = new Tetromino<BlockType>(getLocationX()+(BLOCK_SIZE+BLOCK_PADDING)*(getWidth()/2),
-            getLocationY()+(BLOCK_SIZE+BLOCK_PADDING)*getHeight(), BLOCK_SIZE, BLOCK_PADDING, type, getForeground());
+    Tetromino<BlockType> *tetromino = new Tetromino<BlockType>(getLocationX()+(blockSize+padding)*(getWidth()/2),
+            getLocationY()+(blockSize+padding)*getHeight(), blockSize, padding, type, getForeground());
     
     // We spawn right above the field, this puts us at the top of the screen, properly centered
     tetromino->setLocation(tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),

@@ -10,16 +10,22 @@
 #include "PlayingField.h"
 
 PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
+    blockSize = 10;
+    padding = 2;
     init();
 }
 
 PlayingField::PlayingField(int x, int y): Drawable(x, y, 10, 20) {
+    blockSize = 10;
+    padding = 2;
     init();
 }
 
-PlayingField::PlayingField(int x, int y, int width, int height, unsigned int foreground, unsigned int background):
-        Drawable(x, y, width, height, foreground, background)
+PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, int padding, unsigned int foreground,
+        unsigned int background): Drawable(x, y, width, height, foreground, background)
 {
+    this->blockSize = blockSize;
+    this->padding = padding;
     init();
 }
 
@@ -221,8 +227,8 @@ void PlayingField::init() {
         }
     }
     
-    bgRect = new MyRectangle(getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1),
-            BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getForeground(), getBackground());
+    bgRect = new MyRectangle(getLocationX(), getLocationY(), blockSize*getWidth() + padding*(getWidth()-1),
+            blockSize*getHeight() + padding*(getHeight()-1), getForeground(), getBackground());
 
     draw();
 }
