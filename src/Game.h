@@ -38,7 +38,7 @@
  * Private functions:
  *     `void init()`: Initializes member data and the RNG, draws the initial state to the screen.
  *
- * Functions implimented from Drawable:
+ * Functions implemented from Drawable:
  *     `void draw()`
  *     `void erase()`
  */

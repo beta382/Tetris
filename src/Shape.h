@@ -23,9 +23,9 @@
  *   and manipulating the Blocks. Shape IS intended to be inherited from.
  *
  * Protected member data:
- *    `vector<Block *> blocks`: An array of pointers to dynamically allocated Blocks, representing the Blocks contained
- *      within the Shape. The index of the Block DOES NOT correlate to its on-screen location.
- *    `int blockSize`/`int padding`: The size of the Blocks and padding between Blocks.
+ *     `vector<Block *> blocks`: An array of pointers to dynamically allocated Blocks, representing the Blocks contained
+ *       within the Shape. The index of the Block DOES NOT correlate to its on-screen location.
+ *     `int blockSize`/`int padding`: The size of the Blocks and padding between Blocks.
  *
  * Public functions:
  *     `Block *getBlock(int)`: Gets the Block pointer at the specified index.
@@ -37,7 +37,7 @@
  *       with a conditional.
  *     `Shape& addBlock(Block *)`: Adds the Block pointer to the Shape, and returns the Shape by reference for chaining.
  *
- * Functions implimented from Drawable:
+ * Functions implemented from Drawable:
  *     `void draw()`
  *     `void erase()`
  *

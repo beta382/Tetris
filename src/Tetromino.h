@@ -20,7 +20,7 @@
  * Tetromino<BlockType> is intended to represent a specialized Shape that contains four Blocks of the specified
  *   BlockType. Tetromino<BlockType> IS NOT intended to be inherited from.
  *
- * Functions implimented from TetrominoBase:
+ * Functions implemented from TetrominoBase:
  *     `void initTetromino(TetrominoShape)`
  */
 

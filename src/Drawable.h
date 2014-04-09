@@ -35,6 +35,9 @@
  *       at the end of your `void draw()` and `void erase()` implementations. It is STRONGLY ENCOURAGED that you NOT use
  *       this in a different manner than described.
  *
+ * Protected static data:
+ *     `GLUT_Plotter *g`: A shared GLUT_Plotter for all instances of objects that descend from Drawable.
+ *
  * Public functions:
  *     `void setWidth(int)`/`int getWidth()`/`void setHeight(int)`/`int getHeight()`: Simple getters and setters for
  *       `int width` and `int height`.
@@ -42,7 +45,7 @@
  *       and `int y`.
  *     `void setForeground(unsigned int)`/`unsigned int getForeground()`/`void setBackground(unsigned int)`/`unsigned
  *       int getBackground()`: Simple getters and setters for `unsigned int foreground` and `unsigned int background`.
- *     `void draw()`/`void erase()`: Pure virtual functions that MUST be implimented by descendants of Drawable to draw
+ *     `void draw()`/`void erase()`: Pure virtual functions that MUST be implemented by descendants of Drawable to draw
  *       and erase the Drawable on the screen.
  *
  * All objects that directly inherit from Drawable MUST:

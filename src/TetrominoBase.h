@@ -29,8 +29,8 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  *   independantly instantiate a TetrominoBase object, this is enforced by making the constructors protected.
  *
  * Protected member data:
- *    `int offsetX`/`int offsetY`: Used to alter rotation behavior of a TetrominoBase. Specifically, describes how to
- *      shift the bounding rectangle prior to rotating the TetrominoBase.
+ *     `int offsetX`/`int offsetY`: Used to alter rotation behavior of a TetrominoBase. Specifically, describes how to
+ *       shift the bounding rectangle prior to rotating the TetrominoBase.
  *
  * Public functions:
  *     `void rotateCW()`/`void rotateCCW()`: Rotates the TetrominoBase one quarter rotation in the respective direction,
@@ -38,7 +38,7 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  *     `int getOffsetX()`/`int getOffsetY()`: Getters for `int offsetX` and `int offsetY`.
  *
  * Protected functions:
- *     `void initTetromino(TetrominoShape)`: Pure virtual function that MUST be implimented by descendants of
+ *     `void initTetromino(TetrominoShape)`: Pure virtual function that MUST be implemented by descendants of
  *       TetrominoBase to initialize the tetromino with the specified shape.
  *
  * All objects that directly inherit from TetrominoBase MUST:

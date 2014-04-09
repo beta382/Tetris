@@ -22,8 +22,8 @@
  *   inherited from.
  *
  * Protected member data:
- *    `int padding`: The padding the Block should have in addition to it's visible representation. Specifically, defines
- *      the number of pixels above and to the right the Block technically occupies, but not visibly.
+ *     `int padding`: The padding the Block should have in addition to it's visible representation. Specifically, defines
+ *       the number of pixels above and to the right the Block technically occupies, but not visibly.
  *
  * Public functions:
  *     `int getSize()`/`int getPadding()`/`int getTotalSize()`: Getters for `int width`, `int padding`, and the sum
@@ -34,7 +34,7 @@
  *       Block pointer without knowing whether the object being copied is a Block or one of its descendants. This MUST
  *       be properly overridden by all descendants of Block.
  *
- * Functions implimented from Drawable:
+ * Functions implemented from Drawable:
  *     `void draw()`
  *     `void erase()`
  *
