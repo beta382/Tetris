@@ -1,25 +1,25 @@
 /*
  * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Mar 29, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #include "PlayingField.h"
 
-PlayingField::PlayingField(GLUT_Plotter *g): Drawable(g, 0, 0, 10, 20) {
+PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
+    blockSize = 10;
+    padding = 0;
     init();
 }
 
-PlayingField::PlayingField(GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 20) {
-    init();
-}
-
-PlayingField::PlayingField(GLUT_Plotter *g, int x, int y, int width, int height, unsigned int background): 
-        Drawable(g, x, y, width, height, Color::BLACK, background)
+PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, int padding, unsigned int foreground,
+        unsigned int background): Drawable(x, y, width, height, foreground, background)
 {
+    this->blockSize = blockSize;
+    this->padding = padding;
     init();
 }
 
@@ -46,6 +46,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
                 }
             }
         }
+        
+        delete bgRect;
         
         Drawable::operator =(rhs);
         
@@ -210,18 +212,19 @@ bool PlayingField::canRotateCCW(TetrominoBase *const t) const {
 
 void PlayingField::init() {
     for (int i = 0; i < getWidth(); i++) {
-        myVector<Block *> tmp;
-        blocks.pushBack(tmp);
+        vector<Block *> tmp;
+        blocks.push_back(tmp);
         for (int j = 0; j < getHeight(); j++) {
             // Everything that is a NULL pointer represents a blank space, makes checking for overlap super-simple,
             // just gotta add checks everywhere. Initialize all Block pointers to NULL
-            blocks[i].pushBack(NULL);
+            blocks[i].push_back(NULL);
         }
     }
     
-    bgRect = new MyRectangle(g, getLocationX(), getLocationY(), BLOCK_SIZE*getWidth() + BLOCK_PADDING*(getWidth()-1), 
-            BLOCK_SIZE*getHeight() + BLOCK_PADDING*(getHeight()-1), getBackground());
-    bgRect->draw();
+    bgRect = new MyRectangle(getLocationX(), getLocationY(), blockSize*getWidth() + padding*(getWidth()-1),
+            blockSize*getHeight() + padding*(getHeight()-1), getForeground(), getBackground());
+
+    draw();
 }
 
 bool PlayingField::couldAdd(Block *const block) const {
@@ -242,9 +245,9 @@ bool PlayingField::couldAdd(Block *const block) const {
 }
 
 void PlayingField::doLineClear() {
-    myVector<int> clearableLines;
-    myVector<Block *> clearedBlocks;
-    myVector<Shape *> remainingShapes;
+    vector<int> clearableLines;
+    vector<Block *> clearedBlocks;
+    vector<Shape *> remainingShapes;
     
     clock_t start;
     
@@ -258,12 +261,12 @@ void PlayingField::doLineClear() {
         }
         
         if (isClearable) {
-            clearableLines.pushBack(i);
+            clearableLines.push_back(i);
         }
     }
     
     // If there are lines to clear
-    if (clearableLines.getSize() > 0) {
+    if (clearableLines.size() > 0) {
         
         // Blink three times
         for (int r = 0; r < 3; r++) {
@@ -271,7 +274,7 @@ void PlayingField::doLineClear() {
             
             while (clock() < start+150); // Wait 150ms
             
-            for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (unsigned int i = 0; i < clearableLines.size(); i++) {
                 for (int j = 0; j < getWidth(); j++) {
                     if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                         blocks[j][clearableLines[i]]->erase();
@@ -285,7 +288,7 @@ void PlayingField::doLineClear() {
             
             while (clock() < start+150); // Wait 150ms
             
-            for (int i = 0; i < clearableLines.getSize(); i++) {
+            for (unsigned int i = 0; i < clearableLines.size(); i++) {
                 for (int j = 0; j < getWidth(); j++) {
                     if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                         blocks[j][clearableLines[i]]->draw();
@@ -297,7 +300,7 @@ void PlayingField::doLineClear() {
         }
         
         // Erase the lines for good
-        for (int i = 0; i < clearableLines.getSize(); i++) {
+        for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
                 if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
                     blocks[j][clearableLines[i]]->erase();
@@ -306,10 +309,10 @@ void PlayingField::doLineClear() {
         }
         
         // Clone, store, and then clear the blocks
-        for (int i = 0; i < clearableLines.getSize(); i++) {
+        for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
                 if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                    clearedBlocks.pushBack(blocks[j][clearableLines[i]]->makeNewClone());
+                    clearedBlocks.push_back(blocks[j][clearableLines[i]]->makeNewClone());
                     delete blocks[j][clearableLines[i]];
                     blocks[j][clearableLines[i]] = NULL;
                 }
@@ -318,8 +321,8 @@ void PlayingField::doLineClear() {
         
         // Perform each block's special effect and delete the copy, should probably find a way to convert the remainder
         // of the special tetromino to a normal tetromino
-        // TODO: Above
-        for (int i = 0; i < clearedBlocks.getSize(); i++) {
+        // TODO: Above, maybe have some sort of unique id for each Tetromino's blocks
+        for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
             clearedBlocks[i]->doOnClear(blocks, 
                     (clearedBlocks[i]->getLocationX()-getLocationX())/clearedBlocks[i]->getTotalSize(),
                     (clearedBlocks[i]->getLocationY()-getLocationY())/clearedBlocks[i]->getTotalSize());
@@ -339,7 +342,7 @@ void PlayingField::doLineClear() {
         while(didFall) {
             didFall = false;
             // For each shape...
-            for (int i = 0; i < remainingShapes.getSize(); i++) {
+            for (unsigned int i = 0; i < remainingShapes.size(); i++) {
                 // Shift down once if we can
                 if (remainingShapes[i]) {
                     if (canShiftDown(remainingShapes[i])) {
@@ -357,24 +360,24 @@ void PlayingField::doLineClear() {
             if (didFall) {
                 start = clock();
                 
-                while (clock() < start + 250);
+                while (clock() < start + 100);
             }
         }
     }
 }
 
-myVector<Shape *> PlayingField::formShapes() {
-    myVector<Shape *> shapes;
+vector<Shape *> PlayingField::formShapes() {
+    vector<Shape *> shapes;
     
     for (int i = 0; i < getHeight(); i++) {
         for (int j = 0; j < getWidth(); j++) {
             if (blocks[j][i]) {
-                Shape *curShape = new Shape(g, blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(), 
+                Shape *curShape = new Shape(blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(),
                         blocks[j][i]->getSize(), blocks[j][i]->getPadding());
                 
                 makeShapeRecursively(curShape, j, i);
                 
-                shapes.pushBack(curShape);
+                shapes.push_back(curShape);
             }
         }
     }
@@ -414,6 +417,8 @@ void PlayingField::setLocation(int x, int y) {
         }
     }
     
+    bgRect->setLocation(bgRect->getLocationX()+dX, getLocationY()+dY);
+    
     draw();
     
     this->x = x;
@@ -424,6 +429,8 @@ void PlayingField::setLocation(int x, int y) {
 /* ---------- Implemented from Drawable ---------- */
 
 void PlayingField::draw() {
+    bgRect->draw();
+
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             if (blocks[i][j]) {
@@ -431,7 +438,7 @@ void PlayingField::draw() {
             }
         }
     }
-    
+
     isVisible = true;
 }
 

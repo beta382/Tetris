@@ -1,24 +1,20 @@
 /*
  * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Mar 27, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #include "Block.h"
 
-Block::Block (GLUT_Plotter *g): Drawable(g, 0, 0, 10, 10) {
+Block::Block (): Drawable(0, 0, 10, 10) {
     padding = 0;
 }
 
-Block::Block (GLUT_Plotter *g, int x, int y): Drawable(g, x, y, 10, 10) {
-    padding = 0;
-}
-
-Block::Block (GLUT_Plotter *g, int x, int y, int size, int padding, unsigned int foreground, unsigned int background): 
-        Drawable(g, x, y, size, size, foreground, background) {
+Block::Block (int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+        Drawable(x, y, size, size, foreground, background) {
     this->padding = padding;
 }
 
@@ -51,7 +47,7 @@ int Block::getTotalSize() const {
     return getSize()+getPadding();
 }
 
-void Block::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
+void Block::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
 }
 

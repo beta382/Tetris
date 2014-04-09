@@ -1,17 +1,18 @@
 /*
- * GhostBlock.cpp
- *
- *  Created on: Apr 4, 2014
- *      Author: Austin
+ * Author:                 Austin Hash
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
+ * Date created:           Apr  4, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #include "GhostBlock.h"
 
-GhostBlock::GhostBlock(GLUT_Plotter *g): Block(g) {}
+GhostBlock::GhostBlock(): Block() {}
 
-GhostBlock::GhostBlock(GLUT_Plotter *g, int x, int y): Block(g, x, y) {}
-
-GhostBlock::GhostBlock(GLUT_Plotter *g, int x, int y, int size, int padding): Block(g, x, y, size, padding) {}
+GhostBlock::GhostBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+        Block(x, y, size, padding, foreground, background) {}
 
 GhostBlock::GhostBlock(const GhostBlock& other): Block(other) {}
 
@@ -30,7 +31,7 @@ GhostBlock::~GhostBlock() {
 
 /* ---------- Overriding from Block ---------- */
 
-void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField, int x, int y) {
+void GhostBlock::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
     
     // ExplodingBlock example
@@ -70,7 +71,7 @@ void GhostBlock::doOnClear(myVector<myVector<Block *> >& blockField, int x, int 
         if (didFall) {
             clock_t start = clock();
             
-            while (clock() < start + 250);
+            while (clock() < start + 100);
         }
     }*/
 }
@@ -97,7 +98,7 @@ void GhostBlock::draw() {
 
 void GhostBlock::erase() {
     if (isVisible) {
-        g->setColor(Color::BLACK);
+        g->setColor(getBackground());
         for (int i = 0; i < getWidth(); i++) {
             g->plot(getLocationX()+i, getLocationY());
             g->plot(getLocationX()+i, getLocationY()+getHeight()-1);

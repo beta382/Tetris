@@ -1,21 +1,21 @@
 /*
  * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Mar 30, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #include "Shape.h"
 
-Shape::Shape(GLUT_Plotter *g): Drawable(g) {
+Shape::Shape(): Drawable() {
     blockSize = 10;
     padding = 0;
 }
 
-Shape::Shape (GLUT_Plotter *g, int x, int y, int blockSize, int padding, unsigned int background): 
-        Drawable(g, x, y, 0, 0, Color::WHITE, background)
+Shape::Shape (int x, int y, int blockSize, int padding, unsigned int background):
+		Drawable(x, y, 0, 0, Color::WHITE, background)
 {
     this->blockSize = blockSize;
     this->padding = padding;
@@ -36,7 +36,7 @@ Shape& Shape::operator =(const Shape& rhs) {
     if (this != &rhs) {
         erase();
         
-        for (int i = 0; i < blocks.getSize(); i++) {
+        for (unsigned int i = 0; i < blocks.size(); i++) {
             delete blocks[i];
         }
         
@@ -58,7 +58,7 @@ Shape& Shape::operator =(const Shape& rhs) {
 
 Shape::~Shape() {
     erase();
-    for (int i = 0; i < blocks.getSize(); i++) {
+    for (unsigned int i = 0; i < blocks.size(); i++) {
         delete blocks[i];
     }
 }
@@ -68,7 +68,7 @@ Block *Shape::getBlock(int index) const {
 }
 
 int Shape::numBlocks() const {
-    return blocks.getSize();
+    return blocks.size();
 }
 
 int Shape::getBlockSize() const {
@@ -108,7 +108,7 @@ void Shape::shiftRight () {
 }
 
 Shape& Shape::addBlock(Block *const block) {
-    blocks.pushBack(block);
+    blocks.push_back(block);
     
     return *this;
 }
@@ -118,7 +118,7 @@ Shape& Shape::addBlock(Block *const block) {
 void Shape::setLocation(int x, int y) {
     int dX = x - getLocationX();
     int dY = y - getLocationY();
-    for (int i = 0; i < blocks.getSize(); i++) {
+    for (unsigned int i = 0; i < blocks.size(); i++) {
         blocks[i]->setLocation(blocks[i]->getLocationX()+dX, blocks[i]->getLocationY()+dY);
     }
     
@@ -127,7 +127,7 @@ void Shape::setLocation(int x, int y) {
 }
 
 void Shape::setForeground (unsigned int foreground) {
-    for (int i = 0; i < blocks.getSize(); i++){
+    for (unsigned int i = 0; i < blocks.size(); i++){
         blocks[i]->setForeground(foreground);
     }
     
@@ -135,7 +135,7 @@ void Shape::setForeground (unsigned int foreground) {
 }
 
 void Shape::setBackground(unsigned int background) {
-    for (int i = 0; i < blocks.getSize(); i++){
+    for (unsigned int i = 0; i < blocks.size(); i++){
         blocks[i]->setBackground(background);
     }
     
@@ -146,7 +146,7 @@ void Shape::setBackground(unsigned int background) {
 /* ---------- Implemented from Drawable ---------- */
 
 void Shape::draw() {
-    for (int i = 0; i < blocks.getSize(); i++) {
+    for (unsigned int i = 0; i < blocks.size(); i++) {
         blocks[i]->draw();
     }
     
@@ -155,7 +155,7 @@ void Shape::draw() {
 
 void Shape::erase() {
     if (isVisible) {
-        for (int i = 0; i < blocks.getSize(); i++) {
+        for (unsigned int i = 0; i < blocks.size(); i++) {
             blocks[i]->erase();
         }
         

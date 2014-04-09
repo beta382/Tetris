@@ -1,23 +1,23 @@
 /*
- * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Author:                 Wes Cossick
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Mar 27, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #ifndef RECTANGLE_H_
 #define RECTANGLE_H_
 
 #include "Drawable.h"
-#include "myVector.h"
 
 class MyRectangle: public Drawable {
     public:
-        MyRectangle(GLUT_Plotter *g);
-        MyRectangle(GLUT_Plotter *g, int x, int y);
-        MyRectangle(GLUT_Plotter *g, int x, int y, int width, int height, int color = Color::WHITE);
+        MyRectangle();
+        MyRectangle(int x, int y);
+        MyRectangle(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
+        		unsigned int background = Color::BLACK);
         MyRectangle(const MyRectangle&);
         MyRectangle& operator =(const MyRectangle&);
         ~MyRectangle();
