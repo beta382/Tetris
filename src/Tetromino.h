@@ -1,16 +1,28 @@
 /*
  * Author:                 Austin Hash
- * Assignment name:        Tetris: 
- * Assignment description:
- * Due date:               
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Mar 29, 2014
+ * Date last modified:     Apr  8, 2014
  */
 
 #ifndef TETROMINO_H_
 #define TETROMINO_H_
 
 #include "TetrominoBase.h"
+
+/*
+ * Tetromino<BlockType>:
+ *
+ * Inherits from TetrominoBase.
+ *
+ * Tetromino<BlockType> is intended to represent a specialized Shape that contains four Blocks of the specified
+ *   BlockType. Tetromino<BlockType> IS NOT intended to be inherited from.
+ *
+ * Functions implemented from TetrominoBase:
+ *     `void initTetromino(TetrominoShape)`
+ */
 
 template <typename BlockType>
 class Tetromino: public TetrominoBase {
