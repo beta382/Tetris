@@ -28,6 +28,16 @@
  *   including generating and merging tetrominos and checking whether or not a shape can move or rotate within the block
  *   field. PlayingField IS NOT intended to be inherited from.
  *
+ * PlayingField defines and interprets `int width` and `int height` as the number of Blocks wide and tall the block
+ *   field is.
+ *
+ * Constructors:
+ *     `PlayingField()`: Calls `Drawable(0, 0, 10, 20)`, initializes `int blockSize` to 10 and `int padding` to 0, then
+ *       calls `void init()`.
+ *     `PlayingField(int x, int y, int width, int height, int blockSize, int padding, unsigned int foreground,
+ *       unsigned int background)`: Calls `Drawable(x, y, width, height, foreground, background)`, initializes
+ *       `int blockSize` and `int padding` to the passed values, then calls `void init()`.
+ *
  * Private member data:
  *     `vector<vector<Block *> > blocks`: A two-dimensional array of pointers to dynamically allocated Blocks,
  *       representing the Blocks currently on the field. The index of the Block DOES directly correlate to its on-screen
@@ -69,7 +79,6 @@
 class PlayingField: public Drawable {
     public:
         PlayingField();
-        PlayingField(int x, int y);
         PlayingField(int x, int y, int width, int height, int blockSize, int padding,
                 unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK);
         PlayingField(const PlayingField&);

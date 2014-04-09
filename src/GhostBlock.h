@@ -20,6 +20,11 @@
  * GhostBlock is intended to represent a single block outline, to be used to show where a Block may end up. GhostBlock
  *   IS NOT intended to be inherited from.
  *
+ * Constructors:
+ *     `GhostBlock()`: Calls `Block()`.
+ *     `GhostBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background)`: Calls
+ *       `Block (x, y, size, padding, foreground, background)`.
+ *
  * Functions overridden from Block:
  *     `void draw()`
  *     `void erase()`
@@ -29,8 +34,8 @@
 class GhostBlock: public Block {
     public:
         GhostBlock();
-        GhostBlock(int x, int y);
-        GhostBlock(int x, int y, int size, int padding);
+        GhostBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
+                unsigned int background = Color::BLACK);
         GhostBlock(const GhostBlock&);
         GhostBlock& operator =(const GhostBlock&);
         ~GhostBlock();

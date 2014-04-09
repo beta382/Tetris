@@ -11,13 +11,7 @@
 
 PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
     blockSize = 10;
-    padding = 2;
-    init();
-}
-
-PlayingField::PlayingField(int x, int y): Drawable(x, y, 10, 20) {
-    blockSize = 10;
-    padding = 2;
+    padding = 0;
     init();
 }
 

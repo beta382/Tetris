@@ -28,6 +28,12 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  * TetrominoBase is intended to be the abstract base class for all possible Tetromino<BlockType> classes. You MAY NOT
  *   independantly instantiate a TetrominoBase object, this is enforced by making the constructors protected.
  *
+ * Constructors:
+ *     `TetrominoBase()`: Calls `Shape()` and initializes `int offsetX` and `int offsetY` to 0.
+ *     `TetrominoBase(int x, int y, int blockSize, int padding, unsigned int background)`: Calls
+ *       `Shape(x, y, blockSize, padding, background)` and initializes `int offsetX` and `int offsetY` to the passed
+ *       values.
+ *
  * Protected member data:
  *     `int offsetX`/`int offsetY`: Used to alter rotation behavior of a TetrominoBase. Specifically, describes how to
  *       shift the bounding rectangle prior to rotating the TetrominoBase.

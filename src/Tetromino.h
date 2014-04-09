@@ -20,6 +20,17 @@
  * Tetromino<BlockType> is intended to represent a specialized Shape that contains four Blocks of the specified
  *   BlockType. Tetromino<BlockType> IS NOT intended to be inherited from.
  *
+ * Tetromino<BlockType> DOES use `int width`, `int height`, and `unsigned int foreground`. Tetromino<BlockType> defines
+ *   and interprets `int width` and `int height` as the size of the bounding rectangle of the tetromino in Blocks, with
+ *   some tetromino shapes having modified bounding rectangles to accommodate special rotations.
+ *
+ * Constructors:
+ *     `Tetromino()`: Calls `TetrominoBase()`, and then calls `void initTetromino(TetrominoShape)` with TetrominoShape
+ *       `S`.
+ *     `Tetromino(int x, int y, int blockSize, int padding, TetrominoShape shape, unsigned int background)`: Calls
+ *       `TetrominoBase(x, y, blockSize, padding, background)`, and then calls `void initTetromino(TetrominoShape)` with
+ *       the passed `TetrominoShape shape`.
+ *
  * Functions implemented from TetrominoBase:
  *     `void initTetromino(TetrominoShape)`
  */

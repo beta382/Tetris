@@ -22,6 +22,15 @@
  * Shape is intended to represent and be a wrapper for a collection of Blocks, and provide methods for interfacing with
  *   and manipulating the Blocks. Shape IS intended to be inherited from.
  *
+ * Shape DOES NOT use `int width`, `int height`, or `unsigned int foreground`. However subclasses of Shape MAY use these
+ *   member data.
+ *
+ * Constructors:
+ *     `Shape()`: Calls `Drawable()` and initializes `int blockSize` to 10 and `int padding` to 0.
+ *     `Shape(int x, int y, int blockSize, int padding, unsigned int background)`: Calls
+ *       `Drawable(x, y, 0, 0, Color::WHITE, background)` and initializes `int blockSize` and `int padding` to the
+ *       passed values.
+ *
  * Protected member data:
  *     `vector<Block *> blocks`: An array of pointers to dynamically allocated Blocks, representing the Blocks contained
  *       within the Shape. The index of the Block DOES NOT correlate to its on-screen location.

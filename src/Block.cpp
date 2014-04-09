@@ -13,10 +13,6 @@ Block::Block (): Drawable(0, 0, 10, 10) {
     padding = 0;
 }
 
-Block::Block (int x, int y): Drawable(x, y, 10, 10) {
-    padding = 0;
-}
-
 Block::Block (int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
         Drawable(x, y, size, size, foreground, background) {
     this->padding = padding;
