@@ -44,7 +44,7 @@ Drawable is intended to be the abstract base class of all objects that are to be
   - Define a proper copy constructor that calls `Drawable(const Drawable&)`, even if there is no memory management
   - Define a proper assignment operator that calls `Drawable::operator =(const Drawable&)`, even if there is not
       memory management
-    -(This is because each new Drawable, even if it is a copy, should have `bool isVisible` set to false regardless of its
+  -(This is because each new Drawable, even if it is a copy, should have `bool isVisible` set to false regardless of its
       origin)
       
       
@@ -80,11 +80,11 @@ PlayingField is intended to represent the field of blocks in play, and provide m
   field. PlayingField IS NOT intended to be inherited from.
 
 ####Private member data
-   - `vector<vector<Block *> > blocks`: A two-dimensional array of pointers to dynamically allocated Blocks,
+  - `vector<vector<Block *> > blocks`: A two-dimensional array of pointers to dynamically allocated Blocks,
      representing the Blocks currently on the field. The index of the Block DOES directly correlate to its on-screen
      location. Entries that don't contain a Block address will contain NULL.
-   - `MyRectangle *bgRect`: A rectangle fill representing the background of the playing field.
-   - `int blockSize`/`int padding`: The size of the Blocks and padding between Blocks.
+  - `MyRectangle *bgRect`: A rectangle fill representing the background of the playing field.
+  - `int blockSize`/`int padding`: The size of the Blocks and padding between Blocks.
 
 ####Public functions
   - `Tetromino<BlockType> *spawnNewTetromino(TetrominoShape)`: Allocates a new Tetromino<BlockType> with the
