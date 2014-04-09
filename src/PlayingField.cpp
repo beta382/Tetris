@@ -354,7 +354,9 @@ void PlayingField::doLineClear() {
                 // Shift down once if we can
                 if (remainingShapes[i]) {
                     if (canShiftDown(remainingShapes[i])) {
+                        remainingShapes[i]->erase();
                         remainingShapes[i]->shiftDown();
+                        remainingShapes[i]->draw();
                         didFall = true;
                     } else {
                         mergeAndDelete(remainingShapes[i]);

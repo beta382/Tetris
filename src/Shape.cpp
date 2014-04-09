@@ -92,27 +92,19 @@ int Shape::getTotalBlockSize() const {
 }
 
 void Shape::shiftUp () {
-    erase();
     setLocation(getLocationX(), getLocationY()+getTotalBlockSize());
-    draw();
 }
 
 void Shape::shiftDown () {
-    erase();
     setLocation(getLocationX(), getLocationY()-getTotalBlockSize());
-    draw();
 }
 
 void Shape::shiftLeft () {
-    erase();
     setLocation(getLocationX()-getTotalBlockSize(), getLocationY());
-    draw();
 }
 
 void Shape::shiftRight () {
-    erase();
     setLocation(getLocationX()+getTotalBlockSize(), getLocationY());
-    draw();
 }
 
 /* ---------- Overriding from Drawable ---------- */

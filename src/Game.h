@@ -34,6 +34,9 @@
  *     `PlayingField *field`: Pointer to a PlayingField object representing the main gameplay area.
  *     `TetrominoBase *currentTetromino`: Pointer to a TetrominoBase object (which can be any Tetromino<BlockType>)
  *       representing the currently falling tetromino.
+ *     `Tetromino<GhostBlock> *shadow`: Pointer to a Tetromino<GhostBlock> object representing the final location of the
+ *       currently falling tetromino should it be allowed to fall all the way to the bottom without shifting left or
+ *       right.
  *
  * Public functions:
  *     `void respondToKey(int)`: Performs a gameplay action based on the pressed key.
@@ -64,6 +67,7 @@ class Game: public Drawable {
         
         PlayingField *field;
         TetrominoBase *currentTetromino;
+        Tetromino<GhostBlock> *shadow;
 };
 
 
