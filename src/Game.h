@@ -27,6 +27,9 @@
  * Game is intended to represent the game screen, and be a wrapper for everything that the game screen contains. Game IS
  *   NOT intended to be inherited from.
  *
+ * Constructors:
+ *     `Game()`: Calls `Drawable()`, then calls `void init()`.
+ *
  * Private member data:
  *     `PlayingField *field`: Pointer to a PlayingField object representing the main gameplay area.
  *     `TetrominoBase *currentTetromino`: Pointer to a TetrominoBase object (which can be any Tetromino<BlockType>)

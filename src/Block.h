@@ -21,6 +21,11 @@
  * Block is intended to represent a single block, and define behaviors specific to that block. Block IS intended to be
  *   inherited from.
  *
+ * Constructors:
+ *     `Block()`: Calls `Drawable(0, 0, 10, 10)` and initializes `int padding` to 0.
+ *     `Block(int x, int y, int size, int padding, unsigned int foreground, unsigned int background)`: Calls
+ *       `Drawable(x, y, size, size, foreground, background)` and initializes `int padding` to the passed value.
+ *
  * Protected member data:
  *     `int padding`: The padding the Block should have in addition to it's visible representation. Specifically, defines
  *       the number of pixels above and to the right the Block technically occupies, but not visibly.
@@ -48,7 +53,6 @@
 class Block: public Drawable {
     public:
         Block();
-        Block(int x, int y);
         Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
         		unsigned int background = Color::BLACK);
         Block(const Block&);

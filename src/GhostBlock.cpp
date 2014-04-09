@@ -11,9 +11,8 @@
 
 GhostBlock::GhostBlock(): Block() {}
 
-GhostBlock::GhostBlock(int x, int y): Block(x, y) {}
-
-GhostBlock::GhostBlock(int x, int y, int size, int padding): Block(x, y, size, padding) {}
+GhostBlock::GhostBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+        Block(x, y, size, padding, foreground, background) {}
 
 GhostBlock::GhostBlock(const GhostBlock& other): Block(other) {}
 
@@ -99,7 +98,7 @@ void GhostBlock::draw() {
 
 void GhostBlock::erase() {
     if (isVisible) {
-        g->setColor(Color::BLACK);
+        g->setColor(getBackground());
         for (int i = 0; i < getWidth(); i++) {
             g->plot(getLocationX()+i, getLocationY());
             g->plot(getLocationX()+i, getLocationY()+getHeight()-1);

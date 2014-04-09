@@ -22,6 +22,16 @@
  * Drawable is intended to be the abstract base class of all objects that are to be drawn to the screen. You MAY NOT
  *   independantly instantiate a Drawable object, this is enforced by making the constructors protected.
  *
+ * Constructors:
+ *     `Drawable()`: Initializes `int x`, `int y`, `int width`, and `int height` to 0, `unsigned int foreground` to
+ *       `Color::WHITE`, `unsigned int background` to `Color::BLACK`, and `bool isVisible` to false.
+ *     `Drawable(int x, int y)`: Initializes `int x` and `int y` to the passed values, `int width`, and `int height` to
+ *       0, `unsigned int foreground` to `Color::WHITE`, `unsigned int background` to `Color::BLACK`, and
+ *       `bool isVisible` to false.
+ *     `Drawable(int x, int y, int width, int height, unsigned int foreground, unsigned int background)`: Initializes
+ *       `int x`, `int y`, `int width`, `int height`, `unsigned int foreground`, and `unsigned int background` to the
+ *       passed values, and `bool isVisible` to false.
+ *
  * Protected member data:
  *     `int x`/`int y`: Are intended to define the pixel-location of the bottom-left corner of the Drawable's bounding
  *       rectangle. Descendants of Drawable MAY define and interpret these values however best suits its purpose.
