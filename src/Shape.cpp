@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr  9, 2014
  */
 
 #include "Shape.h"
@@ -22,14 +22,14 @@ Shape::Shape (int x, int y, int blockSize, int padding, unsigned int background)
 }
 
 Shape::Shape(const Shape& other): Drawable(other) {
+    blockSize = other.blockSize;
+    padding = other.padding;
+    
     for (int i = 0; i < other.numBlocks(); i++) {
         if (other.blocks.at(i)) {
             addBlock(other.blocks.at(i)->makeNewClone());
         }
     }
-    
-    blockSize = other.blockSize;
-    padding = other.padding;
 }
 
 Shape& Shape::operator =(const Shape& rhs) {
@@ -39,6 +39,8 @@ Shape& Shape::operator =(const Shape& rhs) {
         for (unsigned int i = 0; i < blocks.size(); i++) {
             delete blocks[i];
         }
+        
+        blocks.clear();
         
         Drawable::operator =(rhs);
         blockSize = rhs.blockSize;
@@ -65,6 +67,12 @@ Shape::~Shape() {
 
 Block *Shape::getBlock(int index) const {
     return blocks.at(index);
+}
+
+Shape& Shape::addBlock(Block *const block) {
+    blocks.push_back(block);
+    
+    return *this;
 }
 
 int Shape::numBlocks() const {
@@ -105,12 +113,6 @@ void Shape::shiftRight () {
     erase();
     setLocation(getLocationX()+getTotalBlockSize(), getLocationY());
     draw();
-}
-
-Shape& Shape::addBlock(Block *const block) {
-    blocks.push_back(block);
-    
-    return *this;
 }
 
 /* ---------- Overriding from Drawable ---------- */

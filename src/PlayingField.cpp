@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr  9, 2014
  */
 
 #include "PlayingField.h"
@@ -24,12 +24,14 @@ PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, i
 }
 
 PlayingField::PlayingField(const PlayingField& other): Drawable(other) {
+    blockSize = other.blockSize;
+    padding = other.padding;
     init();
     
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             if (other.blocks.at(i).at(j)) {
-                blocks[i][i] = other.blocks.at(i).at(j)->makeNewClone();
+                blocks[i][j] = other.blocks.at(i).at(j)->makeNewClone();
             }
         }
     }
@@ -45,18 +47,24 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
                     delete blocks[i][j];
                 }
             }
+            
+            blocks[i].clear();
         }
+        
+        blocks.clear();
         
         delete bgRect;
         
         Drawable::operator =(rhs);
+        blockSize = rhs.blockSize;
+        padding = rhs.padding;
         
         init();
         
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
                 if (rhs.blocks.at(i).at(j)) {
-                    blocks[i][i] = rhs.blocks.at(i).at(j)->makeNewClone();
+                    blocks[i][j] = rhs.blocks.at(i).at(j)->makeNewClone();
                 }
             }
         }

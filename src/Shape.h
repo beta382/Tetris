@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr  9, 2014
  */
 
 #ifndef SHAPE_H_
@@ -38,13 +38,13 @@
  *
  * Public functions:
  *     `Block *getBlock(int)`: Gets the Block pointer at the specified index.
+ *     `Shape& addBlock(Block *)`: Adds the Block pointer to the Shape, and returns the Shape by reference for chaining.
  *     `int numBlocks()`: Returns the number of Blocks the Shape contains.
  *     `int getBlockSize()`/`int getPadding()`/`int getTotalBlockSize()`: Getters for `int blockSize`, `int padding`,
  *       and the sum of both.
  *     `void shiftUp()`/`void shiftDown()`/`void shiftLeft()`/`void shiftRight()`: Shifts the Shape one block in the
  *       respective direction, without performing checks. Within the context of a PlayingField, should be surrounded
  *       with a conditional.
- *     `Shape& addBlock(Block *)`: Adds the Block pointer to the Shape, and returns the Shape by reference for chaining.
  *
  * Functions implemented from Drawable:
  *     `void draw()`
@@ -65,6 +65,7 @@ class Shape: public Drawable {
         ~Shape();
         
         Block *getBlock(int) const;
+        Shape& addBlock(Block *const);
         int numBlocks() const;
         
         int getBlockSize() const;
@@ -75,8 +76,6 @@ class Shape: public Drawable {
         void shiftDown();
         void shiftLeft();
         void shiftRight();
-        
-        Shape& addBlock(Block *const);
         
         /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);

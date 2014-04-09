@@ -163,13 +163,13 @@ Shape DOES NOT use `int width`, `int height`, or `unsigned int foreground`. Howe
 
 ####Public functions
   - `Block *getBlock(int)`: Gets the Block pointer at the specified index.
+  - `Shape& addBlock(Block *)`: Adds the Block pointer to the Shape, and returns the Shape by reference for chaining.
   - `int numBlocks()`: Returns the number of Blocks the Shape contains.
   - `int getBlockSize()`/`int getPadding()`/`int getTotalBlockSize()`: Getters for `int blockSize`, `int padding`,
     and the sum of both.
   - `void shiftUp()`/`void shiftDown()`/`void shiftLeft()`/`void shiftRight()`: Shifts the Shape one block in the
     respective direction, without performing checks. Within the context of a PlayingField, should be surrounded
     with a conditional.
-  - `Shape& addBlock(Block *)`: Adds the Block pointer to the Shape, and returns the Shape by reference for chaining.
 
 ####Functions implemented from Drawable
   - `void draw()`
