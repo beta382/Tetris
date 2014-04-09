@@ -44,7 +44,7 @@ Drawable is intended to be the abstract base class of all objects that are to be
   - Define a proper copy constructor that calls `Drawable(const Drawable&)`, even if there is no memory management
   - Define a proper assignment operator that calls `Drawable::operator =(const Drawable&)`, even if there is not
       memory management
-  -(This is because each new Drawable, even if it is a copy, should have `bool isVisible` set to false regardless of its
+  - (This is because each new Drawable, even if it is a copy, should have `bool isVisible` set to false regardless of its
       origin)
       
       
