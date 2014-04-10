@@ -114,46 +114,73 @@ void Game::respondToKey(int key) {
         case 'q':
             // If we can rotate the current tetromino CCW within the block field, do so
             if (field->canRotateCCW(currentTetromino)) {
-                // Erase and rotate the current tetromino, but don't redraw it just yet
-                currentTetromino->erase();
-                currentTetromino->rotateCCW();       
+                doRotateCCW();
+            } else { // If we can't, try doing a wall kick
+                bool didRotate = false;
                 
-                // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
-                // then have it fall
-                shadow->erase();
-                shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
-                shadow->rotateCCW();
+                // Try shifting to the left and then rotating
+                if (field->canShiftLeft(currentTetromino)) {
+                    currentTetromino->erase();
+                    currentTetromino->shiftLeft();
+                    
+                    if (field->canRotateCCW(currentTetromino)) {
+                        doRotateCCW();
+                        didRotate = true; // If we succeeded, make a note
+                    } else { // If we didn't succeed, reset
+                        currentTetromino->shiftRight();
+                        currentTetromino->draw();
+                    }
+                    
+                } 
                 
-                while (field->canShiftDown(shadow)) {
-                    shadow->shiftDown();
+                // If the previous attempt wasn't successful, try shifting to the right and then rotating
+                if (field->canShiftRight(currentTetromino) && !didRotate) {
+                    currentTetromino->erase();
+                    currentTetromino->shiftRight();
+                    
+                    if (field->canRotateCCW(currentTetromino)) {
+                        doRotateCCW();
+                    } else { // If we didn't succeed, reset
+                        currentTetromino->shiftLeft();
+                        currentTetromino->draw();
+                    }
                 }
-                
-                // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
-                shadow->draw();
-                currentTetromino->draw();
             }
             
             break;
         case 'e': // Rotate CW
-            // If we can rotate the current tetromino CW within the block field, do so
             if (field->canRotateCW(currentTetromino)) {
-                // Erase and rotate the current tetromino, but don't redraw it just yet
-                currentTetromino->erase();
-                currentTetromino->rotateCW();
+                doRotateCW();
+            } else { // If we can't, try doing a wall kick
+                bool didRotate = false;
                 
-                // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
-                // then have it fall
-                shadow->erase();
-                shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
-                shadow->rotateCW();
+                // Try shifting to the left and then rotating
+                if (field->canShiftLeft(currentTetromino)) {
+                    currentTetromino->erase();
+                    currentTetromino->shiftLeft();
+                    
+                    if (field->canRotateCW(currentTetromino)) {
+                        doRotateCW();
+                        didRotate = true; // If we succeeded, make a note
+                    } else { // If we didn't succeed, reset
+                        currentTetromino->shiftRight();
+                        currentTetromino->draw();
+                    }
+                    
+                } 
                 
-                while (field->canShiftDown(shadow)) {
-                    shadow->shiftDown();
+                // If the previous attempt wasn't successful, try shifting to the right and then rotating
+                if (field->canShiftRight(currentTetromino) && !didRotate) {
+                    currentTetromino->erase();
+                    currentTetromino->shiftRight();
+                    
+                    if (field->canRotateCW(currentTetromino)) {
+                        doRotateCW();
+                    } else { // If we didn't succeed, reset
+                        currentTetromino->shiftLeft();
+                        currentTetromino->draw();
+                    }
                 }
-                
-                // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
-                shadow->draw();
-                currentTetromino->draw();
             }
             
             break;
@@ -217,6 +244,48 @@ void Game::respondToClick(Click click) {
 }
 
 
+/* ---------- Private ---------- */
+
+void Game::doRotateCW() {
+    // Erase and rotate the current tetromino, but don't redraw it just yet
+    currentTetromino->erase();
+    currentTetromino->rotateCW();
+    
+    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
+    // then have it fall
+    shadow->erase();
+    shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
+    shadow->rotateCW();
+    
+    while (field->canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
+    shadow->draw();
+    currentTetromino->draw();
+}
+
+void Game::doRotateCCW() {
+    // Erase and rotate the current tetromino, but don't redraw it just yet
+    currentTetromino->erase();
+    currentTetromino->rotateCCW();       
+    
+    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
+    // then have it fall
+    shadow->erase();
+    shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
+    shadow->rotateCCW();
+    
+    while (field->canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
+    shadow->draw();
+    currentTetromino->draw();
+}
+
 /* ---------- Implemented from Drawable ---------- */
 
 void Game::draw() {
@@ -236,3 +305,12 @@ void Game::erase() {
         isVisible = false;
     }
 }
+
+
+
+
+
+
+
+
+

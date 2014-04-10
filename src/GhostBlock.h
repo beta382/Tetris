@@ -42,7 +42,7 @@ class GhostBlock: public Block {
         
         /* ---------- Overriding from Block ---------- */
         void doOnClear(vector<vector<Block *> >&, int x, int y); // Only here to use a testing ground for future Blocks
-        GhostBlock *makeNewClone(); // Covariant overload
+        GhostBlock *makeNewClone();
         
         void draw();
         void erase();

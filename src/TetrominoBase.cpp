@@ -63,5 +63,3 @@ int TetrominoBase::getOffsetX() const {
 int TetrominoBase::getOffsetY() const {
     return offsetY;
 }
-
-

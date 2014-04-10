@@ -75,6 +75,9 @@ Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType
     return *this;
 }
 
+
+/* ---------- Implemented from TetrominoBase ---------- */
+
 template <typename BlockType>
 void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
     Block *block1, *block2, *block3, *block4;
@@ -206,6 +209,5 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             break;
     }
 }
-
 
 #endif /* TETROMINO_H_ */

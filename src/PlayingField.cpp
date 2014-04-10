@@ -408,7 +408,6 @@ vector<Shape *> PlayingField::formShapes() {
     return shapes;
 }
 
-// TODO: Better name? Idk.
 void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
     if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blocks[x][y]) {
         return;

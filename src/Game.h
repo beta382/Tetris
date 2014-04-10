@@ -64,6 +64,9 @@ class Game: public Screen {
     private:
         void init();
         
+        void doRotateCW();
+        void doRotateCCW();
+        
         PlayingField *field;
         TetrominoBase *currentTetromino;
         Tetromino<GhostBlock> *shadow;

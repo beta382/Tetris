@@ -80,7 +80,6 @@ GhostBlock *GhostBlock::makeNewClone() {
     return new GhostBlock(*this);
 }
 
-
 void GhostBlock::draw() {
     g->setColor(getForeground());
     for (int i = 0; i < getWidth(); i++) {
