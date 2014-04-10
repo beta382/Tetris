@@ -9,7 +9,7 @@
 
 #include "Game.h"
 
-Game::Game(): Drawable() {
+Game::Game(): Screen() {
     init();
 }
 
@@ -19,6 +19,33 @@ Game::~Game() {
     delete currentTetromino;
     delete shadow;
 }
+
+
+/* ---------- Private ---------- */
+
+void Game::init() {
+    srand(time(0));
+    
+    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
+    
+    // Spawn a new tetromino and create a shadow in the same place
+    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, 15, 2, Color::WHITE, Color::BLACK);
+    currentTetromino = field->spawnNewTetromino<Block>(shape);
+    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
+            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape, 
+            field->getForeground());
+    
+    // Have the shadow fall
+    while (field->canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+
+    draw();
+}
+
+
+/* ---------- Implemented from Screen ---------- */
+
 
 void Game::respondToKey(int key) {
     switch (key) {
@@ -185,27 +212,8 @@ void Game::respondToKey(int key) {
     }
 }
 
-
-/* ---------- Private ---------- */
-
-void Game::init() {
-    srand(time(0));
-    
-    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
-    
-    // Spawn a new tetromino and create a shadow in the same place
-    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, 15, 2, Color::WHITE, Color::BLACK);
-    currentTetromino = field->spawnNewTetromino<Block>(shape);
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
-            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape, 
-            field->getForeground());
-    
-    // Have the shadow fall
-    while (field->canShiftDown(shadow)) {
-        shadow->shiftDown();
-    }
-
-    draw();
+void Game::respondToClick(Click click) {
+    // Do nothing
 }
 
 

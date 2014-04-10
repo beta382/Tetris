@@ -23,7 +23,7 @@ class Tetris {
         
     private:
         GLUT_Plotter *g;
-        Game *screen;
+        Screen *screen;
 };
 
 #endif /* TETRIS_H_ */

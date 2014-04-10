@@ -10,7 +10,7 @@
 #ifndef GAMESCREEN_H_
 #define GAMESCREEN_H_
 
-#include "Drawable.h"
+#include "Screen.h"
 #include "PlayingField.h"
 #include "TetrominoBase.h"
 #include "Blocks.h" // In turn includes all of our special blocks
@@ -49,15 +49,14 @@
  *     `void erase()`
  */
 
-// TODO: Maybe eventually subclass Drawable into a Screen object, and then make the game-screen, menu-screen, etc.
-// all inherit from that. Would allow for a polymorphic Screen pointer in the Tetris class.
-
-class Game: public Drawable {
+class Game: public Screen {
     public:
         Game();
         ~Game();
         
-        void respondToKey(int key);
+        /* ---------- Implemented from Screen ---------- */
+        void respondToKey(int);
+        void respondToClick(Click);
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

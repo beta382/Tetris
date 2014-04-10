@@ -36,12 +36,11 @@ void Tetris::Play (void) {
         }
     }
     
-    
     //Check for mouse click
     while (g->click()) {
+        Click c = g->getClick();
         
-        Click c;
-        c = g->getClick();
+        screen->respondToClick(c);
     }
     
     // Update screen - draw game
