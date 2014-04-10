@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 10, 2014
  */
 
 #ifndef GAMESCREEN_H_
@@ -22,13 +22,13 @@
 /*
  * Game:
  *
- * Inherits from Drawable.
+ * Inherits from Screen.
  *
  * Game is intended to represent the game screen, and be a wrapper for everything that the game screen contains. Game IS
  *   NOT intended to be inherited from.
  *
  * Constructors:
- *     `Game()`: Calls `Drawable()`, then calls `void init()`.
+ *     `Game()`: Calls `Screen()`, then calls `void init()`.
  *
  * Private member data:
  *     `PlayingField *field`: Pointer to a PlayingField object representing the main gameplay area.

@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 10, 2014
  */
 
 #include "Game.h"
@@ -39,7 +39,7 @@ void Game::init() {
     while (field->canShiftDown(shadow)) {
         shadow->shiftDown();
     }
-
+    
     draw();
 }
 

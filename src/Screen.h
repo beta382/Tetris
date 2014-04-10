@@ -3,8 +3,8 @@
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
- * Date created:           Apr  3, 2014
- * Date last modified:     Apr  8, 2014
+ * Date created:           Apr 10, 2014
+ * Date last modified:     Apr 10, 2014
  */
 
 #ifndef SCREEN_H_
