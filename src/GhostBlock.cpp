@@ -9,6 +9,11 @@
 
 #include "GhostBlock.h"
 
+/* Just put an extra slash in front to un-comment
+#include <ctime>
+#include "Rectangle.h"
+//*/
+
 GhostBlock::GhostBlock(): Block() {}
 
 GhostBlock::GhostBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
@@ -35,7 +40,7 @@ void GhostBlock::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
     
     // ExplodingBlock example, needs <ctime> and "Rectangle.h"
-    /*
+    /* Just put an extra slash in front to un-comment
     // Make a big explosion block
     
     int explosionX = (x >= 2) ? getLocationX()-getTotalSize()*2 : getLocationX()-getTotalSize()*x;
@@ -100,7 +105,7 @@ void GhostBlock::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     //*/
 
     // GravityBlock example, needs <ctime>
-    /*
+    /*// Just put an extra slash in front to un-comment
     bool didFall = true;
     while (didFall) {
         didFall = false;

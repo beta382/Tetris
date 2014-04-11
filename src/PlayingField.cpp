@@ -347,7 +347,7 @@ void PlayingField::doLineClear() {
                             Block *tmp = blocks[j][k];
                             blocks[j][k] = new Block(*tmp); // Not making a clone, this will give us a base Block
                             delete tmp;
-                            blocks[j][k]->draw();
+                            blocks[j][k]->draw(); // Redraw the new block since what used to be there just got erased
                         }
                     }
                 }
@@ -359,8 +359,7 @@ void PlayingField::doLineClear() {
                     {
                         Block *tmp = clearedBlocks[j];
                         clearedBlocks[j] = new Block(*tmp); // Not making a clone, this will give us a base Block
-                        delete tmp;
-                        clearedBlocks[j]->draw();
+                        delete tmp; // Don't redraw, because these blocks aren't supposed to be visible.
                     }
                 }
             }
