@@ -149,6 +149,7 @@ void Game::respondToKey(int key) {
             
             break;
         case 'e': // Rotate CW
+            // If we can rotate the current tetromino CW within the block field, do so
             if (field->canRotateCW(currentTetromino)) {
                 doRotateCW();
             } else { // If we can't, try doing a wall kick
@@ -233,6 +234,29 @@ void Game::respondToKey(int key) {
             shadow->draw();
             currentTetromino->draw();
             
+            break;
+        case 'g': // Spawn Ghost tetromino for testing
+            delete currentTetromino;
+            delete shadow;
+            
+            { // C++ throws a fit about variables in case statements, so this just sets a scope for `shape`
+                TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
+                
+                // Spawn a new tetromino and create a shadow in the same place
+                currentTetromino = field->spawnNewTetromino<GhostBlock>(shape);
+                shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
+                        currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+                        field->getForeground());
+            }
+            
+            // Have the shadow fall
+            while (field->canShiftDown(shadow)) {
+                shadow->shiftDown();
+            }
+            
+            // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
+            shadow->draw();
+            currentTetromino->draw();
             break;
         default:
             cout << key << endl;

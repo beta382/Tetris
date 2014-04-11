@@ -291,6 +291,17 @@ void PlayingField::doLineClear() {
         
         // Blink three times
         for (int r = 0; r < 3; r++) {
+            
+            for (unsigned int i = 0; i < clearableLines.size(); i++) {
+                for (int j = 0; j < getWidth(); j++) {
+                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
+                        blocks[j][clearableLines[i]]->draw();
+                    }
+                }
+            }
+            
+            g->Draw(); // Force screen redraw
+            
             start = clock();
             
             while (clock() < start+150); // Wait 150ms
@@ -308,28 +319,9 @@ void PlayingField::doLineClear() {
             start = clock();
             
             while (clock() < start+150); // Wait 150ms
-            
-            for (unsigned int i = 0; i < clearableLines.size(); i++) {
-                for (int j = 0; j < getWidth(); j++) {
-                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                        blocks[j][clearableLines[i]]->draw();
-                    }
-                }
-            }
-            
-            g->Draw(); // Force screen redraw
         }
         
-        // Erase the lines for good
-        for (unsigned int i = 0; i < clearableLines.size(); i++) {
-            for (int j = 0; j < getWidth(); j++) {
-                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                    blocks[j][clearableLines[i]]->erase();
-                }
-            }
-        }
-        
-        // Clone, store, and then clear the blocks
+        // Clone, store, and then remove the blocks
         for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
                 if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
@@ -340,9 +332,41 @@ void PlayingField::doLineClear() {
             }
         }
         
-        // Perform each block's special effect and delete the copy, should probably find a way to convert the remainder
-        // of the special tetromino to a normal tetromino
-        // TODO: Above, maybe have some sort of unique id for each Tetromino's blocks
+        // Go through the list of cleared blocks and find all blocks from the same tetromino into standard blocks
+        for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
+            
+            // If the block we are on has a "no-ID", we don't need to check
+            if (clearedBlocks[i]->getUniqueID() != 0) {
+                
+                // Go through each block on the field and check for ones with the same unique ID, and replace them
+                for (int j = 0; j < getWidth(); j++) {
+                    for (int k = 0; k < getHeight(); k++) {
+                        if (blocks[j][k] && blocks[j][k]->getUniqueID() != 0 &&
+                                blocks[j][k]->getUniqueID() == clearedBlocks[i]->getUniqueID())
+                        {
+                            Block *tmp = blocks[j][k];
+                            blocks[j][k] = new Block(*tmp); // Not making a clone, this will give us a base Block
+                            delete tmp;
+                            blocks[j][k]->draw();
+                        }
+                    }
+                }
+                
+                // Go through the list of cleared blocks, check for ones with the same unique ID, and replace them
+                for (unsigned int j = i+1; j < clearedBlocks.size(); j++) {
+                    if (clearedBlocks[j]->getUniqueID() != 0 &&
+                            clearedBlocks[i]->getUniqueID() == clearedBlocks[j]->getUniqueID())
+                    {
+                        Block *tmp = clearedBlocks[j];
+                        clearedBlocks[j] = new Block(*tmp); // Not making a clone, this will give us a base Block
+                        delete tmp;
+                        clearedBlocks[j]->draw();
+                    }
+                }
+            }
+        }
+        
+        // For each cleared block, perform the block's special effect
         for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
             clearedBlocks[i]->doOnClear(blocks, 
                     (clearedBlocks[i]->getLocationX()-getLocationX())/clearedBlocks[i]->getTotalSize(),

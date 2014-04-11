@@ -9,6 +9,8 @@
 
 #include "TetrominoBase.h"
 
+unsigned int TetrominoBase::uniqueID = 1; // Reserve 0 as a "no-ID"
+
 TetrominoBase::TetrominoBase(): Shape() {
     offsetX = 0;
     offsetY = 0;

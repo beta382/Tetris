@@ -208,6 +208,12 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape type) {
             setHeight(2);
             break;
     }
+    
+    for (int i = 0; i < numBlocks(); i++) {
+        blocks[i]->setUniqueID(uniqueID);
+    }
+    
+    uniqueID++;
 }
 
 #endif /* TETROMINO_H_ */

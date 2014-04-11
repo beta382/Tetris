@@ -11,21 +11,25 @@
 
 Block::Block (): Drawable(0, 0, 10, 10) {
     padding = 0;
+    uniqueID = 0;
 }
 
 Block::Block (int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
         Drawable(x, y, size, size, foreground, background) {
     this->padding = padding;
+    uniqueID = 0;
 }
 
 Block::Block (const Block& other): Drawable(other) {
     padding = other.padding;
+    uniqueID = 0;
 }
 
 Block& Block::operator =(const Block& rhs) {
     if (this != &rhs) {
         Drawable::operator =(rhs);
         padding = rhs.padding;
+        uniqueID = 0;
     }
     
     return *this;
@@ -47,12 +51,24 @@ int Block::getTotalSize() const {
     return getSize()+getPadding();
 }
 
+unsigned int Block::getUniqueID() const {
+    return uniqueID;
+}
+
+void Block::setUniqueID(unsigned int id) {
+    uniqueID = id;
+}
+
 void Block::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
 }
 
 Block *Block::makeNewClone() {
-    return new Block(*this);
+    Block *tmp = new Block(*this);
+    
+    tmp->setUniqueID(getUniqueID());
+    
+    return tmp;
 }
 
 /* ---------- Implemented from Drawable ---------- */

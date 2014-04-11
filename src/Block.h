@@ -63,6 +63,9 @@ class Block: public Drawable {
         int getPadding() const;
         int getTotalSize() const;
         
+        unsigned int getUniqueID() const;
+        void setUniqueID(unsigned int);
+        
         virtual void doOnClear(vector<vector<Block *> >&, int x, int y);
         virtual Block *makeNewClone();
         
@@ -71,6 +74,7 @@ class Block: public Drawable {
         void erase();
     protected:
         int padding;
+        unsigned int uniqueID;
 };
 
 #endif /* BLOCK_H_ */

@@ -69,6 +69,8 @@ class TetrominoBase: public Shape {
         
         int offsetX;
         int offsetY;
+        
+        static unsigned int uniqueID;
 };
 
 
