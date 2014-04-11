@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 10, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #include "Game.h"
@@ -47,7 +47,7 @@ void Game::init() {
 /* ---------- Implemented from Screen ---------- */
 
 
-void Game::respondToKey(int key) {
+Screen *Game::respondToKey(int key) {
     switch (key) {
         case 'w':
         case 165: // UP
@@ -261,10 +261,18 @@ void Game::respondToKey(int key) {
         default:
             cout << key << endl;
     }
+    
+    return NULL;
 }
 
-void Game::respondToClick(Click click) {
-    // Do nothing
+Screen *Game::respondToClick(Click click) {
+    // Do nothing for now
+    return NULL;
+}
+
+
+void Game::doBackground() {
+    // Do nothing for now
 }
 
 

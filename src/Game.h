@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 10, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #ifndef GAMESCREEN_H_
@@ -55,8 +55,9 @@ class Game: public Screen {
         ~Game();
         
         /* ---------- Implemented from Screen ---------- */
-        void respondToKey(int);
-        void respondToClick(Click);
+        Screen *respondToKey(int);
+        Screen *respondToClick(Click);
+        void doBackground();
         
         /* ---------- Implemented from Drawable ---------- */
         void draw();

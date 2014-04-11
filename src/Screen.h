@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr 10, 2014
- * Date last modified:     Apr 10, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #ifndef SCREEN_H_
@@ -14,8 +14,9 @@
 
 class Screen: public Drawable {
     public:
-        virtual void respondToKey(int) = 0;
-        virtual void respondToClick(Click) = 0;
+        virtual Screen *respondToKey(int) = 0;
+        virtual Screen *respondToClick(Click) = 0;
+        virtual void doBackground() = 0;
     protected:
         Screen(): Drawable() {};
 };
