@@ -4,25 +4,27 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #include "Block.h"
 
-Block::Block (): Drawable(0, 0, 10, 10) {
-    padding = 0;
-    uniqueID = 0;
+Block::Block ():
+Drawable(0, 0, 10, 10),
+        padding(0), uniqueID(0)
+{
 }
 
 Block::Block (int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
-        Drawable(x, y, size, size, foreground, background) {
-    this->padding = padding;
-    uniqueID = 0;
+Drawable(x, y, size, size, foreground, background),
+        padding(padding), uniqueID(0)
+{
 }
 
-Block::Block (const Block& other): Drawable(other) {
-    padding = other.padding;
-    uniqueID = 0;
+Block::Block (const Block& other):
+Drawable(other),
+        padding(other.padding), uniqueID(0)
+{
 }
 
 Block& Block::operator =(const Block& rhs) {

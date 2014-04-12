@@ -7,8 +7,8 @@
  * Date last modified:     Apr  8, 2014
  */
 
-#ifndef DRAWKIT_H_
-#define DRAWKIT_H_
+#ifndef UTIL_H_
+#define UTIL_H_
 
 /* ---------- Color codes ---------- */
 
@@ -24,8 +24,21 @@ namespace Color {
     const unsigned int TAN        = 0xe3decd;
     const unsigned int DARK_GREEN = 0x69803e;
     const unsigned int CYAN       = 0x3cad91;
+    
+}
+
+/* ---------- Key codes ---------- */
+
+namespace Key {
+    
+    const int UP = 165;
+    const int DOWN = 167;
+    const int LEFT = 164;
+    const int RIGHT = 166;
+    const int ESC = 27;
+    
 }
 
 // More stuff later, maybe
 
-#endif /* DRAWKIT_H_ */
+#endif /* UTIL_H_ */

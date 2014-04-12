@@ -14,12 +14,20 @@
 #include "Rectangle.h"
 //*/
 
-GhostBlock::GhostBlock(): Block() {}
+GhostBlock::GhostBlock():
+Block()
+{
+}
 
 GhostBlock::GhostBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
-        Block(x, y, size, padding, foreground, background) {}
+Block(x, y, size, padding, foreground, background)
+{
+}
 
-GhostBlock::GhostBlock(const GhostBlock& other): Block(other) {}
+GhostBlock::GhostBlock(const GhostBlock& other):
+Block(other)
+{
+}
 
 GhostBlock& GhostBlock::operator =(const GhostBlock& rhs) {
     if (this != &rhs) {

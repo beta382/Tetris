@@ -11,14 +11,40 @@
 #define SCREEN_H_
 
 #include "Drawable.h"
+#include "Rectangle.h"
 
 class Screen: public Drawable {
     public:
+        
+        /*
+         * Performs an action based on the passed key
+         */
         virtual Screen *respondToKey(int) = 0;
+        
+        /*
+         * Performs an action based on the passed Click
+         */
         virtual Screen *respondToClick(Click) = 0;
+        
+        /*
+         * Performs actions that should happen continuously in the background on this Screen
+         */
         virtual void doBackground() = 0;
     protected:
-        Screen(): Drawable() {};
+        
+        /*
+         * Instantiates a Screen object using the passed foreground color
+         * 
+         * color defaults to Color::BLACK if nothing is passed
+         * 
+         * Calls Drawable(0, 0, g->getWidth, g->getHeight(), color) 
+         * Initializes bgRect with MyRectangle(0, 0, width, height, color)
+         */
+        Screen(unsigned int color = Color::BLACK):
+            Drawable(0, 0, g->getWidth(), g->getHeight(), color), 
+            bgRect(0, 0, width, height, color) {};
+        
+        MyRectangle bgRect;
 };
 
 

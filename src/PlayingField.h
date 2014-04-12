@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #ifndef PLAYINGFIELD_H_
@@ -13,10 +13,9 @@
 #include "Drawable.h"
 #include "Tetromino.h"
 #include "Shape.h"
-#include <vector>
-#include "drawkit.h"
 #include "Rectangle.h"
 
+#include <vector>
 #include <ctime>
 
 /*
@@ -86,17 +85,17 @@ class PlayingField: public Drawable {
         ~PlayingField();
         
         template <typename BlockType>
-        Tetromino<BlockType> *spawnNewTetromino(TetrominoShape type);
+        Tetromino<BlockType> *spawnNewTetromino(TetrominoShape type) const;
         
         void mergeAndDelete(Shape *);
 
-        bool canShiftUp(Shape *const) const;
-        bool canShiftDown(Shape *const) const;
-        bool canShiftLeft(Shape *const) const;
-        bool canShiftRight(Shape *const) const;
+        bool canShiftUp(const Shape *) const;
+        bool canShiftDown(const Shape *) const;
+        bool canShiftLeft(const Shape *) const;
+        bool canShiftRight(const Shape *) const;
         
-        bool canRotateCW(TetrominoBase *const) const;
-        bool canRotateCCW(TetrominoBase *const) const;
+        bool canRotateCW(const TetrominoBase *) const;
+        bool canRotateCCW(const TetrominoBase *) const;
         
         /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);
@@ -105,25 +104,34 @@ class PlayingField: public Drawable {
         void draw();
         void erase();
     private:
-        void init();
-        bool couldAdd(Block *const) const;
+        bool couldAdd(const Block *) const;
         
         void doLineClear();
         vector<Shape *> formShapes();
         void makeShapeRecursively(Shape *, int x, int y);
-        
-        MyRectangle *bgRect;
-        
-        vector<vector<Block *> > blocks;
+        void merge(const Shape *);
 
         int blockSize;
         int padding;
+        
+        MyRectangle bgRect;
+        
+        vector<vector<Block *> > blocks;
 };
 
 /* ---------- spawnNewTetromino method template implementation ---------- */
 
+/*
+ * Dynamically allocates a Tetromino<BlockType> with the passed TetrominoShape centered at the top 
+ *   of the block field
+ * 
+ * Returns a pointer to the dynamically allocated Tetromino<BlockType>, or NULL if the tetromino
+ *   cannot be spawned
+ * 
+ * Guaranteed that this PlayingField object will not be modified
+ */
 template <typename BlockType>
-Tetromino<BlockType> *PlayingField::spawnNewTetromino (TetrominoShape type) {
+Tetromino<BlockType> *PlayingField::spawnNewTetromino (TetrominoShape type) const {
     Tetromino<BlockType> *tetromino = new Tetromino<BlockType>(getLocationX()+(blockSize+padding)*(getWidth()/2),
             getLocationY()+(blockSize+padding)*getHeight(), blockSize, padding, type, getForeground());
     

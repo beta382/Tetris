@@ -4,14 +4,14 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
 #include "GLUT_Plotter.h"
-#include "drawkit.h"
+#include "util.h"
 
 #include <iostream>
 #include <iomanip>
@@ -44,9 +44,6 @@
  *       ENCOURAGED that you use this as a check when implementing `void erase()`, and that you set it accordingly
  *       at the end of your `void draw()` and `void erase()` implementations. It is STRONGLY ENCOURAGED that you NOT use
  *       this in a different manner than described.
- *
- * Protected static data:
- *     `GLUT_Plotter *g`: A shared GLUT_Plotter for all instances of objects that descend from Drawable.
  *
  * Public functions:
  *     `void setWidth(int)`/`int getWidth()`/`void setHeight(int)`/`int getHeight()`: Simple getters and setters for
@@ -92,7 +89,7 @@ class Drawable {
         virtual void setForeground(unsigned int color);
         unsigned int getForeground() const;
         virtual void setBackground(unsigned int color);
-        unsigned int getBackground();
+        unsigned int getBackground() const;
 
         static void setG(GLUT_Plotter *);
 

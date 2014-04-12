@@ -51,7 +51,7 @@
 
 class Game: public Screen {
     public:
-        Game();
+        Game(unsigned int color = Color::BLACK);
         ~Game();
         
         /* ---------- Implemented from Screen ---------- */

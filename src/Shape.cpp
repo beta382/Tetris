@@ -4,27 +4,27 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr  9, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #include "Shape.h"
 
-Shape::Shape(): Drawable() {
-    blockSize = 10;
-    padding = 0;
+Shape::Shape():
+Drawable(),
+        blockSize(10), padding(0)
+{
 }
 
 Shape::Shape (int x, int y, int blockSize, int padding, unsigned int background):
-		Drawable(x, y, 0, 0, Color::WHITE, background)
+Drawable(x, y, 0, 0, Color::WHITE, background),
+        blockSize(blockSize), padding(padding)
 {
-    this->blockSize = blockSize;
-    this->padding = padding;
 }
 
-Shape::Shape(const Shape& other): Drawable(other) {
-    blockSize = other.blockSize;
-    padding = other.padding;
-    
+Shape::Shape(const Shape& other):
+Drawable(other),
+        blockSize(other.blockSize), padding(other.padding)
+{
     for (int i = 0; i < other.numBlocks(); i++) {
         if (other.blocks.at(i)) {
             addBlock(other.blocks.at(i)->makeNewClone());

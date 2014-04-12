@@ -11,6 +11,7 @@
 
 #include "GLUT_Plotter.h"
 #include "Game.h"
+#include "util.h"
 
 class Tetris {
     public:

@@ -4,30 +4,64 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr  9, 2014
+ * Date last modified:     Apr 11, 2014
  */
 
 #include "PlayingField.h"
 
-PlayingField::PlayingField(): Drawable(0, 0, 10, 20) {
-    blockSize = 10;
-    padding = 0;
-    init();
-}
-
-PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, int padding, unsigned int foreground,
-        unsigned int background): Drawable(x, y, width, height, foreground, background)
+/*
+ * Instantiates a PlayingField object using default values
+ * 
+ * Calls Drawable(0, 0, 10, 20)
+ * Initializes blockSize with 10
+ * Initializes padding with 0
+ * Initializes bgRect with MyRectangle(x, y, (blockSize+padding)*width-padding,
+ *   (blockSize+padding)*height-padding, foreground, background)
+ * Initializes blocks with vector(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+ */
+PlayingField::PlayingField():
+Drawable(0, 0, 10, 20),
+        blockSize(10), padding(0),
+        bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding, foreground, background),
+        blocks(width, vector<Block *>(height, static_cast<Block *>(NULL)))
 {
-    this->blockSize = blockSize;
-    this->padding = padding;
-    init();
 }
 
-PlayingField::PlayingField(const PlayingField& other): Drawable(other) {
-    blockSize = other.blockSize;
-    padding = other.padding;
-    init();
-    
+/*
+ * Instantiates a PlayingField object using the passed values
+ * 
+ * Calls Drawable(x, y, width, height, foreground, background)
+ * Initializes blockSize and padding with the passed values
+ * Initializes bgRect with MyRectangle(x, y, (blockSize+padding)*width-padding,
+ *   (blockSize+padding)*height-padding, foreground, background)
+ * Initializes blocks with vector(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+ */
+PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, int padding, unsigned int foreground,
+        unsigned int background):
+Drawable(x, y, width, height, foreground, background),
+        blockSize(blockSize), padding(padding), 
+        bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding, foreground, background),
+        blocks(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+{
+}
+
+/*
+ * Instantiates a PlayingField object that is a copy of the passed PlayingField object
+ * 
+ * Calls Drawable(other)
+ * Initializes blockSize, padding, and bgRect with the respective values from the passed
+ *   PlayingField object
+ * Initializes blocks with vector(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+ * Assigns blocks pointers to newly allocated clones of the respective Blocks from the passed
+ *   PlayingField object 
+ *   
+ * Guaranteed that the passed PlayingField object will not be modified
+ */
+PlayingField::PlayingField(const PlayingField& other): 
+Drawable(other),
+        blockSize(other.blockSize), padding(other.padding), bgRect(other.bgRect),
+        blocks(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+{
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
             if (other.blocks.at(i).at(j)) {
@@ -37,15 +71,29 @@ PlayingField::PlayingField(const PlayingField& other): Drawable(other) {
     }
 }
 
+/*
+ * Assigns this PlayingField object the values of the passed PlayingField object
+ * 
+ * Calls erase()
+ * Deletes any dynamically allocated Blocks contained in blocks and clears blocks
+ * 
+ * Calls Drawable::operator =(rhs)
+ * Assigns blockSize, padding, and bgRect the respective values from the passed PlayingField object
+ * Assigns blocks a 2D vector of NULL pointers
+ * Assigns blocks pointers to newly allocated clones of the respective Blocks from the passed
+ *   PlayingField object 
+ *   
+ * Guaranteed that the passed PlayingField object will not be modified
+ * 
+ * Returns a reference to this PlayingField object
+ */
 PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     if  (this != &rhs) {
         erase();
         
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
-                if (blocks[i][j]) {
-                    delete blocks[i][j];
-                }
+                delete blocks[i][j];
             }
             
             blocks[i].clear();
@@ -53,13 +101,12 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         
         blocks.clear();
         
-        delete bgRect;
-        
         Drawable::operator =(rhs);
         blockSize = rhs.blockSize;
         padding = rhs.padding;
+        bgRect = rhs.bgRect;
         
-        init();
+        blocks.assign(width, vector<Block *>(height, static_cast<Block *>(NULL)));
         
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
@@ -75,34 +122,48 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     return *this;
 }
 
+/*
+ * Properly destructs a PlayingField object
+ * 
+ * Calls erase()
+ * Deletes any dynamically allocated Blocks pointed to in blocks
+ */
 PlayingField::~PlayingField() {
     erase();
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
-            if (blocks[i][j]) {
-                delete blocks[i][j];
-            }
+            delete blocks[i][j];
         }
     }
-    
-    delete bgRect;
 }
 
+/*
+ * Merges a clone of the passed Shape into the playingField, and then de-allocates the Shape
+ * 
+ * Is mutually recursive with doLineClear()
+ * 
+ * Calls merge(shape)
+ * De-allocates shape
+ * Calls draw()
+ * Calls doLineClear()
+ */
 void PlayingField::mergeAndDelete (Shape *shape) {
-    for (int i = 0; i < shape->numBlocks(); i++) {
-        Block *curBlock = shape->getBlock(i)->makeNewClone();
-        blocks[(curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize()]
-              [(curBlock->getLocationY()-getLocationY())/curBlock->getTotalSize()] = curBlock;
-    }
+    merge(shape);
     
     delete shape;
     
     draw();
     
-    doLineClear();
+    /*if (canLineClear())*/ doLineClear();
 }
 
-bool PlayingField::canShiftUp(Shape *const shape) const {
+/*
+ * Returns true if the passed Shape can shift up within the block field, false otherwise
+ * 
+ * Guaranteed that the Shape pointed to by shape will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::canShiftUp(const Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
@@ -122,7 +183,13 @@ bool PlayingField::canShiftUp(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canShiftDown(Shape *const shape) const {
+/*
+ * Returns true if the passed Shape can shift down within the block field, false otherwise
+ * 
+ * Guaranteed that the Shape pointed to by shape will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::canShiftDown(const Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
@@ -142,7 +209,13 @@ bool PlayingField::canShiftDown(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canShiftLeft(Shape *const shape) const {
+/*
+ * Returns true if the passed Shape can shift left within the block field, false otherwise
+ * 
+ * Guaranteed that the Shape pointed to by shape will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::canShiftLeft(const Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
@@ -162,7 +235,13 @@ bool PlayingField::canShiftLeft(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canShiftRight(Shape *const shape) const {
+/*
+ * Returns true if the passed Shape can shift left within the block field, false otherwise
+ * 
+ * Guaranteed that the Shape pointed to by shape will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::canShiftRight(const Shape *shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
@@ -182,7 +261,14 @@ bool PlayingField::canShiftRight(Shape *const shape) const {
     return can;
 }
 
-bool PlayingField::canRotateCW(TetrominoBase *const t) const {
+/*
+ * Returns true if the passed TetrominoBase can rotate clockwise within the block field, false
+ *   otherwise
+ * 
+ * Guaranteed that the TetrominoBase pointed to by t will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::canRotateCW(const TetrominoBase *t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -205,7 +291,14 @@ bool PlayingField::canRotateCW(TetrominoBase *const t) const {
     return can;
 }
 
-bool PlayingField::canRotateCCW(TetrominoBase *const t) const {
+/*
+ * Returns true if the passed TetrominoBase can rotate counter-clockwise within the block field,
+ *   false otherwise
+ * 
+ * Guaranteed that the TetrominoBase pointed to by t will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::canRotateCCW(const TetrominoBase *t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
@@ -231,24 +324,14 @@ bool PlayingField::canRotateCCW(TetrominoBase *const t) const {
 
 /* ---------- Private ---------- */
 
-void PlayingField::init() {
-    for (int i = 0; i < getWidth(); i++) {
-        vector<Block *> tmp;
-        blocks.push_back(tmp);
-        for (int j = 0; j < getHeight(); j++) {
-            // Everything that is a NULL pointer represents a blank space, makes checking for overlap super-simple,
-            // just gotta add checks everywhere. Initialize all Block pointers to NULL
-            blocks[i].push_back(NULL);
-        }
-    }
-    
-    bgRect = new MyRectangle(getLocationX(), getLocationY(), blockSize*getWidth() + padding*(getWidth()-1),
-            blockSize*getHeight() + padding*(getHeight()-1), getForeground(), getBackground());
-
-    draw();
-}
-
-bool PlayingField::couldAdd(Block *const block) const {
+/*
+ * Returns true if the passed Block could successfully be merged with the block field without
+ *   conflict, false otherwise
+ *   
+ * Guaranteed that the Block pointed to by block will not be modified
+ * Guaranteed that this PlayingField object will not be modified
+ */
+bool PlayingField::couldAdd(const Block *block) const {
     bool can = true;
     
     // Check that it isn't out-of-bounds or intersecting an existing Block
@@ -265,10 +348,20 @@ bool PlayingField::couldAdd(Block *const block) const {
     return can;
 }
 
+/*
+ * Checks if there are lines to be cleared, and clears them if there are
+ * 
+ * Is mutually recursive with mergeAndDelete(Shape *)
+ * 
+ * 
+ */
 void PlayingField::doLineClear() {
     vector<int> clearableLines;
     vector<Block *> clearedBlocks;
-    vector<Shape *> remainingShapes;
+    cout << "---- Entered doLineClear ----" << endl;
+    // This is static because we make a mutually recursive call to mergeAndDelete(Shape * later on, and
+    // when that calls this function, wouldn't normally have the vector of remaining shapes
+    static vector<Shape *> remainingShapes(0); 
     
     clock_t start;
     
@@ -365,51 +458,100 @@ void PlayingField::doLineClear() {
             }
         }
         
-        // For each cleared block, perform the block's special effect
+        // For each cleared block, perform the block's special effect, and then delete the block
         for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
             clearedBlocks[i]->doOnClear(blocks, 
                     (clearedBlocks[i]->getLocationX()-getLocationX())/clearedBlocks[i]->getTotalSize(),
                     (clearedBlocks[i]->getLocationY()-getLocationY())/clearedBlocks[i]->getTotalSize());
             delete clearedBlocks[i];
         }
-        
-        
-        // Take what's left over, form it into individual shapes
+    } // End of "If there are lines to clear"
+
+    if (remainingShapes.size() == 0) {
         remainingShapes = formShapes();
-        // Note that after this, the field is entirely NULL
+        g->Draw(); // Force redraw
+    }
+    
+    if (clearableLines.size() > 0) {
+        vector<Shape *> newRemainingShapes = formShapes();
+        g->Draw(); // Force redraw
         
-        // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
-        // formShapes() starts it's search at (0,0) and works it's way up, so the first shapes should always be entirely
-        // lower than the next shape
-        bool didFall = true;
-        // While we are still shifting down...
-        while(didFall) {
-            didFall = false;
-            // For each shape...
+        for (unsigned int i = 0; i < newRemainingShapes.size(); i++) {
+            remainingShapes.push_back(newRemainingShapes[i]);
+        }
+    }
+    
+    // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
+    // formShapes() starts it's search at (0,0) and works it's way up, so the first shapes should always be entirely
+    // lower than the next shape
+    bool didFall = true;
+    // While we are still shifting down...
+    while(didFall) {
+        didFall = false;
+        // For each shape...
+        vector<int> mergeIndex;
+        vector<int> shiftIndex;
+        for (unsigned int i = 0; i < remainingShapes.size(); i++) {
+            // Shift down once if we can
+            if (remainingShapes[i]) {
+                if (canShiftDown(remainingShapes[i])) {
+                    shiftIndex.push_back(i);
+                } else {
+                    mergeIndex.push_back(i);
+                }
+            }
+        }
+        
+        if (mergeIndex.size() > 0) {
+            for (unsigned int i = 0; i < mergeIndex.size(); i++) {
+                merge(remainingShapes[mergeIndex[i]]);
+                
+                delete remainingShapes[mergeIndex[i]];
+                
+                remainingShapes[mergeIndex[i]] = NULL;
+            }
+            
+            draw();
+            
             for (unsigned int i = 0; i < remainingShapes.size(); i++) {
-                // Shift down once if we can
                 if (remainingShapes[i]) {
-                    if (canShiftDown(remainingShapes[i])) {
-                        remainingShapes[i]->erase();
-                        remainingShapes[i]->shiftDown();
-                        remainingShapes[i]->draw();
-                        didFall = true;
-                    } else {
-                        mergeAndDelete(remainingShapes[i]);
-                        remainingShapes[i] = NULL; // For existence checking
-                    }
+                    remainingShapes[i]->draw();
                 }
             }
             
             g->Draw();
             
-            if (didFall) {
-                start = clock();
-                
-                while (clock() < start + 100);
+            doLineClear();
+            
+            didFall = false;
+        }
+        
+        if (shiftIndex.size() > 0) {
+            for (unsigned int i = 0; i < shiftIndex.size(); i++) {
+                if (remainingShapes[shiftIndex[i]]) {
+                    remainingShapes[shiftIndex[i]]->erase();
+                    remainingShapes[shiftIndex[i]]->shiftDown();
+                    remainingShapes[shiftIndex[i]]->draw();
+                    
+                    didFall = true;
+                }
             }
+            
+            g->Draw();
+        }
+        
+        g->Draw(); // Force redraw
+        
+        if (didFall) {
+            start = clock();
+            
+            while (clock() < start + 100); // Wait 100ms
         }
     }
+    
+    // At this point, we can't be called again from mergeAndDelete(Shape *), so go ahead and erase remainingShapes
+    remainingShapes.clear();
+    cout << "---- Exited doLineClear ----" << endl;
 }
 
 vector<Shape *> PlayingField::formShapes() {
@@ -422,6 +564,8 @@ vector<Shape *> PlayingField::formShapes() {
                         blocks[j][i]->getSize(), blocks[j][i]->getPadding());
                 
                 makeShapeRecursively(curShape, j, i);
+                
+                curShape->draw();
                 
                 shapes.push_back(curShape);
             }
@@ -447,6 +591,32 @@ void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
     makeShapeRecursively(shape, x, y-1);
 }
 
+/*
+ * Merges a clone of the passed Shape into the playingField
+ * 
+ * Any Block already in the location of the merge is deleted and its pointer is overwritten with a
+ *   pointer to the newly allocated block cloned from the passed Shape
+ *   
+ * Allocates clones of the Blocks in the passed Shape
+ * De-allocates any Blocks that may be in the same place as the merge is occurring
+ * 
+ * Guaranteed that the Shape pointed to by shape will not be modified
+ */
+void PlayingField::merge(const Shape *shape) {
+    for (int i = 0; i < shape->numBlocks(); i++) {
+        Block *curBlock = shape->getBlock(i)->makeNewClone();
+        int indexX = (curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize();
+        int indexY = (curBlock->getLocationY()-getLocationY())/curBlock->getTotalSize();
+        
+        // Delete anything that may already be here
+        delete blocks[indexX][indexY];
+        
+        blocks[indexX][indexY] = curBlock;
+        
+        curBlock->draw();
+    }
+}
+
 /* ---------- Overriding from Drawable ---------- */
 
 void PlayingField::setLocation(int x, int y) {
@@ -462,7 +632,7 @@ void PlayingField::setLocation(int x, int y) {
         }
     }
     
-    bgRect->setLocation(bgRect->getLocationX()+dX, getLocationY()+dY);
+    bgRect.setLocation(bgRect.getLocationX()+dX, getLocationY()+dY);
     
     draw();
     
@@ -474,7 +644,7 @@ void PlayingField::setLocation(int x, int y) {
 /* ---------- Implemented from Drawable ---------- */
 
 void PlayingField::draw() {
-    bgRect->draw();
+    bgRect.draw();
 
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
@@ -497,7 +667,7 @@ void PlayingField::erase() {
             }
         }
         
-        bgRect->erase();
+        bgRect.erase();
         
         isVisible = false;
     }

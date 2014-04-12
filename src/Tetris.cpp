@@ -11,9 +11,9 @@
 
 //Tetris Constructor
 
-Tetris::Tetris(GLUT_Plotter *g) {
-    this->g = g;
-    screen = new Game(); // This is temporary, change it to whatever you need to test
+Tetris::Tetris(GLUT_Plotter *g):
+        g(g), screen(new Game())
+{
 }
 
 Tetris::~Tetris() {
@@ -30,7 +30,7 @@ void Tetris::Play (void) {
         int k = g->getKey();
         
         switch (k) {
-            case 27: // ESC
+            case Key::ESC: // ESC
             case 'x':
                 exit(1);
                 break;
@@ -39,7 +39,7 @@ void Tetris::Play (void) {
         }
     }
     
-    // If we don't get NULL back from respondToClicik, it means we went to a new screen, so delete the old screen and 
+    // If we don't get NULL back from respondToKey, it means we went to a new screen, so delete the old screen and 
     // set it to the new screen, and then exit this function
     if (newScreen) {
         delete screen;
@@ -54,7 +54,7 @@ void Tetris::Play (void) {
         newScreen = screen->respondToClick(c);
     }
     
-    // If we don't get NULL back from respondToClicik, it means we went to a new screen, so delete the old screen and 
+    // If we don't get NULL back from respondToClick, it means we went to a new screen, so delete the old screen and 
     // set it to the new screen, and then exit this function
     if (newScreen) {
         delete screen;
