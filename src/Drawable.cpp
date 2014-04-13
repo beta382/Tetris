@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 28, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #include "Drawable.h"
@@ -193,7 +193,29 @@ void Drawable::setG(GLUT_Plotter *plotter) {
 	g = plotter;
 }
 
-
+/*
+ * Blinks this Drawable the passed number of times with the passed number of milliseconds in
+ *   between drawing and erasing
+ */
+void Drawable::blink(int times, int milliseconds) {
+    
+    clock_t start;
+    
+    for (int r = 0; r < times; r++) {
+        
+        draw();
+        g->Draw(); // Force screen redraw
+        
+        start = clock();
+        while (clock() < start+milliseconds);
+        
+        erase();
+        g->Draw(); // Force screen redraw
+        
+        start = clock();
+        while (clock() < start+milliseconds);
+    }
+}
 
 
 

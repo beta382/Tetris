@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #ifndef BLOCK_H_
@@ -66,7 +66,7 @@ class Block: public Drawable {
         unsigned int getUniqueID() const;
         void setUniqueID(unsigned int);
         
-        virtual void doOnClear(vector<vector<Block *> >&, int x, int y);
+        virtual void doEffect(vector<vector<Block *> >&, int x, int y);
         virtual Block *makeNewClone();
         
         /* ---------- Implemented from Drawable ---------- */

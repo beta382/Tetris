@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  4, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #ifndef GHOSTBLOCK_H_
@@ -41,7 +41,7 @@ class GhostBlock: public Block {
         ~GhostBlock();
         
         /* ---------- Overriding from Block ---------- */
-        void doOnClear(vector<vector<Block *> >&, int x, int y); // Only here to use a testing ground for future Blocks
+        void doEffect(vector<vector<Block *> >&, int x, int y); // Only here to use a testing ground for future Blocks
         GhostBlock *makeNewClone();
         
         void draw();

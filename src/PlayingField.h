@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #ifndef PLAYINGFIELD_H_
@@ -16,6 +16,7 @@
 #include "Rectangle.h"
 
 #include <vector>
+#include <algorithm>
 #include <ctime>
 
 /*
@@ -107,16 +108,21 @@ class PlayingField: public Drawable {
         bool couldAdd(const Block *) const;
         
         void doLineClear();
-        vector<Shape *> formShapes();
-        void makeShapeRecursively(Shape *, int x, int y);
+        vector<int> getClearableLines();
+        void normalizeBlocks(Shape&);
+        void doClearedBlockEffects(Shape&, vector<Shape *>&);
+        vector<Shape *> formShapes(vector<vector<Block *> >&);
+        void makeShapeRecursively(Shape *, int, int, vector<vector<Block *> >&);
         void merge(const Shape *);
-
+        
+        int xIndexFromLocation(const Block *) const;
+        int yIndexFromLocation(const Block *) const;
         int blockSize;
         int padding;
         
         MyRectangle bgRect;
         
-        vector<vector<Block *> > blocks;
+        vector<vector<Block *> > blockField;
 };
 
 /* ---------- spawnNewTetromino method template implementation ---------- */

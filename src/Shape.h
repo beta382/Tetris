@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr  9, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #ifndef SHAPE_H_
@@ -77,6 +77,8 @@ class Shape: public Drawable {
         void shiftLeft();
         void shiftRight();
         
+        Block*& operator [](int);
+        
         /* ---------- Overriding from Drawable ---------- */
         void setLocation(int, int);
         void setForeground (unsigned int);
@@ -91,5 +93,7 @@ class Shape: public Drawable {
         int blockSize;
         int padding;
 };
+
+bool compareShapeByLocation(Shape *lhs, Shape *rhs);
 
 #endif /* SHAPE_H_ */

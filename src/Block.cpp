@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #include "Block.h"
@@ -61,7 +61,7 @@ void Block::setUniqueID(unsigned int id) {
     uniqueID = id;
 }
 
-void Block::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
+void Block::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
 }
 

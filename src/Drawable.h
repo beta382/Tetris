@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #ifndef DRAWABLE_H_
@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <ctime>
 
 /*
  * Drawable:
@@ -76,19 +77,20 @@ class Drawable {
     public:
         virtual void draw() = 0;
         virtual void erase() = 0;
+        void blink(int, int);
         
         void setWidth(int);
         int getWidth() const;
         void setHeight(int);
         int getHeight() const;
         
-        virtual void setLocation(int x, int y);
+        virtual void setLocation(int, int);
         int getLocationX() const;
         int getLocationY() const;
         
-        virtual void setForeground(unsigned int color);
+        virtual void setForeground(unsigned int);
         unsigned int getForeground() const;
-        virtual void setBackground(unsigned int color);
+        virtual void setBackground(unsigned int);
         unsigned int getBackground() const;
 
         static void setG(GLUT_Plotter *);

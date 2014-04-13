@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #include "Shape.h"
@@ -107,6 +107,10 @@ void Shape::shiftRight () {
     setLocation(getLocationX()+getTotalBlockSize(), getLocationY());
 }
 
+Block*& Shape::operator [](int index) {
+    return blocks[index];
+}
+
 /* ---------- Overriding from Drawable ---------- */
 
 void Shape::setLocation(int x, int y) {
@@ -156,3 +160,24 @@ void Shape::erase() {
         isVisible = false;
     }
 }
+
+
+/* ---------- Non-member ---------- */
+bool compareShapeByLocation(Shape *lhs, Shape *rhs) {
+    bool result = false;
+    
+    if (lhs->getLocationY() < rhs->getLocationY() || 
+            (lhs->getLocationY() == rhs->getLocationY() && lhs->getLocationX() < rhs->getLocationX()))
+    {
+        result = true;
+    }
+    
+    return result;
+}
+
+
+
+
+
+
+

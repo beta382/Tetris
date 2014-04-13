@@ -4,12 +4,12 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  4, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #include "GhostBlock.h"
 
-/* Just put an extra slash in front to un-comment
+//* Just put an extra slash in front to un-comment
 #include <ctime>
 #include "Rectangle.h"
 //*/
@@ -44,10 +44,10 @@ GhostBlock::~GhostBlock() {
 
 /* ---------- Overriding from Block ---------- */
 
-void GhostBlock::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
+void GhostBlock::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
     // Do nothing
     
-    // ExplodingBlock example, needs <ctime> and "Rectangle.h"
+    // ExplodingBlock example, needs "Rectangle.h"
     /* Just put an extra slash in front to un-comment
     // Make a big explosion block
     
@@ -76,24 +76,7 @@ void GhostBlock::doOnClear(vector<vector<Block *> >& blockField, int x, int y) {
     
     MyRectangle explosion(explosionX, explosionY, explosionWidth, explosionHeight, Color::RED, getBackground());
     
-    // Blink two times
-    for (int r = 0; r < 3; r++) {
-        explosion.draw();
-        
-        g->Draw(); // Force screen redraw
-
-        clock_t start = clock();
-        
-        while (clock() < start+150); // Wait 150ms
-        
-        explosion.erase();
-        
-        g->Draw(); // Force screen redraw
-
-        start = clock();
-        
-        while (clock() < start+150); // Wait 150ms
-    }
+    explosion.blink(3, 150);
     
     // Actually clear the blocks
     for (int i = x-2; i <= x+2; i++) {

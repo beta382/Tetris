@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 12, 2014
  */
 
 #include "PlayingField.h"
@@ -23,7 +23,7 @@ PlayingField::PlayingField():
 Drawable(0, 0, 10, 20),
         blockSize(10), padding(0),
         bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding, foreground, background),
-        blocks(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+        blockField(width, vector<Block *>(height, static_cast<Block *>(NULL)))
 {
 }
 
@@ -41,7 +41,7 @@ PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, i
 Drawable(x, y, width, height, foreground, background),
         blockSize(blockSize), padding(padding), 
         bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding, foreground, background),
-        blocks(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+        blockField(width, vector<Block *>(height, static_cast<Block *>(NULL)))
 {
 }
 
@@ -60,12 +60,12 @@ Drawable(x, y, width, height, foreground, background),
 PlayingField::PlayingField(const PlayingField& other): 
 Drawable(other),
         blockSize(other.blockSize), padding(other.padding), bgRect(other.bgRect),
-        blocks(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+        blockField(width, vector<Block *>(height, static_cast<Block *>(NULL)))
 {
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
-            if (other.blocks.at(i).at(j)) {
-                blocks[i][j] = other.blocks.at(i).at(j)->makeNewClone();
+            if (other.blockField.at(i).at(j)) {
+                blockField[i][j] = other.blockField.at(i).at(j)->makeNewClone();
             }
         }
     }
@@ -93,25 +93,25 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
-                delete blocks[i][j];
+                delete blockField[i][j];
             }
             
-            blocks[i].clear();
+            blockField[i].clear();
         }
         
-        blocks.clear();
+        blockField.clear();
         
         Drawable::operator =(rhs);
         blockSize = rhs.blockSize;
         padding = rhs.padding;
         bgRect = rhs.bgRect;
         
-        blocks.assign(width, vector<Block *>(height, static_cast<Block *>(NULL)));
+        blockField.assign(width, vector<Block *>(height, static_cast<Block *>(NULL)));
         
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
-                if (rhs.blocks.at(i).at(j)) {
-                    blocks[i][j] = rhs.blocks.at(i).at(j)->makeNewClone();
+                if (rhs.blockField.at(i).at(j)) {
+                    blockField[i][j] = rhs.blockField.at(i).at(j)->makeNewClone();
                 }
             }
         }
@@ -132,7 +132,7 @@ PlayingField::~PlayingField() {
     erase();
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
-            delete blocks[i][j];
+            delete blockField[i][j];
         }
     }
 }
@@ -334,13 +334,12 @@ bool PlayingField::canRotateCCW(const TetrominoBase *t) const {
 bool PlayingField::couldAdd(const Block *block) const {
     bool can = true;
     
+    int xIndex = xIndexFromLocation(block);
+    int yIndex = yIndexFromLocation(block);
+    
     // Check that it isn't out-of-bounds or intersecting an existing Block
-    if ((block->getLocationX()-getLocationX())/block->getTotalSize() < 0 || 
-        (block->getLocationX()-getLocationX())/block->getTotalSize() >= getWidth() || 
-        (block->getLocationY()-getLocationY())/block->getTotalSize() < 0 || 
-        (block->getLocationY()-getLocationY())/block->getTotalSize() >= getHeight() ||
-         blocks.at((block->getLocationX()-getLocationX())/block->getTotalSize())
-               .at((block->getLocationY()-getLocationY())/block->getTotalSize()))
+    if (xIndex < 0 || xIndex >= getWidth() || yIndex < 0 || yIndex >= getHeight() ||
+            blockField.at(xIndex).at(yIndex))
     {
         can = false;
     }
@@ -357,128 +356,36 @@ bool PlayingField::couldAdd(const Block *block) const {
  */
 void PlayingField::doLineClear() {
     vector<int> clearableLines;
-    vector<Block *> clearedBlocks;
     cout << "---- Entered doLineClear ----" << endl;
-    // This is static because we make a mutually recursive call to mergeAndDelete(Shape * later on, and
-    // when that calls this function, wouldn't normally have the vector of remaining shapes
+
     static vector<Shape *> remainingShapes(0); 
     
-    clock_t start;
-    
-    // Find which lines can be cleared
-    for (int i = 0; i < getHeight(); i++) {
-        bool isClearable = true;
-        for (int j = 0; j < getWidth() && isClearable; j++) {
-            if (!blocks[j][i]) {
-                isClearable = false;
-            }
-        }
-        
-        if (isClearable) {
-            clearableLines.push_back(i);
-        }
-    }
+    clearableLines = getClearableLines();
     
     // If there are lines to clear
     if (clearableLines.size() > 0) {
-        
-        // Blink three times
-        for (int r = 0; r < 3; r++) {
-            
-            for (unsigned int i = 0; i < clearableLines.size(); i++) {
-                for (int j = 0; j < getWidth(); j++) {
-                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                        blocks[j][clearableLines[i]]->draw();
-                    }
-                }
-            }
-            
-            g->Draw(); // Force screen redraw
-            
-            start = clock();
-            
-            while (clock() < start+150); // Wait 150ms
-            
-            for (unsigned int i = 0; i < clearableLines.size(); i++) {
-                for (int j = 0; j < getWidth(); j++) {
-                    if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                        blocks[j][clearableLines[i]]->erase();
-                    }
-                }
-            }
-            
-            g->Draw(); // Force screen redraw
-            
-            start = clock();
-            
-            while (clock() < start+150); // Wait 150ms
-        }
-        
-        // Clone, store, and then remove the blocks
+        Shape clearedBlocks;
         for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
-                if (blocks[j][clearableLines[i]]) { // Not really necessary since existence is guaranteed, but w/e
-                    clearedBlocks.push_back(blocks[j][clearableLines[i]]->makeNewClone());
-                    delete blocks[j][clearableLines[i]];
-                    blocks[j][clearableLines[i]] = NULL;
-                }
+                clearedBlocks.addBlock(blockField[j][clearableLines[i]]->makeNewClone());
+                delete blockField[j][clearableLines[i]];
+                blockField[j][clearableLines[i]] = NULL;
             }
         }
         
-        // Go through the list of cleared blocks and find all blocks from the same tetromino into standard blocks
-        for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
-            
-            // If the block we are on has a "no-ID", we don't need to check
-            if (clearedBlocks[i]->getUniqueID() != 0) {
-                
-                // Go through each block on the field and check for ones with the same unique ID, and replace them
-                for (int j = 0; j < getWidth(); j++) {
-                    for (int k = 0; k < getHeight(); k++) {
-                        if (blocks[j][k] && blocks[j][k]->getUniqueID() != 0 &&
-                                blocks[j][k]->getUniqueID() == clearedBlocks[i]->getUniqueID())
-                        {
-                            Block *tmp = blocks[j][k];
-                            blocks[j][k] = new Block(*tmp); // Not making a clone, this will give us a base Block
-                            delete tmp;
-                            blocks[j][k]->draw(); // Redraw the new block since what used to be there just got erased
-                        }
-                    }
-                }
-                
-                // Go through the list of cleared blocks, check for ones with the same unique ID, and replace them
-                for (unsigned int j = i+1; j < clearedBlocks.size(); j++) {
-                    if (clearedBlocks[j]->getUniqueID() != 0 &&
-                            clearedBlocks[i]->getUniqueID() == clearedBlocks[j]->getUniqueID())
-                    {
-                        Block *tmp = clearedBlocks[j];
-                        clearedBlocks[j] = new Block(*tmp); // Not making a clone, this will give us a base Block
-                        delete tmp; // Don't redraw, because these blocks aren't supposed to be visible.
-                    }
-                }
-            }
-        }
+        clearedBlocks.blink(3, 150);
         
-        // For each cleared block, perform the block's special effect, and then delete the block
-        for (unsigned int i = 0; i < clearedBlocks.size(); i++) {
-            clearedBlocks[i]->doOnClear(blocks, 
-                    (clearedBlocks[i]->getLocationX()-getLocationX())/clearedBlocks[i]->getTotalSize(),
-                    (clearedBlocks[i]->getLocationY()-getLocationY())/clearedBlocks[i]->getTotalSize());
-            delete clearedBlocks[i];
-        }
-    } // End of "If there are lines to clear"
-
-    if (remainingShapes.size() == 0) {
-        remainingShapes = formShapes();
-        g->Draw(); // Force redraw
-    }
-    
-    if (clearableLines.size() > 0) {
-        vector<Shape *> newRemainingShapes = formShapes();
-        g->Draw(); // Force redraw
+        normalizeBlocks(clearedBlocks);
+        
+        doClearedBlockEffects(clearedBlocks, remainingShapes);
+        
+        vector<Shape *> newRemainingShapes = formShapes(blockField);
         
         for (unsigned int i = 0; i < newRemainingShapes.size(); i++) {
             remainingShapes.push_back(newRemainingShapes[i]);
         }
+        
+        sort(remainingShapes.begin(), remainingShapes.end(), compareShapeByLocation);
     }
     
     // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
@@ -519,7 +426,7 @@ void PlayingField::doLineClear() {
                 }
             }
             
-            g->Draw();
+            g->Draw(); // Force redraw
             
             doLineClear();
             
@@ -536,34 +443,129 @@ void PlayingField::doLineClear() {
                     didFall = true;
                 }
             }
-            
-            g->Draw();
         }
         
         g->Draw(); // Force redraw
         
         if (didFall) {
-            start = clock();
+            clock_t start = clock();
             
             while (clock() < start + 100); // Wait 100ms
         }
     }
     
-    // At this point, we can't be called again from mergeAndDelete(Shape *), so go ahead and erase remainingShapes
     remainingShapes.clear();
     cout << "---- Exited doLineClear ----" << endl;
 }
 
-vector<Shape *> PlayingField::formShapes() {
+vector<int> PlayingField::getClearableLines() {
+    vector<int> clearableLines;
+    
+    for (int i = 0; i < getHeight(); i++) {
+        bool isClearable = true;
+        for (int j = 0; j < getWidth() && isClearable; j++) {
+            if (!blockField[j][i]) {
+                isClearable = false;
+            }
+        }
+        
+        if (isClearable) {
+            clearableLines.push_back(i);
+        }
+    }
+    
+    return clearableLines;
+}
+
+/*
+ * Runs through the passed Shape and finds all Blocks either in the blockField or the passed Shape
+ *   that have the same uniqueID, replacing them with base Blocks
+ */
+void PlayingField::normalizeBlocks(Shape& shape) {
+    for (int i = 0; i < shape.numBlocks(); i++) {
+        
+        // If the block we are on has a "no-ID", we don't need to check
+        if (shape[i] && shape[i]->getUniqueID() != 0) {
+            
+            // blockField
+            for (int j = 0; j < getWidth(); j++) {
+                for (int k = 0; k < getHeight(); k++) {
+                    if (blockField[j][k] &&
+                            blockField[j][k]->getUniqueID() == shape[i]->getUniqueID())
+                    {
+                        Block *tmp = blockField[j][k];
+                        blockField[j][k] = new Block(*tmp); // Not making a clone, this will give us a base Block
+                        delete tmp;
+                        blockField[j][k]->draw();
+                    }
+                }
+            }
+            
+            // Passed Shape
+            for (int j = i+1; j < shape.numBlocks(); j++) {
+                if (shape[i]->getUniqueID() == shape[j]->getUniqueID()) {
+                    Block *tmp = shape[j];
+                    shape[j] = new Block(*tmp); // Not making a clone, this will give us a base Block
+                    delete tmp; // Don't redraw, because these blocks aren't supposed to be visible.
+                }
+            }
+        }
+    }
+}
+
+void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& remainingShapes) {
+    vector<vector<Block *> > remainingBlockField(width, vector<Block *>(height, static_cast<Block *>(NULL)));
+    
+    // Before we perform any special effects, temporarily directly merge any remainingShapes
+    for (unsigned int i = 0; i < remainingShapes.size(); i++) {
+        for (int j = 0; remainingShapes[i] && j < remainingShapes[i]->numBlocks(); j++) {
+            
+            Block *curBlock = (*remainingShapes[i])[j];
+            int indexX = xIndexFromLocation(curBlock);
+            int indexY = yIndexFromLocation(curBlock);
+            
+            // Delete anything that may already be here
+            delete blockField[indexX][indexY];
+            
+            blockField[indexX][indexY] = curBlock;
+            
+            curBlock->draw();
+        }
+    }
+    
+    // For each cleared block, perform the block's special effect, and then delete the block
+    for (int i = 0; i < clearedBlocks.numBlocks(); i++) {
+        clearedBlocks[i]->doEffect(blockField, 
+                xIndexFromLocation(clearedBlocks[i]), yIndexFromLocation(clearedBlocks[i]));
+        delete clearedBlocks[i];
+        clearedBlocks[i] = NULL;
+    }
+    
+    // Extract the merged remainingShapes and make them into a separate blockField
+    for (unsigned int i = 0; i < remainingShapes.size(); i++) {
+        for (int j = 0; remainingShapes[i] && j < remainingShapes[i]->numBlocks(); j++) {
+            Block *curBlock = (*remainingShapes[i])[j];
+            int indexX = xIndexFromLocation(curBlock);
+            int indexY = yIndexFromLocation(curBlock);
+            
+            blockField[indexX][indexY] = NULL;
+            remainingBlockField[indexX][indexY] = curBlock;
+        }
+    }
+    
+    remainingShapes = formShapes(remainingBlockField);
+}
+
+vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
     vector<Shape *> shapes;
     
     for (int i = 0; i < getHeight(); i++) {
         for (int j = 0; j < getWidth(); j++) {
-            if (blocks[j][i]) {
-                Shape *curShape = new Shape(blocks[j][i]->getLocationX(), blocks[j][i]->getLocationY(),
-                        blocks[j][i]->getSize(), blocks[j][i]->getPadding());
+            if (blockField[j][i]) {
+                Shape *curShape = new Shape(blockField[j][i]->getLocationX(), blockField[j][i]->getLocationY(),
+                        blockField[j][i]->getSize(), blockField[j][i]->getPadding());
                 
-                makeShapeRecursively(curShape, j, i);
+                makeShapeRecursively(curShape, j, i, blockField);
                 
                 curShape->draw();
                 
@@ -575,20 +577,20 @@ vector<Shape *> PlayingField::formShapes() {
     return shapes;
 }
 
-void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
-    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blocks[x][y]) {
+void PlayingField::makeShapeRecursively(Shape *shape, int x, int y, vector<vector<Block *> >& blockField) {
+    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blockField[x][y]) {
         return;
     }
     
-    shape->addBlock(blocks[x][y]->makeNewClone());
+    shape->addBlock(blockField[x][y]->makeNewClone());
     
-    delete blocks[x][y];
-    blocks[x][y] = NULL;
+    delete blockField[x][y];
+    blockField[x][y] = NULL;
     
-    makeShapeRecursively(shape, x+1, y);
-    makeShapeRecursively(shape, x, y+1);
-    makeShapeRecursively(shape, x-1, y);
-    makeShapeRecursively(shape, x, y-1);
+    makeShapeRecursively(shape, x+1, y, blockField);
+    makeShapeRecursively(shape, x, y+1, blockField);
+    makeShapeRecursively(shape, x-1, y, blockField);
+    makeShapeRecursively(shape, x, y-1, blockField);
 }
 
 /*
@@ -605,17 +607,26 @@ void PlayingField::makeShapeRecursively(Shape *shape, int x, int y) {
 void PlayingField::merge(const Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = shape->getBlock(i)->makeNewClone();
-        int indexX = (curBlock->getLocationX()-getLocationX())/curBlock->getTotalSize();
-        int indexY = (curBlock->getLocationY()-getLocationY())/curBlock->getTotalSize();
+        int indexX = xIndexFromLocation(curBlock);
+        int indexY = yIndexFromLocation(curBlock);
         
         // Delete anything that may already be here
-        delete blocks[indexX][indexY];
+        delete blockField[indexX][indexY];
         
-        blocks[indexX][indexY] = curBlock;
+        blockField[indexX][indexY] = curBlock;
         
         curBlock->draw();
     }
 }
+
+int PlayingField::xIndexFromLocation(const Block *block) const {
+    return (block->getLocationX()-getLocationX())/block->getTotalSize();
+}
+
+int PlayingField::yIndexFromLocation(const Block *block) const {
+    return (block->getLocationY()-getLocationY())/block->getTotalSize();
+}
+
 
 /* ---------- Overriding from Drawable ---------- */
 
@@ -626,8 +637,8 @@ void PlayingField::setLocation(int x, int y) {
     erase();
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
-            if (blocks[i][j]) {
-                blocks[i][j]->setLocation(blocks[i][j]->getLocationX()+dX, blocks[i][j]->getLocationY()+dY);
+            if (blockField[i][j]) {
+                blockField[i][j]->setLocation(blockField[i][j]->getLocationX()+dX, blockField[i][j]->getLocationY()+dY);
             }
         }
     }
@@ -648,8 +659,8 @@ void PlayingField::draw() {
 
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
-            if (blocks[i][j]) {
-                blocks[i][j]->draw();
+            if (blockField[i][j]) {
+                blockField[i][j]->draw();
             }
         }
     }
@@ -661,8 +672,8 @@ void PlayingField::erase() {
     if (isVisible) {
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
-                if (blocks[i][j]) {
-                    blocks[i][j]->erase();
+                if (blockField[i][j]) {
+                    blockField[i][j]->erase();
                 }
             }
         }
