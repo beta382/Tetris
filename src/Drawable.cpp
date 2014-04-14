@@ -11,18 +11,16 @@
 
 /*
  * A shared GLUT_Plotter for all instances of objects that descend from Drawable. Should have a
- *   proper value assigned to it through Drawable::setG(GLUT_Plotter) prior to using a Drawable
- *   object
+ *   proper value assigned to it through Drawable::setG(GLUT_Plotter *) prior to using a Drawable
+ *   object.
  */
 GLUT_Plotter *Drawable::g = NULL;
 
+
+/* ---------- Constructors ---------- */
+
 /*
- * Instantiates a Drawable object using default values
- * 
- * Initializes x, y, width, and height with 0
- * Initializes foreground with Color::WHITE
- * Initializes background with Color::BLACK
- * Initializes isVisible with false
+ * Instantiates a Drawable object using default values.
  */
 Drawable::Drawable(): 
         x(0), y(0), width(0), height(0), foreground(Color::WHITE), background(Color::BLACK),
@@ -31,13 +29,11 @@ Drawable::Drawable():
 }
 
 /*
- * Instantiates a Drawable object using the passed x and y values and other default values
+ * Instantiates a Drawable object using the passed parameters and other default values.
  * 
- * Initializes x and y with the passed values
- * Initializes width and height with 0
- * Initializes foreground with Color::WHITE
- * Initializes background with Color::BLACK
- * Initializes isVisible with false
+ * Parameters:
+ *   int x: The value to initialize this Drawable object's x with
+ *   int y: The value to initialize this Drawable object's x with
  */
 Drawable::Drawable (int x, int y):
         x(x), y(y), width(0), height(0), foreground(Color::WHITE), background(Color::BLACK),
@@ -46,10 +42,15 @@ Drawable::Drawable (int x, int y):
 }
 
 /*
- * Instantiates a Drawable object using the passed values
+ * Instantiates a Drawable object using the passed parameters.
  * 
- * Initializes x, y, width, height, foreground, and background with the passed values
- * Initializes isVisible with false
+ * Parameters:
+ *   int x: The value to initialize this Drawable object's x with
+ *   int y: The value to initialize this Drawable object's x with
+ *   int width: The value to initialize this Drawable object's width with
+ *   int height: The value to initialize this Drawable object's height with
+ *   unsigned int foreground: The value to initialize this Drawable object's foreground with
+ *   unsigned int background: The value to initialize this Drawable object's background with
  */
 Drawable::Drawable (int x, int y, int width, int height, unsigned int foreground, unsigned int background):
         x(x), y(y), width(width), height(height), foreground(foreground), background(background), isVisible(false)
@@ -57,13 +58,11 @@ Drawable::Drawable (int x, int y, int width, int height, unsigned int foreground
 }
 
 /*
- * Instantiates a Drawable object that is a copy of the passed Drawable object
+ * Instantiates a Drawable object that is a copy of the passed Drawable object, except for
+ *   bool isVisible, which is initialized with false.
  * 
- * Initializes x, y, width, height, foreground, and background with the respective values from the 
- *   passed Drawable object
- * Initializes isVisible with false
- * 
- * Guaranteed that the passed Drawable object will not be modified
+ * Parameters:
+ *   const Drawable& other: A reference to the Drawable object to copy from
  */
 Drawable::Drawable (const Drawable& other):
         x(other.x), y(other.y), width(other.width), height(other.height), foreground(other.foreground),
@@ -71,16 +70,17 @@ Drawable::Drawable (const Drawable& other):
 {
 }
 
+
+/* ---------- Member functions ---------- */
+
 /*
- * Assigns this Drawable object the values of the passed Drawable object
+ * Assigns this Drawable object the values of the passed Drawable object, except for bool isVisible,
+ *   which is assigned false.
  * 
- * Assigns x, y, width, height, foreground, and background the respective values from the passed
- *   Drawable object
- * Assigns isVisible false
+ * Parameters:
+ *   const Drawable& rhs: A reference to the Drawable object to assign from
  * 
- * Guaranteed that the passed Drawable object will not be modified
- * 
- * Returns a reference to this Drawable object
+ * Returns: A reference to this Drawable object
  */
 Drawable& Drawable::operator =(const Drawable& rhs) {
     if (this != &rhs) {
@@ -97,39 +97,49 @@ Drawable& Drawable::operator =(const Drawable& rhs) {
 }
 
 /*
- * Assigns width the passed value
+ * Assigns width the value of the passed parameter.
+ * 
+ * Parameters:
+ *   int width: The value to assign to this Drawable object's width
  */
 void Drawable::setWidth (int width) {
     this->width = width;
 }
 
 /*
- * Returns the value of width
+ * Getter for width
  * 
- * Guaranteed that this Drawable object will not be modified
+ * Returns: The value of this Drawable object's width
  */
 int Drawable::getWidth () const {
     return width;
 }
 
 /*
- * Assigns height the passed value
+ * Assigns height the value of the passed parameter.
+ * 
+ * Parameters:
+ *   int height: The value to assign to this Drawable object's height
  */
 void Drawable::setHeight (int height) {
     this->height = height;
 }
 
 /*
- * Returns the value of height
+ * Getter for height
  * 
- * Guaranteed that this Drawable object will not be modified
+ * Returns: The value of this Drawable object's height.
  */
 int Drawable::getHeight () const {
     return height;
 }
 
 /*
- * Assigns x any y the passed values
+ * Assigns x and y the values of the passed parameters.
+ * 
+ * Parameters:
+ *   int x: The value to assign to this Drawable object's x
+ *   int y: The value to assign to this Drawable object's y
  */
 void Drawable::setLocation(int x, int y) {
     this->x = x;
@@ -137,67 +147,69 @@ void Drawable::setLocation(int x, int y) {
 }
 
 /*
- * Returns the value of x
+ * Getter for x
  * 
- * Guaranteed that this Drawable object will not be modified
+ * Returns: The value of this Drawable object's x.
  */
 int Drawable::getLocationX() const {
     return x;
 }
 
 /*
- * Returns the value of y
+ * Getter for y
  * 
- * Guaranteed that this Drawable object will not be modified
+ * Returns: The value of this Drawable object's y.
  */
 int Drawable::getLocationY() const {
     return y;
 }
 
 /*
- * Assigns foreground the passed value
+ * Assigns foreground the value of the passed parameter.
+ *  
+ * Parameters:
+ *   unsigned int color: The value to assign to this Drawable object's foreground
  */
 void Drawable::setForeground (unsigned int color) {
     foreground = color;
 }
 
 /*
- * Returns the value of foreground
+ * Getter for foreground
  * 
- * Guaranteed that this Drawable object will not be modified
+ * Returns: The value of this Drawable object's foreground.
  */
 unsigned int Drawable::getForeground() const {
     return foreground;
 }
 
 /*
- * Assigns background the passed value
+ * Assigns background the value of the passed parameter.
+ * 
+ * Parameters:
+ *   unsigned int color: The value to assign to this Drawable object's background
  */
 void Drawable::setBackground(unsigned int color) {
     background = color;
 }
 
 /*
- * Returns the value of background
+ * Getter for background
  * 
- * Guaranteed that this Drawable object will not be modified
+ * Returns: The value of this Drawable object's background.
  */
 unsigned int Drawable::getBackground() const {
     return background;
 }
 
 /*
- * Assigns g the passed value. Should be called before using any Drawable objects
+ * Blinks this Drawable object. The final state will result in this Drawable object being erased.
+ * 
+ * Parameters:
+ *   int times: The number of times to blink this Drawable object
+ *   int interval: The time in milliseconds between drawing and erasing this Drawable object
  */
-void Drawable::setG(GLUT_Plotter *plotter) {
-	g = plotter;
-}
-
-/*
- * Blinks this Drawable the passed number of times with the passed number of milliseconds in
- *   between drawing and erasing
- */
-void Drawable::blink(int times, int milliseconds) {
+void Drawable::blink(int times, int interval) {
     
     clock_t start;
     
@@ -207,17 +219,25 @@ void Drawable::blink(int times, int milliseconds) {
         g->Draw(); // Force screen redraw
         
         start = clock();
-        while (clock() < start+milliseconds);
+        while (clock() < start+interval);
         
         erase();
         g->Draw(); // Force screen redraw
         
         start = clock();
-        while (clock() < start+milliseconds);
+        while (clock() < start+interval);
     }
 }
 
 
+/* ---------- Static ---------- */
 
-
-
+/*
+ * Assigns g the passed value. Should be called before using any Drawable objects.
+ * 
+ * Parameters:
+ *   GLUT_Plotter *plotter: The value to assign to Drawable's static GLUT_Plotter *g
+ */
+void Drawable::setG(GLUT_Plotter *plotter) {
+	g = plotter;
+}
