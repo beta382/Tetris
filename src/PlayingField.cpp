@@ -154,7 +154,11 @@ void PlayingField::mergeAndDelete (Shape *shape) {
     
     draw();
     
-    /*if (canLineClear())*/ doLineClear();
+    vector<int> clearableLines = getClearableLines();
+
+    if (clearableLines.size() > 0) {
+    	doLineClear(clearableLines);
+    }
 }
 
 /*
@@ -354,16 +358,13 @@ bool PlayingField::couldAdd(const Block *block) const {
  * 
  * 
  */
-void PlayingField::doLineClear() {
-    vector<int> clearableLines;
-    cout << "---- Entered doLineClear ----" << endl;
-
-    static vector<Shape *> remainingShapes(0); 
-    
-    clearableLines = getClearableLines();
+void PlayingField::doLineClear(vector<int> clearableLines) {
+	static vector<Shape *> remainingShapes(0);
     
     // If there are lines to clear
     if (clearableLines.size() > 0) {
+
+    	// Extract all the clearable lines into a single Shape
         Shape clearedBlocks;
         for (unsigned int i = 0; i < clearableLines.size(); i++) {
             for (int j = 0; j < getWidth(); j++) {
@@ -428,7 +429,11 @@ void PlayingField::doLineClear() {
             
             g->Draw(); // Force redraw
             
-            doLineClear();
+            clearableLines = getClearableLines();
+
+            if (clearableLines.size() > 0) {
+            	doLineClear(clearableLines);
+            }
             
             didFall = false;
         }
@@ -455,7 +460,6 @@ void PlayingField::doLineClear() {
     }
     
     remainingShapes.clear();
-    cout << "---- Exited doLineClear ----" << endl;
 }
 
 vector<int> PlayingField::getClearableLines() {
@@ -565,7 +569,7 @@ vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
                 Shape *curShape = new Shape(blockField[j][i]->getLocationX(), blockField[j][i]->getLocationY(),
                         blockField[j][i]->getSize(), blockField[j][i]->getPadding());
                 
-                makeShapeRecursively(curShape, j, i, blockField);
+                r_makeShape(curShape, j, i, blockField);
                 
                 curShape->draw();
                 
@@ -577,7 +581,7 @@ vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
     return shapes;
 }
 
-void PlayingField::makeShapeRecursively(Shape *shape, int x, int y, vector<vector<Block *> >& blockField) {
+void PlayingField::r_makeShape(Shape *shape, int x, int y, vector<vector<Block *> >& blockField) {
     if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blockField[x][y]) {
         return;
     }
@@ -587,10 +591,10 @@ void PlayingField::makeShapeRecursively(Shape *shape, int x, int y, vector<vecto
     delete blockField[x][y];
     blockField[x][y] = NULL;
     
-    makeShapeRecursively(shape, x+1, y, blockField);
-    makeShapeRecursively(shape, x, y+1, blockField);
-    makeShapeRecursively(shape, x-1, y, blockField);
-    makeShapeRecursively(shape, x, y-1, blockField);
+    r_makeShape(shape, x+1, y, blockField);
+    r_makeShape(shape, x, y+1, blockField);
+    r_makeShape(shape, x-1, y, blockField);
+    r_makeShape(shape, x, y-1, blockField);
 }
 
 /*

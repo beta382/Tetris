@@ -107,12 +107,12 @@ class PlayingField: public Drawable {
     private:
         bool couldAdd(const Block *) const;
         
-        void doLineClear();
+        void doLineClear(vector<int>);
         vector<int> getClearableLines();
         void normalizeBlocks(Shape&);
         void doClearedBlockEffects(Shape&, vector<Shape *>&);
         vector<Shape *> formShapes(vector<vector<Block *> >&);
-        void makeShapeRecursively(Shape *, int, int, vector<vector<Block *> >&);
+        void r_makeShape(Shape *, int, int, vector<vector<Block *> >&);
         void merge(const Shape *);
         
         int xIndexFromLocation(const Block *) const;
