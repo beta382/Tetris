@@ -111,6 +111,7 @@ class PlayingField: public Drawable {
         vector<int> getClearableLines();
         void normalizeBlocks(Shape&);
         void doClearedBlockEffects(Shape&, vector<Shape *>&);
+        void doFall(vector<Shape *>&);
         vector<Shape *> formShapes(vector<vector<Block *> >&);
         void r_makeShape(Shape *, int, int, vector<vector<Block *> >&);
         void merge(const Shape *);

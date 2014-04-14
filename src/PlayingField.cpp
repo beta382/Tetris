@@ -359,105 +359,36 @@ bool PlayingField::couldAdd(const Block *block) const {
  * 
  */
 void PlayingField::doLineClear(vector<int> clearableLines) {
-	static vector<Shape *> remainingShapes(0);
-    
-    // If there are lines to clear
-    if (clearableLines.size() > 0) {
+	static vector<Shape *> remainingShapes(0); // Static because this recurses with doFall
+	vector<Shape *> newRemainingShapes;
 
-    	// Extract all the clearable lines into a single Shape
-        Shape clearedBlocks;
-        for (unsigned int i = 0; i < clearableLines.size(); i++) {
-            for (int j = 0; j < getWidth(); j++) {
-                clearedBlocks.addBlock(blockField[j][clearableLines[i]]->makeNewClone());
-                delete blockField[j][clearableLines[i]];
-                blockField[j][clearableLines[i]] = NULL;
-            }
-        }
-        
-        clearedBlocks.blink(3, 150);
-        
-        normalizeBlocks(clearedBlocks);
-        
-        doClearedBlockEffects(clearedBlocks, remainingShapes);
-        
-        vector<Shape *> newRemainingShapes = formShapes(blockField);
-        
-        for (unsigned int i = 0; i < newRemainingShapes.size(); i++) {
-            remainingShapes.push_back(newRemainingShapes[i]);
-        }
-        
-        sort(remainingShapes.begin(), remainingShapes.end(), compareShapeByLocation);
-    }
-    
-    // Take each of those shapes and push them all the way down. This should be hierarchically safe because 
-    // formShapes() starts it's search at (0,0) and works it's way up, so the first shapes should always be entirely
-    // lower than the next shape
-    bool didFall = true;
-    // While we are still shifting down...
-    while(didFall) {
-        didFall = false;
-        // For each shape...
-        vector<int> mergeIndex;
-        vector<int> shiftIndex;
-        for (unsigned int i = 0; i < remainingShapes.size(); i++) {
-            // Shift down once if we can
-            if (remainingShapes[i]) {
-                if (canShiftDown(remainingShapes[i])) {
-                    shiftIndex.push_back(i);
-                } else {
-                    mergeIndex.push_back(i);
-                }
-            }
-        }
-        
-        if (mergeIndex.size() > 0) {
-            for (unsigned int i = 0; i < mergeIndex.size(); i++) {
-                merge(remainingShapes[mergeIndex[i]]);
-                
-                delete remainingShapes[mergeIndex[i]];
-                
-                remainingShapes[mergeIndex[i]] = NULL;
-            }
-            
-            draw();
-            
-            for (unsigned int i = 0; i < remainingShapes.size(); i++) {
-                if (remainingShapes[i]) {
-                    remainingShapes[i]->draw();
-                }
-            }
-            
-            g->Draw(); // Force redraw
-            
-            clearableLines = getClearableLines();
+	// Extract all the clearable lines into a single Shape
+	Shape clearedBlocks;
+	for (unsigned int i = 0; i < clearableLines.size(); i++) {
+		for (int j = 0; j < getWidth(); j++) {
+			clearedBlocks.addBlock(blockField[j][clearableLines[i]]->makeNewClone());
+			delete blockField[j][clearableLines[i]];
+			blockField[j][clearableLines[i]] = NULL;
+		}
+	}
 
-            if (clearableLines.size() > 0) {
-            	doLineClear(clearableLines);
-            }
-            
-            didFall = false;
-        }
-        
-        if (shiftIndex.size() > 0) {
-            for (unsigned int i = 0; i < shiftIndex.size(); i++) {
-                if (remainingShapes[shiftIndex[i]]) {
-                    remainingShapes[shiftIndex[i]]->erase();
-                    remainingShapes[shiftIndex[i]]->shiftDown();
-                    remainingShapes[shiftIndex[i]]->draw();
-                    
-                    didFall = true;
-                }
-            }
-        }
-        
-        g->Draw(); // Force redraw
-        
-        if (didFall) {
-            clock_t start = clock();
-            
-            while (clock() < start + 100); // Wait 100ms
-        }
-    }
+	clearedBlocks.blink(3, 150);
+
+	normalizeBlocks(clearedBlocks);
+
+	doClearedBlockEffects(clearedBlocks, remainingShapes);
+
+	// See if we have any new shapes to form, and add them to remainingShapes
+	newRemainingShapes = formShapes(blockField);
+
+	for (unsigned int i = 0; i < newRemainingShapes.size(); i++) {
+		remainingShapes.push_back(newRemainingShapes[i]);
+	}
+
+	// Maintains proper order since we might add new shapes out-of-order
+	sort(remainingShapes.begin(), remainingShapes.end(), compareShapeByLocation);
+
+	doFall(remainingShapes);
     
     remainingShapes.clear();
 }
@@ -558,6 +489,79 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
     }
     
     remainingShapes = formShapes(remainingBlockField);
+}
+
+void PlayingField::doFall(vector<Shape *>& fallingShapes) {
+	bool didFall = true;
+	// While we are still shifting down...
+	while(didFall) {
+		didFall = false;
+
+		vector<int> mergeIndex;
+		vector<int> shiftIndex;
+		for (unsigned int i = 0; i < fallingShapes.size(); i++) {
+			// Shift down once if we can
+			if (fallingShapes[i]) {
+				if (canShiftDown(fallingShapes[i])) {
+					shiftIndex.push_back(i);
+				} else {
+					mergeIndex.push_back(i);
+				}
+			}
+		}
+
+		// Merge all the mergable shapes
+		if (mergeIndex.size() > 0) {
+			for (unsigned int i = 0; i < mergeIndex.size(); i++) {
+				merge(fallingShapes[mergeIndex[i]]);
+
+				delete fallingShapes[mergeIndex[i]];
+
+				fallingShapes[mergeIndex[i]] = NULL;
+			}
+
+			draw();
+
+			for (unsigned int i = 0; i < fallingShapes.size(); i++) {
+				if (fallingShapes[i]) {
+					fallingShapes[i]->draw();
+				}
+			}
+
+			g->Draw(); // Force redraw
+
+			// Since we merged, see if we need to clear new lines
+			vector<int> clearableLines = getClearableLines();
+
+			if (clearableLines.size() > 0) {
+				doLineClear(clearableLines);
+			}
+
+			didFall = false;
+		}
+
+		// Shift all the shiftable shapes
+		if (shiftIndex.size() > 0) {
+			for (unsigned int i = 0; i < shiftIndex.size(); i++) {
+				// These can be NULL since from previous calls, since all calls pass the same data
+				if (fallingShapes[shiftIndex[i]]) {
+					fallingShapes[shiftIndex[i]]->erase();
+					fallingShapes[shiftIndex[i]]->shiftDown();
+					fallingShapes[shiftIndex[i]]->draw();
+
+					didFall = true;
+				}
+			}
+		}
+
+		g->Draw(); // Force redraw
+
+		if (didFall) {
+			clock_t start = clock();
+
+			while (clock() < start + 100); // Wait 100ms
+		}
+	}
 }
 
 vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
