@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 13, 2014
  */
 
 #ifndef GAMESCREEN_H_
@@ -13,8 +13,7 @@
 #include "Screen.h"
 #include "PlayingField.h"
 #include "TetrominoBase.h"
-#include "Blocks.h" // In turn includes all of our special blocks
-#include "Rectangle.h"
+#include "blocks.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -24,29 +23,8 @@
  *
  * Inherits from Screen.
  *
- * Game is intended to represent the game screen, and be a wrapper for everything that the game screen contains. Game IS
- *   NOT intended to be inherited from.
- *
- * Constructors:
- *     `Game()`: Calls `Screen()`, then calls `void init()`.
- *
- * Private member data:
- *     `PlayingField *field`: Pointer to a PlayingField object representing the main gameplay area.
- *     `TetrominoBase *currentTetromino`: Pointer to a TetrominoBase object (which can be any Tetromino<BlockType>)
- *       representing the currently falling tetromino.
- *     `Tetromino<GhostBlock> *shadow`: Pointer to a Tetromino<GhostBlock> object representing the final location of the
- *       currently falling tetromino should it be allowed to fall all the way to the bottom without shifting left or
- *       right.
- *
- * Public functions:
- *     `void respondToKey(int)`: Performs a gameplay action based on the pressed key.
- *
- * Private functions:
- *     `void init()`: Initializes member data and the RNG, draws the initial state to the screen.
- *
- * Functions implemented from Drawable:
- *     `void draw()`
- *     `void erase()`
+ * Game is intended to represent the game screen, and be a wrapper for everything that the game
+ *   screen contains. Game IS NOT intended to be inherited from.
  */
 
 class Game: public Screen {
@@ -63,6 +41,14 @@ class Game: public Screen {
         void draw();
         void erase();
     private:
+        
+        /*
+         * Prohibit copying or assignment
+         */
+        Game(const Game&);
+        Game& operator =(const Game&);
+        
+        
         void init();
         
         void doRotateCW();

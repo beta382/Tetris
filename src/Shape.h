@@ -4,15 +4,16 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr 12, 2014
+ * Date last modified:     Apr 13, 2014
  */
 
 #ifndef SHAPE_H_
 #define SHAPE_H_
 
 #include "Drawable.h"
-#include <vector>
 #include "Block.h"
+
+#include <vector>
 
 /*
  * Shape:

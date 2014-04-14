@@ -9,13 +9,15 @@
 
 #include "Game.h"
 
+
+/* ---------- Constructors/Destructor ---------- */
+
 /*
- * Instantiates a Game object using the passed foreground color
+ * Instantiates a Drawable object using the passed foreground or default values.
  * 
- * color defaults to Color::BLACK if nothing is passed
- * 
- * Calls Screen(color)
- * Calls init()
+ * Parameters:
+ *   unsigned int color: The value to initialize this Game object's foreground with, defaults to
+ *     Color::BLACK
  */
 Game::Game(unsigned int color): 
 Screen(color)
@@ -24,10 +26,7 @@ Screen(color)
 }
 
 /*
- * Properly destructs a Game object
- * 
- * Calls erase()
- * Deletes field, currentTetromino, and shadow
+ * Destructs a Game object
  */
 Game::~Game() {
     erase();
@@ -37,105 +36,18 @@ Game::~Game() {
 }
 
 
-/* ---------- Private ---------- */
-
-/*
- * Instantiates dynamically allocated member data, performs initial game screen setup
- * 
- * Dynamically allocates a PlayingField, a Tetromino<Block>, and a Tetromino<GhostBlock>
- * Moves the Tetromino<GhostBlock> to it's proper location on the screen
- * Calls draw()
- */
-void Game::init() {
-    srand(time(0));
-    
-    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
-    
-    // Spawn a new tetromino and create a shadow in the same place
-    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, 15, 2, Color::WHITE, getForeground());
-    currentTetromino = field->spawnNewTetromino<Block>(shape);
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
-            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape, 
-            field->getForeground());
-    
-    // Have the shadow fall
-    while (field->canShiftDown(shadow)) {
-        shadow->shiftDown();
-    }
-    
-    draw();
-}
-
-/*
- * Does a clockwise rotation on currentTetromino WITHOUT performing checks, while properly updating
- *   shadow's position on the screen
- */
-void Game::doRotateCW() {
-    // Erase and rotate the current tetromino, but don't redraw it just yet
-    currentTetromino->erase();
-    currentTetromino->rotateCW();
-    
-    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
-    // then have it fall
-    shadow->erase();
-    shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
-    shadow->rotateCW();
-    
-    while (field->canShiftDown(shadow)) {
-        shadow->shiftDown();
-    }
-    
-    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
-    shadow->draw();
-    currentTetromino->draw();
-}
-
-/*
- * Does a counter-clockwise rotation on currentTetromino WITHOUT performing checks, while properly
- *   updating shadow's position on the screen
- */
-void Game::doRotateCCW() {
-    // Erase and rotate the current tetromino, but don't redraw it just yet
-    currentTetromino->erase();
-    currentTetromino->rotateCCW();       
-    
-    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
-    // then have it fall
-    shadow->erase();
-    shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
-    shadow->rotateCCW();
-    
-    while (field->canShiftDown(shadow)) {
-        shadow->shiftDown();
-    }
-    
-    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
-    shadow->draw();
-    currentTetromino->draw();
-}
-
-
 /* ---------- Implemented from Screen ---------- */
 
 /*
- * Performs an action based on the passed key. Some of these currently exist only for testing
- *   purposes.
+ * Performs an action based on the passed key
  * 
- * If key is 'w' or UP, shift the currentTetromino up
- * If key is 'a' or LEFT, shift the currentTetromino left
- * If key is 's' or DOWN, shift the currentTetromino down
- * If key is 'd' or RIGHT, shift the currentTetromino right
- * If key is 'q', rotate the currentTetromino counter-clockwise
- * If key is 'e', rotate the currentTetromino clockwise
- * If key is 'n', spawn a new Tetromino<BlockType> without joining the current one with the field
- * If key is 'j', join the currentTetromino with the field and 
- * If key is 'g', spawn a new Tetromino<GhostBlock> without joining the current one with the field
- * Else, print the value of the key to the console
- * 
- * Returns a pointer to a Screen object that control should shift to after this function exits, or
- *   NULL if control should remain unchanged.
+ * Parameters:
+ *   int key: The value of the key to perform an action based upon
+ *   
+ * Returns: A pointer to the Screen object control should shift to after this function
+ *   exits, or NULL if control should not shift to another Screen object
  */
-Screen *Game::respondToKey(int key) {
+Screen *Game::respondToKey(int key) { // TODO: Refactor
     switch (key) {
         case 'w':
         case Key::UP: // UP
@@ -356,10 +268,11 @@ Screen *Game::respondToKey(int key) {
 /*
  * Performs an action based on the passed Click
  * 
- * Currently does nothing
- * 
- * Returns a pointer to a Screen object that control should shift to after this function exits, or
- *   NULL if control should remain unchanged.
+ * Parameters:
+ *   Click: The value of the Click to perform an action based upon
+ *            
+ * Returns: A pointer to the Screen object control should shift to after this function
+ *   exits, or NULL if control should not shift to another Screen object
  */
 Screen *Game::respondToClick(Click click) {
     // Do nothing for now
@@ -367,9 +280,7 @@ Screen *Game::respondToClick(Click click) {
 }
 
 /*
- * Performs actions that should happen continuously in the background on the Game screen
- * 
- * Calls draw()
+ * Performs actions that should happen continuously in the background on this Screen
  */
 void Game::doBackground() {
     // Just redraw for now
@@ -381,8 +292,6 @@ void Game::doBackground() {
 
 /*
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy
- * 
- * Sets isVisible to true
  */
 void Game::draw() {
     bgRect.draw();
@@ -394,8 +303,7 @@ void Game::draw() {
 }
 
 /*
- * Erases all Drawable member data from the screen in an order that preserves view heiarchy and sets
- *   isVisible to false, only if isVisible is true
+ * Erases all Drawable member data from the screen in an order that preserves view heiarchy
  */
 void Game::erase() {
     if (isVisible) {
@@ -409,10 +317,75 @@ void Game::erase() {
 }
 
 
+/* ---------- Private ---------- */
 
+/*
+ * Instantiates this Game object's dynamically allocated member data and starts the RNG
+ */
+void Game::init() {
+    srand(time(0));
+    
+    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
+    
+    // Spawn a new tetromino and create a shadow in the same place
+    field = new PlayingField(10+getLocationX(), 10+getLocationY(), 10, 20, 15, 2, Color::WHITE, getForeground());
+    currentTetromino = field->spawnNewTetromino<Block>(shape);
+    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
+            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape, 
+            field->getForeground());
+    
+    // Have the shadow fall
+    while (field->canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    draw();
+}
 
+/*
+ * Properly performs a clockwise rotation on currentTetromino WITHOUT performing checks
+ */
+void Game::doRotateCW() {
+    // Erase and rotate the current tetromino, but don't redraw it just yet
+    currentTetromino->erase();
+    currentTetromino->rotateCW();
+    
+    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
+    // then have it fall
+    shadow->erase();
+    shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
+    shadow->rotateCW();
+    
+    while (field->canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
+    shadow->draw();
+    currentTetromino->draw();
+}
 
+/*
+ * Properly performs a counter-clockwise rotation on currentTetromino WITHOUT performing checks
+ */
+void Game::doRotateCCW() {
+    // Erase and rotate the current tetromino, but don't redraw it just yet
+    currentTetromino->erase();
+    currentTetromino->rotateCCW();       
+    
+    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
+    // then have it fall
+    shadow->erase();
+    shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
+    shadow->rotateCCW();
+    
+    while (field->canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
+    shadow->draw();
+    currentTetromino->draw();
+}
 
-
-
-
+// TODO: More of these for every action, modularize!

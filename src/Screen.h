@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr 10, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 13, 2014
  */
 
 #ifndef SCREEN_H_
@@ -13,18 +13,39 @@
 #include "Drawable.h"
 #include "Rectangle.h"
 
+/*
+ * Screen:
+ * 
+ * Inherits from Drawable
+ *
+ * Screen is intended to be the abstract base class of all objects that contain unique elements
+ *   that form a single "screen". You MAY NOT independantly instantiate a Screen object, this is
+ *   enforced by making the constructors protected.
+ */
 class Screen: public Drawable {
     public:
         
         /*
          * Performs an action based on the passed key
+         * 
+         * Parameters:
+         *   int key: The value of the key to perform an action based upon
+         *   
+         * Returns: A pointer to the Screen object control should shift to after this function
+         *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen *respondToKey(int) = 0;
+        virtual Screen *respondToKey(int key) = 0;
         
         /*
          * Performs an action based on the passed Click
+         * 
+         * Parameters:
+         *   Click: The value of the Click to perform an action based upon
+         *            
+         * Returns: A pointer to the Screen object control should shift to after this function
+         *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen *respondToClick(Click) = 0;
+        virtual Screen *respondToClick(Click click) = 0;
         
         /*
          * Performs actions that should happen continuously in the background on this Screen
@@ -33,17 +54,27 @@ class Screen: public Drawable {
     protected:
         
         /*
-         * Instantiates a Screen object using the passed foreground color
+         * Instantiates a Screen object using the passed foreground color or default values.
          * 
-         * color defaults to Color::BLACK if nothing is passed
-         * 
-         * Calls Drawable(0, 0, g->getWidth, g->getHeight(), color) 
-         * Initializes bgRect with MyRectangle(0, 0, width, height, color)
+         * Parameters:
+         *   unsigned int color: The value to initialize this Screen object's foreground with,
+         *     defaults to Color::BLACK
          */
         Screen(unsigned int color = Color::BLACK):
-            Drawable(0, 0, g->getWidth(), g->getHeight(), color), 
-            bgRect(0, 0, width, height, color) {};
+        Drawable(0, 0, g->getWidth(), g->getHeight(), color), 
+                bgRect(0, 0, width, height, color)
+        {
+        };
         
+        /*
+         * Prohibit copying or assignment
+         */
+        Screen(const Screen& other);
+        Screen& operator =(const Screen& other);
+        
+        /*
+         * Represents the background fill for this Screen object
+         */
         MyRectangle bgRect;
 };
 

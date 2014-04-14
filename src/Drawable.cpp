@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 28, 2014
- * Date last modified:     Apr 12, 2014
+ * Date last modified:     Apr 13, 2014
  */
 
 #include "Drawable.h"
@@ -17,7 +17,7 @@
 GLUT_Plotter *Drawable::g = NULL;
 
 
-/* ---------- Constructors ---------- */
+/* ---------- Constructors/Destructor ---------- */
 
 /*
  * Instantiates a Drawable object using default values.
@@ -49,8 +49,10 @@ Drawable::Drawable (int x, int y):
  *   int y: The value to initialize this Drawable object's x with
  *   int width: The value to initialize this Drawable object's width with
  *   int height: The value to initialize this Drawable object's height with
- *   unsigned int foreground: The value to initialize this Drawable object's foreground with
- *   unsigned int background: The value to initialize this Drawable object's background with
+ *   unsigned int foreground: The value to initialize this Drawable object's foreground with,
+ *     defaults to Color::WHITE
+ *   unsigned int background: The value to initialize this Drawable object's background with,
+ *     defaults to Color::BLACK
  */
 Drawable::Drawable (int x, int y, int width, int height, unsigned int foreground, unsigned int background):
         x(x), y(y), width(width), height(height), foreground(foreground), background(background), isVisible(false)
@@ -71,30 +73,7 @@ Drawable::Drawable (const Drawable& other):
 }
 
 
-/* ---------- Member functions ---------- */
-
-/*
- * Assigns this Drawable object the values of the passed Drawable object, except for bool isVisible,
- *   which is assigned false.
- * 
- * Parameters:
- *   const Drawable& rhs: A reference to the Drawable object to assign from
- * 
- * Returns: A reference to this Drawable object
- */
-Drawable& Drawable::operator =(const Drawable& rhs) {
-    if (this != &rhs) {
-        x = rhs.x;
-        y = rhs.y;
-        width = rhs.width;
-        height = rhs.height;
-        foreground = rhs.foreground;
-        background = rhs.background;
-        isVisible = false;
-    }
-    
-    return *this;
-}
+/* ---------- Public ---------- */
 
 /*
  * Assigns width the value of the passed parameter.
@@ -227,6 +206,32 @@ void Drawable::blink(int times, int interval) {
         start = clock();
         while (clock() < start+interval);
     }
+}
+
+
+/* ---------- Protected ---------- */
+
+/*
+ * Assigns this Drawable object the values of the passed Drawable object, except for bool isVisible,
+ *   which is assigned false.
+ * 
+ * Parameters:
+ *   const Drawable& rhs: A reference to the Drawable object to assign from
+ * 
+ * Returns: A reference to this Drawable object
+ */
+Drawable& Drawable::operator =(const Drawable& rhs) {
+    if (this != &rhs) {
+        x = rhs.x;
+        y = rhs.y;
+        width = rhs.width;
+        height = rhs.height;
+        foreground = rhs.foreground;
+        background = rhs.background;
+        isVisible = false;
+    }
+    
+    return *this;
 }
 
 
