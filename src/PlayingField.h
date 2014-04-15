@@ -69,7 +69,7 @@ class PlayingField: public Drawable {
         void doClearedBlockEffects(Shape&, vector<Shape *>&);
         void doFall(vector<Shape *>&);
         vector<Shape *> formNewContiguousShapes(vector<vector<Block *> >&);
-        void r_makeShape(Shape *, int, int, vector<vector<Block *> >&);
+        void r_makeContiguousShape(Shape *, int, int, vector<vector<Block *> >&);
         void mergeCopy(const Shape *);
         
         int xIndexFromLocation(const Block *) const;

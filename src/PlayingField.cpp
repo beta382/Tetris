@@ -624,13 +624,13 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 vector<Shape *> PlayingField::formNewContiguousShapes(vector<vector<Block *> >& blockField) {
     vector<Shape *> shapes;
     
-    for (int i = 0; i < getHeight(); i++) {
-        for (int j = 0; j < getWidth(); j++) {
+    for (unsigned int i = 0; blockField.size() > 0 && i < blockField[0].size(); i++) {
+        for (unsigned int j = 0; j < blockField.size(); j++) {
             if (blockField[j][i]) {
                 Shape *curShape = new Shape(blockField[j][i]->getLocationX(), blockField[j][i]->getLocationY(),
                         blockField[j][i]->getSize(), blockField[j][i]->getPadding());
 
-                r_makeShape(curShape, j, i, blockField);
+                r_makeContiguousShape(curShape, j, i, blockField);
                 
                 curShape->draw();
                 
@@ -642,8 +642,19 @@ vector<Shape *> PlayingField::formNewContiguousShapes(vector<vector<Block *> >& 
     return shapes;
 }
 
-void PlayingField::r_makeShape(Shape *shape, int x, int y, vector<vector<Block *> >& blockField) {
-    if (x < 0 || x >= getWidth() || y < 0 || y >= getHeight() || !blockField[x][y]) {
+/*
+ * Recursively makes a Shape from contiguous Blocks in the passed blockField, starting at the
+ *   passed coordinates.
+ *   
+ * Parameters:
+ *   Shape *shape: A pointer to the Shape object to add contiguous blocks to
+ *   int x: The x-coordinate of the block to attempt to add
+ *   int y: The y-coordinate of the block to attempt to add
+ *   vector<vector<Block *> >& blockField: The blockField to pull Blocks from when making the Shape
+ */
+void PlayingField::r_makeContiguousShape(Shape *shape, int x, int y, vector<vector<Block *> >& blockField) {
+    if (x < 0 || x >= static_cast<int>(blockField.size()) || y < 0 ||
+            y >= static_cast<int>(blockField[x].size()) || !blockField[x][y]) {
         return;
     }
     
@@ -651,10 +662,10 @@ void PlayingField::r_makeShape(Shape *shape, int x, int y, vector<vector<Block *
     
     blockField[x][y] = NULL;
     
-    r_makeShape(shape, x+1, y, blockField);
-    r_makeShape(shape, x, y+1, blockField);
-    r_makeShape(shape, x-1, y, blockField);
-    r_makeShape(shape, x, y-1, blockField);
+    r_makeContiguousShape(shape, x+1, y, blockField);
+    r_makeContiguousShape(shape, x, y+1, blockField);
+    r_makeContiguousShape(shape, x-1, y, blockField);
+    r_makeContiguousShape(shape, x, y-1, blockField);
 }
 
 /*
