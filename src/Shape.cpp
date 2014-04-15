@@ -145,7 +145,9 @@ void Shape::setBackground(unsigned int background) {
 
 void Shape::draw() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->draw();
+        if (blocks[i]) {
+            blocks[i]->draw();
+        }
     }
     
     isVisible = true;
@@ -154,7 +156,9 @@ void Shape::draw() {
 void Shape::erase() {
     if (isVisible) {
         for (unsigned int i = 0; i < blocks.size(); i++) {
-            blocks[i]->erase();
+            if (blocks[i]) {
+                blocks[i]->erase();
+            }
         }
         
         isVisible = false;

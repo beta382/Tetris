@@ -135,7 +135,7 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
  *   Shape *shape: A pointer to the Shape object to merge and delete
  */
 void PlayingField::mergeAndDelete (Shape *shape) {
-    merge(shape);
+    mergeCopy(shape);
     
     delete shape;
     
@@ -391,7 +391,7 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
 	doClearedBlockEffects(clearedBlocks, fallingShapes);
 
 	// See if we have any new shapes to form, and add them to fallingShapes
-	newFallingShapes = formShapes(blockField);
+	newFallingShapes = formNewContiguousShapes(blockField);
 
 	for (unsigned int i = 0; i < newFallingShapes.size(); i++) {
 		fallingShapes.push_back(newFallingShapes[i]);
@@ -402,7 +402,7 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
 
 	doFall(fallingShapes);
     
-	// Clear fallingShapes when this finally exits
+	// Clear fallingShapes when this finally exits, should be totally NULL at this point
     fallingShapes.clear();
 }
 
@@ -505,8 +505,6 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
     for (int i = 0; i < clearedBlocks.numBlocks(); i++) {
         clearedBlocks[i]->doEffect(blockField, 
                 xIndexFromLocation(clearedBlocks[i]), yIndexFromLocation(clearedBlocks[i]));
-        delete clearedBlocks[i];
-        clearedBlocks[i] = NULL;
     }
     
     // Extract the merged fallingShapes and make them into a separate blockField
@@ -518,12 +516,18 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
             
             blockField[indexX][indexY] = NULL;
             remainingBlockField[indexX][indexY] = curBlock;
+            
+            // NULL the leftover Block pointer copy in fallingShapes
+            (*fallingShapes[i])[j] = NULL;
         }
+        
+        // Deletes dynamically allocated Shape, doesn't delete Blocks because they were NULLed
+        fallingShapes[i] = NULL;
     }
     
     // Takes a blockField made from the potentially modified original fallingShapes and forms new
     // shapes out of them. Effectively refreshes fallingShapes post-special effects
-    fallingShapes = formShapes(remainingBlockField);
+    fallingShapes = formNewContiguousShapes(remainingBlockField);
 }
 
 /*
@@ -558,7 +562,7 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 		// Merge all the mergeable shapes
 		if (mergeIndex.size() > 0) {
 			for (unsigned int i = 0; i < mergeIndex.size(); i++) {
-				merge(fallingShapes[mergeIndex[i]]);
+				mergeCopy(fallingShapes[mergeIndex[i]]);
 
 				delete fallingShapes[mergeIndex[i]];
 
@@ -593,7 +597,7 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 					fallingShapes[shiftIndex[i]]->erase();
 					fallingShapes[shiftIndex[i]]->shiftDown();
 					fallingShapes[shiftIndex[i]]->draw();
-
+					
 					didFall = true;
 				}
 			}
@@ -610,14 +614,14 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 }
 
 /*
- * Forms contiguous Shapes objects from the passed blockField.
+ * Allocates contiguous Shapes objects from the Blocks in the passed blockField.
  * 
  * Parameters:
  *   vector<vector<Block *> >& blockField: The blockField to from contiguous shapes from
  *   
  * Returns: A vector of pointers to the formed Shape objects
  */
-vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
+vector<Shape *> PlayingField::formNewContiguousShapes(vector<vector<Block *> >& blockField) {
     vector<Shape *> shapes;
     
     for (int i = 0; i < getHeight(); i++) {
@@ -625,7 +629,7 @@ vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
             if (blockField[j][i]) {
                 Shape *curShape = new Shape(blockField[j][i]->getLocationX(), blockField[j][i]->getLocationY(),
                         blockField[j][i]->getSize(), blockField[j][i]->getPadding());
-                
+
                 r_makeShape(curShape, j, i, blockField);
                 
                 curShape->draw();
@@ -643,9 +647,8 @@ void PlayingField::r_makeShape(Shape *shape, int x, int y, vector<vector<Block *
         return;
     }
     
-    shape->addBlock(blockField[x][y]->makeNewClone());
+    shape->addBlock(blockField[x][y]);
     
-    delete blockField[x][y];
     blockField[x][y] = NULL;
     
     r_makeShape(shape, x+1, y, blockField);
@@ -665,7 +668,7 @@ void PlayingField::r_makeShape(Shape *shape, int x, int y, vector<vector<Block *
  * 
  * Guaranteed that the Shape pointed to by shape will not be modified
  */
-void PlayingField::merge(const Shape *shape) {
+void PlayingField::mergeCopy(const Shape *shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
         Block *curBlock = shape->getBlock(i)->makeNewClone();
         int indexX = xIndexFromLocation(curBlock);

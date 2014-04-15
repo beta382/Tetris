@@ -212,7 +212,6 @@ Screen *Game::respondToKey(int key) { // TODO: Refactor
             break;
         case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
             delete shadow; // Delete the current tetromino's shadow
-            cout << endl << endl;
             field.mergeAndDelete(currentTetromino); // Merge the current tetromino into the playing field
             
             { // C++ throws a fit about variables in case statements, so this just sets a scope for shape
