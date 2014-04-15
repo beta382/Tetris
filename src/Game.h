@@ -29,7 +29,19 @@
 
 class Game: public Screen {
     public:
+        
+        /*
+         * Instantiates a Game object using the passed foreground color or default values.
+         * 
+         * Parameters:
+         *   unsigned int color: The value to initialize this Game object's foreground with, defaults to
+         *     Color::BLACK
+         */
         Game(unsigned int color = Color::BLACK);
+
+        /*
+         * Destructs a Game object
+         */
         ~Game();
         
         /* ---------- Implemented from Screen ---------- */
@@ -48,14 +60,34 @@ class Game: public Screen {
         Game(const Game&);
         Game& operator =(const Game&);
         
-        
+        /*
+         * Instantiates this Game object's dynamically allocated member data and starts the RNG
+         */
         void init();
         
+        /*
+         * Properly performs a clockwise rotation on currentTetromino WITHOUT performing checks
+         */
         void doRotateCW();
+        
+        /*
+         * Properly performs a counter-clockwise rotation on currentTetromino WITHOUT performing checks
+         */
         void doRotateCCW();
         
-        PlayingField *field;
+        /*
+         * PlayingField object that represents the area of main gameplay
+         */
+        PlayingField field;
+        
+        /*
+         * Pointer to a TetrominoBase object representing the currently falling tetromino
+         */
         TetrominoBase *currentTetromino;
+        
+        /*
+         * Pointer to a Tetromino<GhostBlock> object representing the currently falling tetromino's shadow
+         */
         Tetromino<GhostBlock> *shadow;
 };
 

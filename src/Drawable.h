@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr 13, 2014
+ * Date last modified:     Apr 15, 2014
  */
 
 #ifndef DRAWABLE_H_
@@ -25,12 +25,12 @@
 class Drawable {
     public:
         /*
-         * Draws this drawable object to the screen
+         * Draws this Drawable object to the screen
          */
         virtual void draw() = 0;
         
         /*
-         * Erases this drawable object from the screen
+         * Erases this Drawable object from the screen
          */
         virtual void erase() = 0;
         
@@ -192,15 +192,15 @@ class Drawable {
         Drawable& operator =(const Drawable&);
         
         /*
-         * These values are intended to represent the x and y coordinates of the bottom-left corner
-         *   of this Drawable object's bounding rectangle, however, they may be interpreted by
-         *   sub-classes of Drawable in whatever manner best suits the nature of that object.
+         * These variables are intended to represent the x and y coordinates of the bottom-left
+         *   corner of this Drawable object's bounding rectangle, however, they may be interpreted
+         *   by sub-classes of Drawable in whatever manner best suits the nature of that object.
          */
         int x;
         int y;
         
         /*
-         * These values are intended to represent the width and height in pixels of this Drawable
+         * These variables are intended to represent the width and height in pixels of this Drawable
          *   object's bounding rectangle, however, they may be interpreted by sub-classes of
          *   Drawable in whatever manner best suits the nature of that object.
          */
@@ -208,23 +208,23 @@ class Drawable {
         int height;
         
         /*
-         * These values are intended to represent the color of this Drawable object and the color
+         * These variables are intended to represent the color of this Drawable object and the color
          *   of whatever lies behind this Drawable object, respectively.
          */
         unsigned int foreground;
         unsigned int background;
         
         /*
-         * This value is intended to represent whether or not this Drawable object is currently 
+         * This variable is intended to represent whether or not this Drawable object is currently 
          *   visible on the screen. In implementations of draw() and erase(), this should be set
          *   accordingly, 
          */
         bool isVisible;
 
         /*
-         * A shared GLUT_Plotter for all instances of objects that descend from Drawable. Should have a
-         *   proper value assigned to it through Drawable::setG(GLUT_Plotter *) prior to using a Drawable
-         *   object.
+         * A pointer to a shared GLUT_Plotter for all instances of objects that descend from
+         *   Drawable. Should have a proper value assigned to it through
+         *   Drawable::setG(GLUT_Plotter *) prior to using a Drawable object.
          */
         static GLUT_Plotter *g;
 };

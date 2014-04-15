@@ -31,8 +31,8 @@ class Screen: public Drawable {
          * Parameters:
          *   int key: The value of the key to perform an action based upon
          *   
-         * Returns: A pointer to the Screen object control should shift to after this function
-         *   exits, or NULL if control should not shift to another Screen object
+         * Returns: A pointer to the Screen object control should shift to after this function exits, or
+         *   NULL if control should not shift to another Screen object
          */
         virtual Screen *respondToKey(int key) = 0;
         
@@ -42,8 +42,8 @@ class Screen: public Drawable {
          * Parameters:
          *   Click: The value of the Click to perform an action based upon
          *            
-         * Returns: A pointer to the Screen object control should shift to after this function
-         *   exits, or NULL if control should not shift to another Screen object
+         * Returns: A pointer to the Screen object control should shift to after this function exits, or
+         *   NULL if control should not shift to another Screen object
          */
         virtual Screen *respondToClick(Click click) = 0;
         

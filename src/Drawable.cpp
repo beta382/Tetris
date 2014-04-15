@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 28, 2014
- * Date last modified:     Apr 13, 2014
+ * Date last modified:     Apr 15, 2014
  */
 
 #include "Drawable.h"
@@ -17,7 +17,7 @@
 GLUT_Plotter *Drawable::g = NULL;
 
 
-/* ---------- Constructors/Destructor ---------- */
+/* ---------- Protected Constructors/Destructor ---------- */
 
 /*
  * Instantiates a Drawable object using default values.
@@ -33,7 +33,7 @@ Drawable::Drawable():
  * 
  * Parameters:
  *   int x: The value to initialize this Drawable object's x with
- *   int y: The value to initialize this Drawable object's x with
+ *   int y: The value to initialize this Drawable object's y with
  */
 Drawable::Drawable (int x, int y):
         x(x), y(y), width(0), height(0), foreground(Color::WHITE), background(Color::BLACK),
@@ -46,7 +46,7 @@ Drawable::Drawable (int x, int y):
  * 
  * Parameters:
  *   int x: The value to initialize this Drawable object's x with
- *   int y: The value to initialize this Drawable object's x with
+ *   int y: The value to initialize this Drawable object's y with
  *   int width: The value to initialize this Drawable object's width with
  *   int height: The value to initialize this Drawable object's height with
  *   unsigned int foreground: The value to initialize this Drawable object's foreground with,

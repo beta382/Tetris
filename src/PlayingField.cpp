@@ -4,20 +4,16 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr 12, 2014
+ * Date last modified:     Apr 15, 2014
  */
 
 #include "PlayingField.h"
 
+
+/* ---------- Constructors/Destructor ---------- */
+
 /*
- * Instantiates a PlayingField object using default values
- * 
- * Calls Drawable(0, 0, 10, 20)
- * Initializes blockSize with 10
- * Initializes padding with 0
- * Initializes bgRect with MyRectangle(x, y, (blockSize+padding)*width-padding,
- *   (blockSize+padding)*height-padding, foreground, background)
- * Initializes blocks with vector(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+ * Instantiates a PlayingField object using default values.
  */
 PlayingField::PlayingField():
 Drawable(0, 0, 10, 20),
@@ -28,13 +24,19 @@ Drawable(0, 0, 10, 20),
 }
 
 /*
- * Instantiates a PlayingField object using the passed values
+ * Instantiates a PlayingField object using the passed parameters.
  * 
- * Calls Drawable(x, y, width, height, foreground, background)
- * Initializes blockSize and padding with the passed values
- * Initializes bgRect with MyRectangle(x, y, (blockSize+padding)*width-padding,
- *   (blockSize+padding)*height-padding, foreground, background)
- * Initializes blocks with vector(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+ * Parameters:
+ *   int x: The value to initialize this PlayingField object's x with
+ *   int y: The value to initialize this PlayingField object's y with
+ *   int width: The value to initialize this PlayingField object's width with
+ *   int height: The value to initialize this PlayingField object's height with
+ *   int blockSize: The value to initialize this PlayingField object's blockSize with
+ *   int padding: The value to initialize this PlayingField object's padding with
+ *   unsigned int foreground: The value to initialize this PlayingField object's foreground with,
+ *     defaults to Color::WHITE
+ *   unsigned int background: The value to initialize this PlayingField object's background with,
+ *     defaults to Color::BLACK
  */
 PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, int padding, unsigned int foreground,
         unsigned int background):
@@ -46,16 +48,11 @@ Drawable(x, y, width, height, foreground, background),
 }
 
 /*
- * Instantiates a PlayingField object that is a copy of the passed PlayingField object
+ * Instantiates a PlayingField object that is a copy of the passed PlayingField object, except for
+ *   bool isVisible, which is initialized with false.
  * 
- * Calls Drawable(other)
- * Initializes blockSize, padding, and bgRect with the respective values from the passed
- *   PlayingField object
- * Initializes blocks with vector(width, vector<Block *>(height, static_cast<Block *>(NULL)))
- * Assigns blocks pointers to newly allocated clones of the respective Blocks from the passed
- *   PlayingField object 
- *   
- * Guaranteed that the passed PlayingField object will not be modified
+ * Parameters:
+ *   const PlayingField& other: A reference to the PlayingField object to copy from
  */
 PlayingField::PlayingField(const PlayingField& other): 
 Drawable(other),
@@ -72,20 +69,28 @@ Drawable(other),
 }
 
 /*
- * Assigns this PlayingField object the values of the passed PlayingField object
+ * Destructs a PlayingField object.
+ */
+PlayingField::~PlayingField() {
+    erase();
+    for (int i = 0; i < getWidth(); i++) {
+        for (int j = 0; j < getHeight(); j++) {
+            delete blockField[i][j];
+        }
+    }
+}
+
+
+/* ---------- Public ---------- */
+
+/*
+ * Assigns this PlayingField object the values of the passed PlayingField object, except for bool
+ *   isVisible, which is assigned false.
  * 
- * Calls erase()
- * Deletes any dynamically allocated Blocks contained in blocks and clears blocks
+ * Parameters:
+ *   const PlayingField& rhs: A reference to the PlayingField object to assign from
  * 
- * Calls Drawable::operator =(rhs)
- * Assigns blockSize, padding, and bgRect the respective values from the passed PlayingField object
- * Assigns blocks a 2D vector of NULL pointers
- * Assigns blocks pointers to newly allocated clones of the respective Blocks from the passed
- *   PlayingField object 
- *   
- * Guaranteed that the passed PlayingField object will not be modified
- * 
- * Returns a reference to this PlayingField object
+ * Returns: A reference to this PlayingField object
  */
 PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     if  (this != &rhs) {
@@ -123,29 +128,11 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
 }
 
 /*
- * Properly destructs a PlayingField object
- * 
- * Calls erase()
- * Deletes any dynamically allocated Blocks pointed to in blocks
- */
-PlayingField::~PlayingField() {
-    erase();
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
-            delete blockField[i][j];
-        }
-    }
-}
-
-/*
- * Merges a clone of the passed Shape into the playingField, and then de-allocates the Shape
- * 
- * Is mutually recursive with doLineClear()
- * 
- * Calls merge(shape)
- * De-allocates shape
- * Calls draw()
- * Calls doLineClear()
+ * Merges a clone of the Shape pointed to by the passed pointer into the blockField, de-allocates
+ *   the Shape, and then checks to see if lines need to be cleared, doing so if need be.
+ *   
+ * Parameters:
+ *   Shape *shape: A pointer to the Shape object to merge and delete
  */
 void PlayingField::mergeAndDelete (Shape *shape) {
     merge(shape);
@@ -162,10 +149,13 @@ void PlayingField::mergeAndDelete (Shape *shape) {
 }
 
 /*
- * Returns true if the passed Shape can shift up within the block field, false otherwise
- * 
- * Guaranteed that the Shape pointed to by shape will not be modified
- * Guaranteed that this PlayingField object will not be modified
+ * Determines whether or not the Shape object pointed to by the passed pointer can be shifted up
+ *   within the blockField.
+ *   
+ * Parameters:
+ *   const Shape *shape: A pointer to the Shape object to test
+ *   
+ * Returns: True if the Shape can shift up within the blockField, false otherwise
  */
 bool PlayingField::canShiftUp(const Shape *shape) const {
     bool can = true;
@@ -188,10 +178,13 @@ bool PlayingField::canShiftUp(const Shape *shape) const {
 }
 
 /*
- * Returns true if the passed Shape can shift down within the block field, false otherwise
- * 
- * Guaranteed that the Shape pointed to by shape will not be modified
- * Guaranteed that this PlayingField object will not be modified
+ * Determines whether or not the Shape object pointed to by the passed pointer can be shifted down
+ *   within the blockField.
+ *   
+ * Parameters:
+ *   const Shape *shape: A pointer to the Shape object to test
+ *   
+ * Returns: True if the Shape can shift down within the blockField, false otherwise
  */
 bool PlayingField::canShiftDown(const Shape *shape) const {
     bool can = true;
@@ -214,10 +207,13 @@ bool PlayingField::canShiftDown(const Shape *shape) const {
 }
 
 /*
- * Returns true if the passed Shape can shift left within the block field, false otherwise
- * 
- * Guaranteed that the Shape pointed to by shape will not be modified
- * Guaranteed that this PlayingField object will not be modified
+ * Determines whether or not the Shape object pointed to by the passed pointer can be shifted left
+ *   within the blockField.
+ *   
+ * Parameters:
+ *   const Shape *shape: A pointer to the Shape object to test
+ *   
+ * Returns: True if the Shape can shift left within the blockField, false otherwise
  */
 bool PlayingField::canShiftLeft(const Shape *shape) const {
     bool can = true;
@@ -240,10 +236,13 @@ bool PlayingField::canShiftLeft(const Shape *shape) const {
 }
 
 /*
- * Returns true if the passed Shape can shift left within the block field, false otherwise
- * 
- * Guaranteed that the Shape pointed to by shape will not be modified
- * Guaranteed that this PlayingField object will not be modified
+ * Determines whether or not the Shape object pointed to by the passed pointer can be shifted right
+ *   within the blockField.
+ *   
+ * Parameters:
+ *   const Shape *shape: A pointer to the Shape object to test
+ *   
+ * Returns: True if the Shape can shift right within the blockField, false otherwise
  */
 bool PlayingField::canShiftRight(const Shape *shape) const {
     bool can = true;
@@ -266,11 +265,14 @@ bool PlayingField::canShiftRight(const Shape *shape) const {
 }
 
 /*
- * Returns true if the passed TetrominoBase can rotate clockwise within the block field, false
+ * Determines whether or not the TetrominoBase object pointed to by the passed pointer can be
+ *   rotated clockwise within the blockField.
+ *   
+ * Parameters:
+ *   const Shape *shape: A pointer to the TetrominoBase object to test
+ *   
+ * Returns: True if the TetrominoBase object can rotate clockwise within the blockField, false
  *   otherwise
- * 
- * Guaranteed that the TetrominoBase pointed to by t will not be modified
- * Guaranteed that this PlayingField object will not be modified
  */
 bool PlayingField::canRotateCW(const TetrominoBase *t) const {
     bool can = true;
@@ -296,11 +298,14 @@ bool PlayingField::canRotateCW(const TetrominoBase *t) const {
 }
 
 /*
- * Returns true if the passed TetrominoBase can rotate counter-clockwise within the block field,
+ * Determines whether or not the TetrominoBase object pointed to by the passed pointer can be
+ *   rotated counter-clockwise within the blockField.
+ *   
+ * Parameters:
+ *   const Shape *shape: A pointer to the TetrominoBase object to test
+ *   
+ * Returns: True if the TetrominoBase object can rotate counter-clockwise within the blockField,
  *   false otherwise
- * 
- * Guaranteed that the TetrominoBase pointed to by t will not be modified
- * Guaranteed that this PlayingField object will not be modified
  */
 bool PlayingField::canRotateCCW(const TetrominoBase *t) const {
     bool can = true;
@@ -329,11 +334,14 @@ bool PlayingField::canRotateCCW(const TetrominoBase *t) const {
 /* ---------- Private ---------- */
 
 /*
- * Returns true if the passed Block could successfully be merged with the block field without
- *   conflict, false otherwise
+ * Determines whether or not the Block object pointed to by the passed pointer can be added to the
+ *   blockField without conflict.
  *   
- * Guaranteed that the Block pointed to by block will not be modified
- * Guaranteed that this PlayingField object will not be modified
+ * Parameters:
+ *   const Shape *shape: A pointer to the Block object to test
+ *   
+ * Returns: True if the Block object can be added to the blockField without conflict, false
+ *   otherwise
  */
 bool PlayingField::couldAdd(const Block *block) const {
     bool can = true;
@@ -352,15 +360,19 @@ bool PlayingField::couldAdd(const Block *block) const {
 }
 
 /*
- * Checks if there are lines to be cleared, and clears them if there are
+ * Checks if there are lines to be cleared, and clears them if there are.
  * 
- * Is mutually recursive with mergeAndDelete(Shape *)
+ * Is mutually recursive with doFall(vector<Shape *>&).
  * 
- * 
+ * Parameters:
+ *   vector<int> clearableLines: The lines to clear
  */
 void PlayingField::doLineClear(vector<int> clearableLines) {
-	static vector<Shape *> remainingShapes(0); // Static because this recurses with doFall
-	vector<Shape *> newRemainingShapes;
+    // Static because this recurses with doFall, maintains the remaining shapes across calls, is
+    // always cleared/reset before exiting the top-level of a single call.
+	static vector<Shape *> fallingShapes;
+	
+	vector<Shape *> newFallingShapes;
 
 	// Extract all the clearable lines into a single Shape
 	Shape clearedBlocks;
@@ -376,23 +388,29 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
 
 	normalizeBlocks(clearedBlocks);
 
-	doClearedBlockEffects(clearedBlocks, remainingShapes);
+	doClearedBlockEffects(clearedBlocks, fallingShapes);
 
-	// See if we have any new shapes to form, and add them to remainingShapes
-	newRemainingShapes = formShapes(blockField);
+	// See if we have any new shapes to form, and add them to fallingShapes
+	newFallingShapes = formShapes(blockField);
 
-	for (unsigned int i = 0; i < newRemainingShapes.size(); i++) {
-		remainingShapes.push_back(newRemainingShapes[i]);
+	for (unsigned int i = 0; i < newFallingShapes.size(); i++) {
+		fallingShapes.push_back(newFallingShapes[i]);
 	}
 
 	// Maintains proper order since we might add new shapes out-of-order
-	sort(remainingShapes.begin(), remainingShapes.end(), compareShapeByLocation);
+	sort(fallingShapes.begin(), fallingShapes.end(), compareShapeByLocation);
 
-	doFall(remainingShapes);
+	doFall(fallingShapes);
     
-    remainingShapes.clear();
+	// Clear fallingShapes when this finally exits
+    fallingShapes.clear();
 }
 
+/*
+ * Checks the blockField for lines that are able to be cleared.
+ * 
+ * Returns: A vector<int> of the indices of the clearable lines
+ */
 vector<int> PlayingField::getClearableLines() {
     vector<int> clearableLines;
     
@@ -414,7 +432,11 @@ vector<int> PlayingField::getClearableLines() {
 
 /*
  * Runs through the passed Shape and finds all Blocks either in the blockField or the passed Shape
- *   that have the same uniqueID, replacing them with base Blocks
+ *   that have the same uniqueID, replacing them with identical base Blocks.
+ *   
+ * Parameters:
+ *   Shape& shape: A reference to the Shape to use as a base when searching for Blocks with the same
+ *     uniqueID
  */
 void PlayingField::normalizeBlocks(Shape& shape) {
     for (int i = 0; i < shape.numBlocks(); i++) {
@@ -448,14 +470,25 @@ void PlayingField::normalizeBlocks(Shape& shape) {
     }
 }
 
-void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& remainingShapes) {
+/*
+ * For each Block in the passed Shape, performs its special effect on the blockField and the passed
+ *   vector<Shape *> of fallingShapes.
+ * 
+ * Parameters:
+ *   Shape& clearedBlocks: A reference to the Shape object who's Block's special effects should be
+ *     performed.
+ *   vector<Shape *>& fallingShapes: A reference to the vector<Shape *> containing pointers to the 
+ *     Shape objects currently falling; since these are separate from the blockField, they must
+ *     be passed separately
+ */
+void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& fallingShapes) {
     vector<vector<Block *> > remainingBlockField(width, vector<Block *>(height, static_cast<Block *>(NULL)));
     
-    // Before we perform any special effects, temporarily directly merge any remainingShapes
-    for (unsigned int i = 0; i < remainingShapes.size(); i++) {
-        for (int j = 0; remainingShapes[i] && j < remainingShapes[i]->numBlocks(); j++) {
+    // Before we perform any special effects, temporarily directly merge any fallingShapes
+    for (unsigned int i = 0; i < fallingShapes.size(); i++) {
+        for (int j = 0; fallingShapes[i] && j < fallingShapes[i]->numBlocks(); j++) {
             
-            Block *curBlock = (*remainingShapes[i])[j];
+            Block *curBlock = (*fallingShapes[i])[j];
             int indexX = xIndexFromLocation(curBlock);
             int indexY = yIndexFromLocation(curBlock);
             
@@ -476,10 +509,10 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
         clearedBlocks[i] = NULL;
     }
     
-    // Extract the merged remainingShapes and make them into a separate blockField
-    for (unsigned int i = 0; i < remainingShapes.size(); i++) {
-        for (int j = 0; remainingShapes[i] && j < remainingShapes[i]->numBlocks(); j++) {
-            Block *curBlock = (*remainingShapes[i])[j];
+    // Extract the merged fallingShapes and make them into a separate blockField
+    for (unsigned int i = 0; i < fallingShapes.size(); i++) {
+        for (int j = 0; fallingShapes[i] && j < fallingShapes[i]->numBlocks(); j++) {
+            Block *curBlock = (*fallingShapes[i])[j];
             int indexX = xIndexFromLocation(curBlock);
             int indexY = yIndexFromLocation(curBlock);
             
@@ -488,9 +521,21 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
         }
     }
     
-    remainingShapes = formShapes(remainingBlockField);
+    // Takes a blockField made from the potentially modified original fallingShapes and forms new
+    // shapes out of them. Effectively refreshes fallingShapes post-special effects
+    fallingShapes = formShapes(remainingBlockField);
 }
 
+/*
+ * Performs a falling animation for each of the Shapes pointed to by the pointers in the passed
+ *   vector<Shape *> and merges Shapes that have finished falling.
+ * 
+ * Is mutually recursive with doLineClear(vector<int> clearableLines)
+ * 
+ * Parameters:
+ *   vector<Shape *>& fallingShapes: A vector of pointers to Shape objects that need to have a
+ *     falling animation performed on them, may contain NULL pointers
+ */
 void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 	bool didFall = true;
 	// While we are still shifting down...
@@ -510,7 +555,7 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 			}
 		}
 
-		// Merge all the mergable shapes
+		// Merge all the mergeable shapes
 		if (mergeIndex.size() > 0) {
 			for (unsigned int i = 0; i < mergeIndex.size(); i++) {
 				merge(fallingShapes[mergeIndex[i]]);
@@ -564,6 +609,14 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
 	}
 }
 
+/*
+ * Forms contiguous Shapes objects from the passed blockField.
+ * 
+ * Parameters:
+ *   vector<vector<Block *> >& blockField: The blockField to from contiguous shapes from
+ *   
+ * Returns: A vector of pointers to the formed Shape objects
+ */
 vector<Shape *> PlayingField::formShapes(vector<vector<Block *> >& blockField) {
     vector<Shape *> shapes;
     
@@ -662,6 +715,9 @@ void PlayingField::setLocation(int x, int y) {
 
 /* ---------- Implemented from Drawable ---------- */
 
+/*
+ * Draws all Drawable member data from the screen in an order that preserves view heiarchy.
+ */
 void PlayingField::draw() {
     bgRect.draw();
 
@@ -676,6 +732,9 @@ void PlayingField::draw() {
     isVisible = true;
 }
 
+/*
+ * Erases all Drawable member data from the screen in an order that preserves view heiarchy.
+ */
 void PlayingField::erase() {
     if (isVisible) {
         for (int i = 0; i < getWidth(); i++) {
