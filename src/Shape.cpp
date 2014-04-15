@@ -117,7 +117,9 @@ void Shape::setLocation(int x, int y) {
     int dX = x - getLocationX();
     int dY = y - getLocationY();
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->setLocation(blocks[i]->getLocationX()+dX, blocks[i]->getLocationY()+dY);
+        if (blocks[i]) {
+            blocks[i]->setLocation(blocks[i]->getLocationX()+dX, blocks[i]->getLocationY()+dY);
+        }
     }
     
     this->x = x;
@@ -126,7 +128,9 @@ void Shape::setLocation(int x, int y) {
 
 void Shape::setForeground (unsigned int foreground) {
     for (unsigned int i = 0; i < blocks.size(); i++){
-        blocks[i]->setForeground(foreground);
+        if (blocks[i]) {
+            blocks[i]->setForeground(foreground);
+        }
     }
     
     this->foreground = foreground;
@@ -134,7 +138,11 @@ void Shape::setForeground (unsigned int foreground) {
 
 void Shape::setBackground(unsigned int background) {
     for (unsigned int i = 0; i < blocks.size(); i++){
-        blocks[i]->setBackground(background);
+        if (blocks[i]) {
+            if (blocks[i]) {
+                blocks[i]->setBackground(background);
+            }
+        }
     }
     
     this->background = background;
