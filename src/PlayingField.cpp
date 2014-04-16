@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 16, 2014
  */
 
 #include "PlayingField.h"
@@ -533,7 +533,7 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& f
         }
         
         // Deletes dynamically allocated Shape, doesn't delete Blocks because they were NULLed
-        fallingShapes[i] = NULL;
+        delete fallingShapes[i];
     }
     
     // Takes a blockField made from the potentially modified original fallingShapes and forms new
