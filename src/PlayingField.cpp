@@ -20,7 +20,7 @@ Drawable(0, 0, 10, 20),
         blockSize(10), padding(0),
         bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
           foreground, background),
-        blockField(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+        blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
 
@@ -45,7 +45,7 @@ Drawable(x, y, width, height, foreground, background),
         blockSize(blockSize), padding(padding), 
         bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
           foreground, background),
-        blockField(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+        blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
 
@@ -59,7 +59,7 @@ Drawable(x, y, width, height, foreground, background),
 PlayingField::PlayingField(const PlayingField& other): 
 Drawable(other),
         blockSize(other.blockSize), padding(other.padding), bgRect(other.bgRect),
-        blockField(width, vector<Block *>(height, static_cast<Block *>(NULL)))
+        blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
@@ -113,7 +113,7 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         padding = rhs.padding;
         bgRect = rhs.bgRect;
         
-        blockField.assign(width, vector<Block *>(height, static_cast<Block *>(NULL)));
+        blockField.assign(width, vector<Block*>(height, static_cast<Block*>(NULL)));
         
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
@@ -134,9 +134,9 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
  *   the Shape, and then checks to see if lines need to be cleared, doing so if need be.
  *   
  * Parameters:
- *   Shape *shape: A pointer to the Shape object to merge and delete
+ *   Shape* shape: A pointer to the Shape object to merge and delete
  */
-void PlayingField::mergeAndDelete (Shape *shape) {
+void PlayingField::mergeAndDelete (Shape* shape) {
     mergeCopy(shape);
     
     delete shape;
@@ -155,16 +155,16 @@ void PlayingField::mergeAndDelete (Shape *shape) {
  *   within the blockField.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the Shape object to test
+ *   const Shape* shape: A pointer to the Shape object to test
  *   
  * Returns: True if the Shape can shift up within the blockField, false otherwise
  */
-bool PlayingField::canShiftUp(const Shape *shape) const {
+bool PlayingField::canShiftUp(const Shape* shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         // Create a tmp duplicate, since we actually are applying transformations
-        Block *tmp = shape->getBlock(i)->makeNewClone();
+        Block* tmp = shape->getBlock(i)->makeNewClone();
         
         // Apply transformation to our tmp Block
         tmp->setLocation(tmp->getLocationX(), tmp->getLocationY()+tmp->getTotalSize());
@@ -184,16 +184,16 @@ bool PlayingField::canShiftUp(const Shape *shape) const {
  *   within the blockField.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the Shape object to test
+ *   const Shape* shape: A pointer to the Shape object to test
  *   
  * Returns: True if the Shape can shift down within the blockField, false otherwise
  */
-bool PlayingField::canShiftDown(const Shape *shape) const {
+bool PlayingField::canShiftDown(const Shape* shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         // Create a tmp duplicate, since we actually are applying transformations
-        Block *tmp = shape->getBlock(i)->makeNewClone();
+        Block* tmp = shape->getBlock(i)->makeNewClone();
         
         // Apply transformation to our tmp Block
         tmp->setLocation(tmp->getLocationX(), tmp->getLocationY()-tmp->getTotalSize());
@@ -213,16 +213,16 @@ bool PlayingField::canShiftDown(const Shape *shape) const {
  *   within the blockField.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the Shape object to test
+ *   const Shape* shape: A pointer to the Shape object to test
  *   
  * Returns: True if the Shape can shift left within the blockField, false otherwise
  */
-bool PlayingField::canShiftLeft(const Shape *shape) const {
+bool PlayingField::canShiftLeft(const Shape* shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         // Create a tmp duplicate, since we actually are applying transformations
-        Block *tmp = shape->getBlock(i)->makeNewClone();
+        Block* tmp = shape->getBlock(i)->makeNewClone();
         
         // Apply transformation to our tmp Block
         tmp->setLocation(tmp->getLocationX()-tmp->getTotalSize(), tmp->getLocationY());
@@ -242,16 +242,16 @@ bool PlayingField::canShiftLeft(const Shape *shape) const {
  *   within the blockField.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the Shape object to test
+ *   const Shape* shape: A pointer to the Shape object to test
  *   
  * Returns: True if the Shape can shift right within the blockField, false otherwise
  */
-bool PlayingField::canShiftRight(const Shape *shape) const {
+bool PlayingField::canShiftRight(const Shape* shape) const {
     bool can = true;
     
     for (int i = 0; i < shape->numBlocks() && can; i++) {
         // Create a tmp duplicate, since we actually are applying transformations
-        Block *tmp = shape->getBlock(i)->makeNewClone();
+        Block* tmp = shape->getBlock(i)->makeNewClone();
         
         // Apply transformation to our tmp Block
         tmp->setLocation(tmp->getLocationX()+tmp->getTotalSize(), tmp->getLocationY());
@@ -271,17 +271,17 @@ bool PlayingField::canShiftRight(const Shape *shape) const {
  *   rotated clockwise within the blockField.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the TetrominoBase object to test
+ *   const Shape* shape: A pointer to the TetrominoBase object to test
  *   
  * Returns: True if the TetrominoBase object can rotate clockwise within the blockField, false
  *   otherwise
  */
-bool PlayingField::canRotateCW(const TetrominoBase *t) const {
+bool PlayingField::canRotateCW(const TetrominoBase* t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
         // Create a tmp duplicate, since we actually are applying transformations
-        Block *tmp = t->getBlock(i)->makeNewClone();
+        Block* tmp = t->getBlock(i)->makeNewClone();
         
         // Apply rotation transformation to our tmp Block
         tmp->setLocation(
@@ -306,17 +306,17 @@ bool PlayingField::canRotateCW(const TetrominoBase *t) const {
  *   rotated counter-clockwise within the blockField.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the TetrominoBase object to test
+ *   const Shape* shape: A pointer to the TetrominoBase object to test
  *   
  * Returns: True if the TetrominoBase object can rotate counter-clockwise within the blockField,
  *   false otherwise
  */
-bool PlayingField::canRotateCCW(const TetrominoBase *t) const {
+bool PlayingField::canRotateCCW(const TetrominoBase* t) const {
     bool can = true;
     
     for (int i = 0; i < t->numBlocks() && can; i++) {
         // Create a tmp duplicate, since we actually are applying transformations
-        Block *tmp = t->getBlock(i)->makeNewClone();
+        Block* tmp = t->getBlock(i)->makeNewClone();
         
         // Apply rotation transformation to our tmp Block
         tmp->setLocation(
@@ -344,12 +344,12 @@ bool PlayingField::canRotateCCW(const TetrominoBase *t) const {
  *   blockField without conflict.
  *   
  * Parameters:
- *   const Shape *shape: A pointer to the Block object to test
+ *   const Shape* shape: A pointer to the Block object to test
  *   
  * Returns: True if the Block object can be added to the blockField without conflict, false
  *   otherwise
  */
-bool PlayingField::couldAdd(const Block *block) const {
+bool PlayingField::couldAdd(const Block* block) const {
     bool can = true;
     
     int xIndex = xIndexFromLocation(block);
@@ -368,7 +368,7 @@ bool PlayingField::couldAdd(const Block *block) const {
 /*
  * Checks if there are lines to be cleared, and clears them if there are.
  * 
- * Is mutually recursive with doFall(vector<Shape *>&).
+ * Is mutually recursive with doFall(vector<Shape*>&).
  * 
  * Parameters:
  *   vector<int> clearableLines: The lines to clear
@@ -376,9 +376,9 @@ bool PlayingField::couldAdd(const Block *block) const {
 void PlayingField::doLineClear(vector<int> clearableLines) {
     // Static because this recurses with doFall, maintains the remaining shapes across calls, is
     // always cleared/reset before exiting the top-level of a single call.
-	static vector<Shape *> fallingShapes;
+	static vector<Shape*> fallingShapes;
 	
-	vector<Shape *> newFallingShapes;
+	vector<Shape*> newFallingShapes;
 
 	// Extract all the clearable lines into a single Shape
 	Shape clearedBlocks;
@@ -456,7 +456,7 @@ void PlayingField::normalizeBlocks(Shape& shape) {
                     if (blockField[j][k] &&
                             blockField[j][k]->getUniqueID() == shape[i]->getUniqueID())
                     {
-                        Block *tmp = blockField[j][k];
+                        Block* tmp = blockField[j][k];
                         
                         // Not making a clone, this will give us a base Block
                         blockField[j][k] = new Block(*tmp);
@@ -469,7 +469,7 @@ void PlayingField::normalizeBlocks(Shape& shape) {
             // Passed Shape
             for (int j = i+1; j < shape.numBlocks(); j++) {
                 if (shape[i]->getUniqueID() == shape[j]->getUniqueID()) {
-                    Block *tmp = shape[j];
+                    Block* tmp = shape[j];
                     
                     // Not making a clone, this will give us a base Block
                     shape[j] = new Block(*tmp); 
@@ -482,24 +482,24 @@ void PlayingField::normalizeBlocks(Shape& shape) {
 
 /*
  * For each Block in the passed Shape, performs its special effect on the blockField and the passed
- *   vector<Shape *> of fallingShapes.
+ *   vector<Shape*> of fallingShapes.
  * 
  * Parameters:
  *   Shape& clearedBlocks: A reference to the Shape object who's Block's special effects should be
  *     performed.
- *   vector<Shape *>& fallingShapes: A reference to the vector<Shape *> containing pointers to the 
+ *   vector<Shape*>& fallingShapes: A reference to the vector<Shape*> containing pointers to the 
  *     Shape objects currently falling; since these are separate from the blockField, they must
  *     be passed separately
  */
-void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& fallingShapes) {
-    vector<vector<Block *> > remainingBlockField(width,
-            vector<Block *>(height, static_cast<Block *>(NULL)));
+void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) {
+    vector<vector<Block*> > remainingBlockField(width,
+            vector<Block*>(height, static_cast<Block*>(NULL)));
     
     // Before we perform any special effects, temporarily directly merge any fallingShapes
     for (unsigned int i = 0; i < fallingShapes.size(); i++) {
         for (int j = 0; fallingShapes[i] && j < fallingShapes[i]->numBlocks(); j++) {
             
-            Block *curBlock = (*fallingShapes[i])[j];
+            Block* curBlock = (*fallingShapes[i])[j];
             int indexX = xIndexFromLocation(curBlock);
             int indexY = yIndexFromLocation(curBlock);
             
@@ -521,7 +521,7 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
     // Extract the merged fallingShapes and make them into a separate blockField
     for (unsigned int i = 0; i < fallingShapes.size(); i++) {
         for (int j = 0; fallingShapes[i] && j < fallingShapes[i]->numBlocks(); j++) {
-            Block *curBlock = (*fallingShapes[i])[j];
+            Block* curBlock = (*fallingShapes[i])[j];
             int indexX = xIndexFromLocation(curBlock);
             int indexY = yIndexFromLocation(curBlock);
             
@@ -543,15 +543,15 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape *>& 
 
 /*
  * Performs a falling animation for each of the Shapes pointed to by the pointers in the passed
- *   vector<Shape *> and merges Shapes that have finished falling.
+ *   vector<Shape*> and merges Shapes that have finished falling.
  * 
  * Is mutually recursive with doLineClear(vector<int> clearableLines)
  * 
  * Parameters:
- *   vector<Shape *>& fallingShapes: A vector of pointers to Shape objects that need to have a
+ *   vector<Shape*>& fallingShapes: A vector of pointers to Shape objects that need to have a
  *     falling animation performed on them, may contain NULL pointers
  */
-void PlayingField::doFall(vector<Shape *>& fallingShapes) {
+void PlayingField::doFall(vector<Shape*>& fallingShapes) {
 	bool didFall = true;
 	// While we are still shifting down...
 	while(didFall) {
@@ -624,17 +624,17 @@ void PlayingField::doFall(vector<Shape *>& fallingShapes) {
  * Allocates contiguous Shapes objects from the Blocks in the passed blockField.
  * 
  * Parameters:
- *   vector<vector<Block *> >& blockField: The blockField to from contiguous shapes from
+ *   vector<vector<Block*> >& blockField: The blockField to from contiguous shapes from
  *   
  * Returns: A vector of pointers to the formed Shape objects
  */
-vector<Shape *> PlayingField::formNewContiguousShapes(vector<vector<Block *> >& blockField) {
-    vector<Shape *> shapes;
+vector<Shape*> PlayingField::formNewContiguousShapes(vector<vector<Block*> >& blockField) {
+    vector<Shape*> shapes;
     
     for (unsigned int i = 0; blockField.size() > 0 && i < blockField[0].size(); i++) {
         for (unsigned int j = 0; j < blockField.size(); j++) {
             if (blockField[j][i]) {
-                Shape *curShape = new Shape(blockField[j][i]->getLocationX(),
+                Shape* curShape = new Shape(blockField[j][i]->getLocationX(),
                         blockField[j][i]->getLocationY(), blockField[j][i]->getSize(),
                         blockField[j][i]->getPadding());
 
@@ -657,13 +657,13 @@ vector<Shape *> PlayingField::formNewContiguousShapes(vector<vector<Block *> >& 
  * Is recursive.
  *   
  * Parameters:
- *   Shape *shape: A pointer to the Shape object to add contiguous blocks to
+ *   Shape* shape: A pointer to the Shape object to add contiguous blocks to
  *   int x: The x-coordinate of the block to attempt to add
  *   int y: The y-coordinate of the block to attempt to add
- *   vector<vector<Block *> >& blockField: The blockField to pull Blocks from when making the Shape
+ *   vector<vector<Block*> >& blockField: The blockField to pull Blocks from when making the Shape
  */
-void PlayingField::r_makeContiguousShape(Shape *shape, int x, int y, 
-        vector<vector<Block *> >& blockField)
+void PlayingField::r_makeContiguousShape(Shape* shape, int x, int y, 
+        vector<vector<Block*> >& blockField)
 {
     if (x < 0 || x >= static_cast<int>(blockField.size()) || y < 0 ||
             y >= static_cast<int>(blockField[x].size()) || !blockField[x][y]) {
@@ -684,11 +684,11 @@ void PlayingField::r_makeContiguousShape(Shape *shape, int x, int y,
  * Merges a clone of the Shape pointed to by the passed pointer into the blockField.
  *   
  * Parameters:
- *   Shape *shape: A pointer to the Shape object to merge
+ *   Shape* shape: A pointer to the Shape object to merge
  */
-void PlayingField::mergeCopy(const Shape *shape) {
+void PlayingField::mergeCopy(const Shape* shape) {
     for (int i = 0; i < shape->numBlocks(); i++) {
-        Block *curBlock = shape->getBlock(i)->makeNewClone();
+        Block* curBlock = shape->getBlock(i)->makeNewClone();
         int indexX = xIndexFromLocation(curBlock);
         int indexY = yIndexFromLocation(curBlock);
         
@@ -706,11 +706,11 @@ void PlayingField::mergeCopy(const Shape *shape) {
  *   of the blockField, derived from it's x-coordinate.
  *   
  * Parameters:
- *   const Block *block: A pointer to the Block to determine the x-index of
+ *   const Block* block: A pointer to the Block to determine the x-index of
  *   
  * Return: The x-index of the Block pointed to by the passed pointer
  */
-int PlayingField::xIndexFromLocation(const Block *block) const {
+int PlayingField::xIndexFromLocation(const Block* block) const {
     return (block->getLocationX()-getLocationX())/block->getTotalSize();
 }
 
@@ -719,11 +719,11 @@ int PlayingField::xIndexFromLocation(const Block *block) const {
  *   of the blockField, derived from it's y-coordinate.
  *   
  * Parameters:
- *   const Block *block: A pointer to the Block to determine the y-index of
+ *   const Block* block: A pointer to the Block to determine the y-index of
  *   
  * Return: The y-index of the Block pointed to by the passed pointer
  */
-int PlayingField::yIndexFromLocation(const Block *block) const {
+int PlayingField::yIndexFromLocation(const Block* block) const {
     return (block->getLocationY()-getLocationY())/block->getTotalSize();
 }
 

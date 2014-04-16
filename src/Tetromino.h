@@ -154,7 +154,7 @@ Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType
  */
 template <typename BlockType>
 void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
-    Block *block1, *block2, *block3, *block4;
+    Block* block1, * block2, * block3, * block4;
     
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired
     // rotations.

@@ -115,12 +115,12 @@ class Block: public Drawable {
          *   coordinates. Should be called when this Block is cleared from the PlayingField.
          *   
          * Parameters:
-         *   <vector<vector<Block *> >& blockField: A reference to the blockField to perform the
+         *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the
          *     effect on
          *   int x: The x-coordinate of this Block within the blockField
          *   int y: The y-coordinate of this Block within the blockField
          */
-        virtual void doEffect(vector<vector<Block *> >&, int x, int y);
+        virtual void doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this Block, including it's uniqueID. Should be overridden by Block
@@ -129,7 +129,7 @@ class Block: public Drawable {
          *   
          * Returns: The address of the newly instantiated clone of this Block
          */
-        virtual Block *makeNewClone();
+        virtual Block* makeNewClone();
         
         /* ---------- Implemented from Drawable ---------- */
 

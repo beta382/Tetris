@@ -133,11 +133,11 @@ void Block::setUniqueID(unsigned int id) {
  *   be called when this Block is cleared from the PlayingField.
  *   
  * Parameters:
- *   <vector<vector<Block *> >& blockField: A reference to the blockField to perform the effect on
+ *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this Block within the blockField
  *   int y: The y-coordinate of this Block within the blockField
  */
-void Block::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
+void Block::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
     // Do nothing
 }
 
@@ -148,8 +148,8 @@ void Block::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
  *   
  * Returns: The address of the newly instantiated clone of this Block
  */
-Block *Block::makeNewClone() {
-    Block *tmp = new Block(*this);
+Block* Block::makeNewClone() {
+    Block* tmp = new Block(*this);
     
     tmp->setUniqueID(getUniqueID());
     

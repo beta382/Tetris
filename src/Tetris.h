@@ -16,15 +16,15 @@
 class Tetris {
     public:
         //constructor
-        Tetris(GLUT_Plotter *g);
+        Tetris(GLUT_Plotter* g);
         ~Tetris();
         
         //Main game function
         void Play(void);
         
     private:
-        GLUT_Plotter *g;
-        Screen *screen;
+        GLUT_Plotter* g;
+        Screen* screen;
 };
 
 #endif /* TETRIS_H_ */

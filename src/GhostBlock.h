@@ -78,19 +78,19 @@ class GhostBlock: public Block {
          *   coordinates. Should be called when this GhostBlock is cleared from the PlayingField.
          *   
          * Parameters:
-         *   <vector<vector<Block *> >& blockField: A reference to the blockField to perform the
+         *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the
          *     effect on
          *   int x: The x-coordinate of this GhostBlock within the blockField
          *   int y: The y-coordinate of this GhostBlock within the blockField
          */
-        void doEffect(vector<vector<Block *> >&, int x, int y);
+        void doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this GhostBlock, including it's uniqueID.
          *   
          * Returns: The address of the newly instantiated clone of this GhostBlock
          */
-        GhostBlock *makeNewClone();
+        GhostBlock* makeNewClone();
 
 
         /*

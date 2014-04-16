@@ -137,9 +137,9 @@ class Drawable {
          * Assigns g the passed value. Should be called before using any Drawable objects.
          * 
          * Parameters:
-         *   GLUT_Plotter *plotter: The value to assign to Drawable's static GLUT_Plotter *g
+         *   GLUT_Plotter* plotter: The value to assign to Drawable's static GLUT_Plotter* g
          */
-        static void setG(GLUT_Plotter *);
+        static void setG(GLUT_Plotter*);
 
         virtual ~Drawable() {};
     protected:
@@ -226,10 +226,10 @@ class Drawable {
 
         /*
          * A shared GLUT_Plotter for all instances of objects that descend from Drawable. Should
-         *   have a proper value assigned to it through Drawable::setG(GLUT_Plotter *) prior to 
+         *   have a proper value assigned to it through Drawable::setG(GLUT_Plotter*) prior to 
          *   using a Drawable object.
          */
-        static GLUT_Plotter *g;
+        static GLUT_Plotter* g;
 };
 
 #endif /* DRAWABLE_H_ */

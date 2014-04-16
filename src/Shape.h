@@ -81,17 +81,17 @@ class Shape: public Drawable {
          *   
          * Returns: A the Block pointer at the specified index
          */
-        Block *getBlock(int) const;
+        Block* getBlock(int) const;
 
         /*
          * Adds a Block pointer to this Shape.
          * 
          * Parameters:
-         *   Block *block: The Block pointer to add to this Shape
+         *   Block* block: The Block pointer to add to this Shape
          *   
          * Returns: A reference to this Shape object
          */
-        Shape& addBlock(Block *);
+        Shape& addBlock(Block*);
 
         /*
          * Getter for the number of Block pointers in this Shape.
@@ -201,7 +201,7 @@ class Shape: public Drawable {
         /*
          * Represents the Blocks that this Shape contains
          */
-        vector<Block *> blocks;
+        vector<Block*> blocks;
         
         /*
          * These variables represent the size in pixels of the blocks this Shape contains and the
@@ -217,11 +217,11 @@ class Shape: public Drawable {
  *   which has a greater x-coordinate. Returns a result logically equivalent to "lhs < rhs".
  *   
  * Parameters:
- *   const Shape *lhs: A pointer to a Shape object on the left-hand-side of this comparison
- *   const Shape *rhs: A pointer to a Shape object on the left-hand-side of this comparison
+ *   const Shape* lhs: A pointer to a Shape object on the left-hand-side of this comparison
+ *   const Shape* rhs: A pointer to a Shape object on the left-hand-side of this comparison
  *   
  * Returns: True if lhs is less than rhs, false otherwise
  */
-bool compareShapePointerByLocation(const Shape *lhs, const Shape *rhs);
+bool compareShapePointerByLocation(const Shape* lhs, const Shape* rhs);
 
 #endif /* SHAPE_H_ */

@@ -47,7 +47,7 @@ Game::~Game() {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen *Game::respondToKey(int key) { // TODO: Refactor
+Screen* Game::respondToKey(int key) { // TODO: Refactor
     switch (key) {
         case 'w':
         case Key::UP: // UP
@@ -136,7 +136,7 @@ Screen *Game::respondToKey(int key) { // TODO: Refactor
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen *Game::respondToClick(Click click) {
+Screen* Game::respondToClick(Click click) {
     // Do nothing for now
     return NULL;
 }

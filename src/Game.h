@@ -55,7 +55,7 @@ class Game: public Screen {
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen *respondToKey(int);
+        Screen* respondToKey(int);
         
         /*
          * Performs an action based on the passed Click.
@@ -66,7 +66,7 @@ class Game: public Screen {
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen *respondToClick(Click);
+        Screen* respondToClick(Click);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -150,13 +150,13 @@ class Game: public Screen {
         /*
          * Pointer to a TetrominoBase object representing the currently falling tetromino.
          */
-        TetrominoBase *currentTetromino;
+        TetrominoBase* currentTetromino;
         
         /*
          * Pointer to a Tetromino<GhostBlock> object representing the currently falling tetromino's
          *   shadow.
          */
-        Tetromino<GhostBlock> *shadow;
+        Tetromino<GhostBlock>* shadow;
 };
 
 

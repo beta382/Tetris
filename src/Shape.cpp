@@ -112,7 +112,7 @@ Shape& Shape::operator =(const Shape& rhs) {
  *   
  * Returns: A the Block pointer at the specified index
  */
-Block *Shape::getBlock(int index) const {
+Block* Shape::getBlock(int index) const {
     return blocks.at(index);
 }
 
@@ -120,11 +120,11 @@ Block *Shape::getBlock(int index) const {
  * Adds a Block pointer to this Shape.
  * 
  * Parameters:
- *   Block *block: The Block pointer to add to this Shape
+ *   Block* block: The Block pointer to add to this Shape
  *   
  * Returns: A reference to this Shape object
  */
-Shape& Shape::addBlock(Block *block) {
+Shape& Shape::addBlock(Block* block) {
     blocks.push_back(block);
     
     return *this;
@@ -305,12 +305,12 @@ void Shape::erase() {
  *   which has a greater x-coordinate. Returns a result logically equivalent to "lhs < rhs".
  *   
  * Parameters:
- *   const Shape *lhs: A pointer to a Shape object on the left-hand-side of this comparison
- *   const Shape *rhs: A pointer to a Shape object on the left-hand-side of this comparison
+ *   const Shape* lhs: A pointer to a Shape object on the left-hand-side of this comparison
+ *   const Shape* rhs: A pointer to a Shape object on the left-hand-side of this comparison
  *   
  * Returns: True if lhs is less than rhs, false otherwise
  */
-bool compareShapePointerByLocation(const Shape *lhs, const Shape *rhs) {
+bool compareShapePointerByLocation(const Shape* lhs, const Shape* rhs) {
     bool result = false;
     
     if (lhs->getLocationY() < rhs->getLocationY() || 

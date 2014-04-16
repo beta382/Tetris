@@ -6,7 +6,7 @@
  */
 
 #include "GLUT_Plotter.h"
-GLUT_Plotter *g;
+GLUT_Plotter* g;
 
 GLUT_Plotter::GLUT_Plotter(int w, int h) {
 

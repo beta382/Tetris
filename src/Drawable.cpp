@@ -11,10 +11,10 @@
 
 /*
  * A shared GLUT_Plotter for all instances of objects that descend from Drawable. Should have a
- *   proper value assigned to it through Drawable::setG(GLUT_Plotter *) prior to using a Drawable
+ *   proper value assigned to it through Drawable::setG(GLUT_Plotter*) prior to using a Drawable
  *   object.
  */
-GLUT_Plotter *Drawable::g = NULL;
+GLUT_Plotter* Drawable::g = NULL;
 
 
 /* ---------- Protected Constructors/Destructor ---------- */
@@ -238,8 +238,8 @@ Drawable& Drawable::operator =(const Drawable& rhs) {
  * Assigns g the passed value. Should be called before using any Drawable objects.
  * 
  * Parameters:
- *   GLUT_Plotter *plotter: The value to assign to Drawable's static GLUT_Plotter *g
+ *   GLUT_Plotter* plotter: The value to assign to Drawable's static GLUT_Plotter* g
  */
-void Drawable::setG(GLUT_Plotter *plotter) {
+void Drawable::setG(GLUT_Plotter* plotter) {
 	g = plotter;
 }

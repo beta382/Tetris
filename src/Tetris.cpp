@@ -11,7 +11,7 @@
 
 //Tetris Constructor
 
-Tetris::Tetris(GLUT_Plotter *g):
+Tetris::Tetris(GLUT_Plotter* g):
         g(g), screen(new Game())
 {
 }
@@ -23,7 +23,7 @@ Tetris::~Tetris() {
 //Tetris Main Game Loop
 void Tetris::Play (void) {
     
-    Screen *newScreen = NULL;
+    Screen* newScreen = NULL;
     
     //Check for Keyboard Hit
     while (g->kbhit()) {

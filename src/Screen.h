@@ -34,7 +34,7 @@ class Screen: public Drawable {
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen *respondToKey(int key) = 0;
+        virtual Screen* respondToKey(int key) = 0;
         
         /*
          * Performs an action based on the passed Click.  Must be implimented by children of
@@ -46,7 +46,7 @@ class Screen: public Drawable {
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen *respondToClick(Click click) = 0;
+        virtual Screen* respondToClick(Click click) = 0;
         
         /*
          * Performs actions that should happen continuously in the background on this Screen. Must

@@ -91,11 +91,11 @@ GhostBlock::~GhostBlock() {
  *   Should be called when this GhostBlock is cleared from the PlayingField.
  *   
  * Parameters:
- *   <vector<vector<Block *> >& blockField: A reference to the blockField to perform the effect on
+ *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this GhostBlock within the blockField
  *   int y: The y-coordinate of this GhostBlock within the blockField
  */
-void GhostBlock::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
+void GhostBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
     // Do nothing
     
     // ExplodingBlock example, needs "Rectangle.h"
@@ -137,7 +137,7 @@ void GhostBlock::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
                     blockField[i][j]) {
                 blockField[i][j]->erase();
                 
-                Block *tmp = blockField[i][j];
+                Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;
                 
                 tmp->doEffect(blockField, i, j);
@@ -183,8 +183,8 @@ void GhostBlock::doEffect(vector<vector<Block *> >& blockField, int x, int y) {
  *   
  * Returns: The address of the newly instantiated clone of this GhostBlock
  */
-GhostBlock *GhostBlock::makeNewClone() {
-    GhostBlock *tmp = new GhostBlock(*this);
+GhostBlock* GhostBlock::makeNewClone() {
+    GhostBlock* tmp = new GhostBlock(*this);
     
     tmp->setUniqueID(getUniqueID());
     
