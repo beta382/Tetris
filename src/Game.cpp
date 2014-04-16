@@ -27,7 +27,7 @@ Screen(color),
 }
 
 /*
- * Destructs a Game object.
+ * Destructs this Game object.
  */
 Game::~Game() {
     erase();
@@ -329,8 +329,8 @@ void Game::init() {
     // Spawn a new tetromino and create a shadow in the same place
     currentTetromino = field.spawnNewTetromino<Block>(shape);
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
-            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape, 
-            field.getForeground());
+            currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
+            currentTetromino->getPadding(), shape, field.getForeground());
     
     // Have the shadow fall
     while (field.canShiftDown(shadow)) {
@@ -348,8 +348,8 @@ void Game::doRotateCW() {
     currentTetromino->erase();
     currentTetromino->rotateCW();
     
-    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
-    // then have it fall
+    // Erase the old shadow, move it to the new location of the current tetromino, apply the
+    // rotation, and then have it fall
     shadow->erase();
     shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
     shadow->rotateCW();
@@ -358,7 +358,8 @@ void Game::doRotateCW() {
         shadow->shiftDown();
     }
     
-    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
+    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the
+    // shadow
     shadow->draw();
     currentTetromino->draw();
 }
@@ -371,8 +372,8 @@ void Game::doRotateCCW() {
     currentTetromino->erase();
     currentTetromino->rotateCCW();       
     
-    // Erase the old shadow, move it to the new location of the current tetromino, apply the rotation, and
-    // then have it fall
+    // Erase the old shadow, move it to the new location of the current tetromino, apply the
+    // rotation, and then have it fall
     shadow->erase();
     shadow->setLocation(currentTetromino->getLocationX(), currentTetromino->getLocationY());
     shadow->rotateCCW();
@@ -381,7 +382,8 @@ void Game::doRotateCCW() {
         shadow->shiftDown();
     }
     
-    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the shadow
+    // Redraw the shadow then the current tetromino, so that the current tetromino may overlap the
+    // shadow
     shadow->draw();
     currentTetromino->draw();
 }

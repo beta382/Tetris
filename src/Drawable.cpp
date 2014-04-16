@@ -24,7 +24,7 @@ GLUT_Plotter *Drawable::g = NULL;
  */
 Drawable::Drawable(): 
         x(0), y(0), width(0), height(0), foreground(Color::WHITE), background(Color::BLACK),
-          isVisible(false)
+        isVisible(false)
 {
 }
 
@@ -37,7 +37,7 @@ Drawable::Drawable():
  */
 Drawable::Drawable (int x, int y):
         x(x), y(y), width(0), height(0), foreground(Color::WHITE), background(Color::BLACK),
-          isVisible(false)
+        isVisible(false)
 {
 }
 
@@ -54,21 +54,23 @@ Drawable::Drawable (int x, int y):
  *   unsigned int background: The value to initialize this Drawable object's background with,
  *     defaults to Color::BLACK
  */
-Drawable::Drawable (int x, int y, int width, int height, unsigned int foreground, unsigned int background):
-        x(x), y(y), width(width), height(height), foreground(foreground), background(background), isVisible(false)
+Drawable::Drawable (int x, int y, int width, int height, unsigned int foreground,
+  unsigned int background):
+        x(x), y(y), width(width), height(height), foreground(foreground), background(background),
+        isVisible(false)
 {
 }
 
 /*
- * Instantiates a Drawable object that is a copy of the passed Drawable object, except for
- *   bool isVisible, which is initialized with false.
+ * Instantiates a Drawable object that is a copy of the passed Drawable object, except for bool
+ *   isVisible, which is initialized with false.
  * 
  * Parameters:
  *   const Drawable& other: A reference to the Drawable object to copy from
  */
 Drawable::Drawable (const Drawable& other):
-        x(other.x), y(other.y), width(other.width), height(other.height), foreground(other.foreground),
-        background(other.background), isVisible(false)
+        x(other.x), y(other.y), width(other.width), height(other.height),
+        foreground(other.foreground), background(other.background), isVisible(false)
 {
 }
 
@@ -86,7 +88,7 @@ void Drawable::setWidth (int width) {
 }
 
 /*
- * Getter for width
+ * Getter for width.
  * 
  * Returns: The value of this Drawable object's width
  */
@@ -105,7 +107,7 @@ void Drawable::setHeight (int height) {
 }
 
 /*
- * Getter for height
+ * Getter for height.
  * 
  * Returns: The value of this Drawable object's height.
  */
@@ -126,7 +128,7 @@ void Drawable::setLocation(int x, int y) {
 }
 
 /*
- * Getter for x
+ * Getter for x.
  * 
  * Returns: The value of this Drawable object's x.
  */
@@ -135,7 +137,7 @@ int Drawable::getLocationX() const {
 }
 
 /*
- * Getter for y
+ * Getter for y.
  * 
  * Returns: The value of this Drawable object's y.
  */
@@ -154,7 +156,7 @@ void Drawable::setForeground (unsigned int color) {
 }
 
 /*
- * Getter for foreground
+ * Getter for foreground.
  * 
  * Returns: The value of this Drawable object's foreground.
  */
@@ -173,7 +175,7 @@ void Drawable::setBackground(unsigned int color) {
 }
 
 /*
- * Getter for background
+ * Getter for background.
  * 
  * Returns: The value of this Drawable object's background.
  */
@@ -186,25 +188,20 @@ unsigned int Drawable::getBackground() const {
  * 
  * Parameters:
  *   int times: The number of times to blink this Drawable object
- *   int interval: The time in milliseconds between drawing and erasing this Drawable object
+ *   clock_t interval: The time in milliseconds between drawing and erasing this Drawable object
  */
-void Drawable::blink(int times, int interval) {
-    
-    clock_t start;
-    
+void Drawable::blink(int times, clock_t interval) {
     for (int r = 0; r < times; r++) {
         
         draw();
         g->Draw(); // Force screen redraw
         
-        start = clock();
-        while (clock() < start+interval);
+        util::wait(interval);
         
         erase();
         g->Draw(); // Force screen redraw
         
-        start = clock();
-        while (clock() < start+interval);
+        util::wait(interval);
     }
 }
 

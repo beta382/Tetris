@@ -4,11 +4,13 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 15, 2014
  */
 
 #ifndef UTIL_H_
 #define UTIL_H_
+
+#include <ctime>
 
 /* ---------- Color codes ---------- */
 
@@ -36,6 +38,18 @@ namespace Key {
     const int LEFT = 164;
     const int RIGHT = 166;
     const int ESC = 27;
+    
+}
+
+namespace util {
+    
+    /*
+     * Waits the passed number of milliseconds.
+     * 
+     * Parameters:
+     *   clock_t ms: The number of milliseconds to wait
+     */
+    void wait(clock_t ms);
     
 }
 

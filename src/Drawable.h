@@ -19,18 +19,19 @@
  * Drawable:
  *
  * Drawable is intended to be the abstract base class of all objects that are to be drawn to the
- *   screen. You MAY NOT independantly instantiate a Drawable object, this is enforced by making the
- *   constructors protected.
+ *   screen. You MAY NOT independantly instantiate a Drawable object, this is enforced by making
+ *   the constructors protected.
  */
 class Drawable {
     public:
         /*
-         * Draws this Drawable object to the screen
+         * Draws this Drawable object to the screen. Must be implimented by children of Drawable.
          */
         virtual void draw() = 0;
         
         /*
-         * Erases this Drawable object from the screen
+         * Erases this Drawable object from the screen. Must be implimented by children of
+         *   Drawable.
          */
         virtual void erase() = 0;
         
@@ -44,7 +45,7 @@ class Drawable {
         void setWidth(int);
         
         /*
-         * Getter for width
+         * Getter for width.
          * 
          * Returns: The value of this Drawable object's width
          */
@@ -59,7 +60,7 @@ class Drawable {
         void setHeight(int);
         
         /*
-         * Getter for height
+         * Getter for height.
          * 
          * Returns: The value of this Drawable object's height.
          */
@@ -76,14 +77,14 @@ class Drawable {
         virtual void setLocation(int, int);
         
         /*
-         * Getter for x
+         * Getter for x.
          * 
          * Returns: The value of this Drawable object's x.
          */
         int getLocationX() const;
         
         /*
-         * Getter for y
+         * Getter for y.
          * 
          * Returns: The value of this Drawable object's y.
          */
@@ -99,7 +100,7 @@ class Drawable {
         virtual void setForeground(unsigned int);
         
         /*
-         * Getter for foreground
+         * Getter for foreground.
          * 
          * Returns: The value of this Drawable object's foreground.
          */
@@ -114,7 +115,7 @@ class Drawable {
         virtual void setBackground(unsigned int);
         
         /*
-         * Getter for background
+         * Getter for background.
          * 
          * Returns: The value of this Drawable object's background.
          */
@@ -122,13 +123,15 @@ class Drawable {
         
         
         /*
-         * Blinks this Drawable object. The final state will result in this Drawable object being erased.
+         * Blinks this Drawable object. The final state will result in this Drawable object being
+         *   erased.
          * 
          * Parameters:
          *   int times: The number of times to blink this Drawable object
-         *   int interval: The time in milliseconds between drawing and erasing this Drawable object
+         *   clock_t interval: The time in milliseconds between drawing and erasing this Drawable
+         *     object
          */
-        void blink(int, int);
+        void blink(int, clock_t);
 
         /*
          * Assigns g the passed value. Should be called before using any Drawable objects.
@@ -151,7 +154,7 @@ class Drawable {
          * 
          * Parameters:
          *   int x: The value to initialize this Drawable object's x with
-         *   int y: The value to initialize this Drawable object's x with
+         *   int y: The value to initialize this Drawable object's y with
          */
         Drawable(int x, int y);
         
@@ -160,13 +163,13 @@ class Drawable {
          * 
          * Parameters:
          *   int x: The value to initialize this Drawable object's x with
-         *   int y: The value to initialize this Drawable object's x with
+         *   int y: The value to initialize this Drawable object's y with
          *   int width: The value to initialize this Drawable object's width with
          *   int height: The value to initialize this Drawable object's height with
-         *   unsigned int foreground: The value to initialize this Drawable object's foreground with,
-         *     defaults to Color::WHITE
-         *   unsigned int background: The value to initialize this Drawable object's background with,
-         *     defaults to Color::BLACK
+         *   unsigned int foreground: The value to initialize this Drawable object's foreground
+         *     with, defaults to Color::WHITE
+         *   unsigned int background: The value to initialize this Drawable object's background
+         *     with, defaults to Color::BLACK
          */
         Drawable(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
         		unsigned int background = Color::BLACK);
@@ -181,8 +184,8 @@ class Drawable {
         Drawable(const Drawable&);
         
         /*
-         * Assigns this Drawable object the values of the passed Drawable object, except for bool isVisible,
-         *   which is assigned false.
+         * Assigns this Drawable object the values of the passed Drawable object, except for bool
+         *   isVisible, which is assigned false.
          * 
          * Parameters:
          *   const Drawable& rhs: A reference to the Drawable object to assign from
@@ -222,9 +225,9 @@ class Drawable {
         bool isVisible;
 
         /*
-         * A pointer to a shared GLUT_Plotter for all instances of objects that descend from
-         *   Drawable. Should have a proper value assigned to it through
-         *   Drawable::setG(GLUT_Plotter *) prior to using a Drawable object.
+         * A shared GLUT_Plotter for all instances of objects that descend from Drawable. Should
+         *   have a proper value assigned to it through Drawable::setG(GLUT_Plotter *) prior to 
+         *   using a Drawable object.
          */
         static GLUT_Plotter *g;
 };
