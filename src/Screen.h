@@ -80,5 +80,4 @@ class Screen: public Drawable {
         MyRectangle bgRect;
 };
 
-
 #endif /* SCREEN_H_ */

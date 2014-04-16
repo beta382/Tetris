@@ -322,10 +322,3 @@ bool compareShapePointerByLocation(const Shape *lhs, const Shape *rhs) {
     
     return result;
 }
-
-
-
-
-
-
-

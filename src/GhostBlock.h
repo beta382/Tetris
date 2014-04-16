@@ -104,5 +104,4 @@ class GhostBlock: public Block {
         void erase();
 };
 
-
 #endif /* GHOSTBLOCK_H_ */

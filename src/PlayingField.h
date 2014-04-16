@@ -343,7 +343,8 @@ class PlayingField: public Drawable {
         vector<vector<Block *> > blockField;
 };
 
-/* ---------- spawnNewTetromino method template implementation ---------- */
+
+/* ---------- Method template implementation ---------- */
 
 /*
  * Dynamically allocates a Tetromino<BlockType> with the passed TetrominoShape centered at the top 

@@ -98,6 +98,26 @@ class Game: public Screen {
          * Instantiates this Game object's dynamically allocated member data and starts the RNG.
          */
         void init();
+
+        /*
+         * Properly performs a shift up on currentTetromino WITHOUT performing checks.
+         */
+        void doShiftUp();
+        
+        /*
+         * Properly performs a shift down on currentTetromino WITHOUT performing checks.
+         */
+        void doShiftDown();
+        
+        /*
+         * Properly performs a shift left on currentTetromino WITHOUT performing checks.
+         */
+        void doShiftLeft();
+        
+        /*
+         * Properly performs a shift right on currentTetromino WITHOUT performing checks.
+         */
+        void doShiftRight();
         
         /*
          * Properly performs a clockwise rotation on currentTetromino WITHOUT performing checks.
@@ -109,6 +129,18 @@ class Game: public Screen {
          *   checks.
          */
         void doRotateCCW();
+        
+        /*
+         * Resets the currentTetromino and spawns a new one. Exists for testing purposes.
+         */
+        template <typename BlockType>
+        void doResetTetromino();
+        
+        /*
+         * Joins the currentTetromino with the field and spawns a new one.
+         */
+        template <typename BlockType>
+        void doJoinAndRespawn();
         
         /*
          * PlayingField object that represents the area of main gameplay.
@@ -127,5 +159,59 @@ class Game: public Screen {
         Tetromino<GhostBlock> *shadow;
 };
 
+
+/* ---------- Method template implementation ---------- */
+
+/*
+ * Resets the currentTetromino and spawns a new one. Exists for testing purposes.
+ */
+template <typename BlockType>
+void Game::doResetTetromino() {
+    delete currentTetromino;
+    delete shadow;
+    
+    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
+        
+    // Spawn a new tetromino and create a shadow in the same place
+    currentTetromino = field.spawnNewTetromino<BlockType>(shape);
+    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
+            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+            field.getForeground());
+    
+    // Have the shadow fall
+    while (field.canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
+    shadow->draw();
+    currentTetromino->draw();
+}
+
+/*
+ * Joins the currentTetromino with the field and spawns a new one.
+ */
+template <typename BlockType>
+void Game::doJoinAndRespawn() {
+    delete shadow;
+    field.mergeAndDelete(currentTetromino);
+    
+    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
+        
+    // Spawn a new tetromino and create a shadow in the same place
+    currentTetromino = field.spawnNewTetromino<BlockType>(shape);
+    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
+            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+            field.getForeground());
+    
+    // Have the shadow fall
+    while (field.canShiftDown(shadow)) {
+        shadow->shiftDown();
+    }
+    
+    // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
+    shadow->draw();
+    currentTetromino->draw();
+}
 
 #endif /* GAMESCREEN_H_ */

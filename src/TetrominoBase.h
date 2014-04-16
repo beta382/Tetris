@@ -122,5 +122,4 @@ class TetrominoBase: public Shape {
         static unsigned int uniqueID;
 };
 
-
 #endif /* TETROMINOBASE_H_ */
