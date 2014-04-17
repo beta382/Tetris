@@ -118,7 +118,7 @@ Screen* Game::respondToKey(int key) { // TODO: Refactor
             doJoinAndRespawn<Block>();
             break;
         case 'g': // Spawn Ghost tetromino for testing
-           doResetTetromino<GhostBlock>();
+            doResetTetromino<GhostBlock>();
             break;
         default:
             cout << key << endl;
