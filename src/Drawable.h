@@ -4,119 +4,232 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr  8, 2014
+ * Date last modified:     Apr 15, 2014
  */
 
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
 #include "GLUT_Plotter.h"
-#include "drawkit.h"
+#include "util.h"
 
-#include <iostream>
-#include <iomanip>
+#include <ctime>
 
 /*
  * Drawable:
  *
- * Drawable is intended to be the abstract base class of all objects that are to be drawn to the screen. You MAY NOT
- *   independantly instantiate a Drawable object, this is enforced by making the constructors protected.
- *
- * Constructors:
- *     `Drawable()`: Initializes `int x`, `int y`, `int width`, and `int height` to 0, `unsigned int foreground` to
- *       `Color::WHITE`, `unsigned int background` to `Color::BLACK`, and `bool isVisible` to false.
- *     `Drawable(int x, int y)`: Initializes `int x` and `int y` to the passed values, `int width`, and `int height` to
- *       0, `unsigned int foreground` to `Color::WHITE`, `unsigned int background` to `Color::BLACK`, and
- *       `bool isVisible` to false.
- *     `Drawable(int x, int y, int width, int height, unsigned int foreground, unsigned int background)`: Initializes
- *       `int x`, `int y`, `int width`, `int height`, `unsigned int foreground`, and `unsigned int background` to the
- *       passed values, and `bool isVisible` to false.
- *
- * Protected member data:
- *     `int x`/`int y`: Are intended to define the pixel-location of the bottom-left corner of the Drawable's bounding
- *       rectangle. Descendants of Drawable MAY define and interpret these values however best suits its purpose.
- *     `int width`/`int height`: Are intended to define the number of pixels wide/tall the Drawable's bounding rectangle
- *       is. Descendants of Drawable MAY define and interpret these values however best suits its purpose.
- *     `unsigned int foreground`/`unsigned int background`: Are intended to define the foreground color and background
- *       color of the Drawable. Descendants of Drawable MAY define and interpret these values however best suits its
- *       purpose.
- *     `bool isVisible`: Is intended to define whether or not the Drawable is visible on the screen. It is STRONGLY
- *       ENCOURAGED that you use this as a check when implementing `void erase()`, and that you set it accordingly
- *       at the end of your `void draw()` and `void erase()` implementations. It is STRONGLY ENCOURAGED that you NOT use
- *       this in a different manner than described.
- *
- * Protected static data:
- *     `GLUT_Plotter *g`: A shared GLUT_Plotter for all instances of objects that descend from Drawable.
- *
- * Public functions:
- *     `void setWidth(int)`/`int getWidth()`/`void setHeight(int)`/`int getHeight()`: Simple getters and setters for
- *       `int width` and `int height`.
- *     `void setLocation(int, int)`/`int getLocationX()`/`int getLocationY()`: Simple getters and setters for `int x`
- *       and `int y`.
- *     `void setForeground(unsigned int)`/`unsigned int getForeground()`/`void setBackground(unsigned int)`/`unsigned
- *       int getBackground()`: Simple getters and setters for `unsigned int foreground` and `unsigned int background`.
- *     `void draw()`/`void erase()`: Pure virtual functions that MUST be implemented by descendants of Drawable to draw
- *       and erase the Drawable on the screen.
- *
- * All objects that directly inherit from Drawable MUST:
- *     Implement `void draw()`
- *     Implement `void erase()`
- *
- * All objects that directly or indirectly inherit from Drawable MAY:
- *     Override `void setForeground(unsigned int)`
- *     Override `void setBackground(unsigned int)`
- *     Override `void setLocation(int, int)`
- *
- * All objects that directly or indirectly inherit from Drawable are STRONGLY ENGOURAGED to:
- *     Define a proper copy constructor that calls `Drawable(const Drawable&)`, even if there is no memory management
- *     Define a proper assignment operator that calls `Drawable::operator =(const Drawable&)`, even if there is not
- *       memory management
- * (This is because each new Drawable, even if it is a copy, should have `bool isVisible` set to false regardless of its
- *   origin)
+ * Drawable is intended to be the abstract base class of all objects that are to be drawn to the
+ *   screen. You MAY NOT independantly instantiate a Drawable object, this is enforced by making
+ *   the constructors protected.
  */
-
 class Drawable {
     public:
+        /*
+         * Draws this Drawable object to the screen. Must be implimented by children of Drawable.
+         */
         virtual void draw() = 0;
+        
+        /*
+         * Erases this Drawable object from the screen. Must be implimented by children of
+         *   Drawable.
+         */
         virtual void erase() = 0;
         
+        
+        /*
+         * Assigns width the value of the passed parameter.
+         * 
+         * Parameters:
+         *   int width: The value to assign to this Drawable object's width
+         */
         void setWidth(int);
+        
+        /*
+         * Getter for width.
+         * 
+         * Returns: The value of this Drawable object's width
+         */
         int getWidth() const;
+        
+        /*
+         * Assigns height the value of the passed parameter.
+         * 
+         * Parameters:
+         *   int height: The value to assign to this Drawable object's height
+         */
         void setHeight(int);
+        
+        /*
+         * Getter for height.
+         * 
+         * Returns: The value of this Drawable object's height.
+         */
         int getHeight() const;
         
-        virtual void setLocation(int x, int y);
+        
+        /*
+         * Assigns x and y the values of the passed parameters.
+         * 
+         * Parameters:
+         *   int x: The value to assign to this Drawable object's x
+         *   int y: The value to assign to this Drawable object's y
+         */
+        virtual void setLocation(int, int);
+        
+        /*
+         * Getter for x.
+         * 
+         * Returns: The value of this Drawable object's x.
+         */
         int getLocationX() const;
+        
+        /*
+         * Getter for y.
+         * 
+         * Returns: The value of this Drawable object's y.
+         */
         int getLocationY() const;
         
-        virtual void setForeground(unsigned int color);
+        
+        /*
+         * Assigns foreground the value of the passed parameter.
+         *  
+         * Parameters:
+         *   unsigned int color: The value to assign to this Drawable object's foreground
+         */
+        virtual void setForeground(unsigned int);
+        
+        /*
+         * Getter for foreground.
+         * 
+         * Returns: The value of this Drawable object's foreground.
+         */
         unsigned int getForeground() const;
-        virtual void setBackground(unsigned int color);
-        unsigned int getBackground();
+        
+        /*
+         * Assigns background the value of the passed parameter.
+         * 
+         * Parameters:
+         *   unsigned int color: The value to assign to this Drawable object's background
+         */
+        virtual void setBackground(unsigned int);
+        
+        /*
+         * Getter for background.
+         * 
+         * Returns: The value of this Drawable object's background.
+         */
+        unsigned int getBackground() const;
+        
+        
+        /*
+         * Blinks this Drawable object. The final state will result in this Drawable object being
+         *   erased.
+         * 
+         * Parameters:
+         *   int times: The number of times to blink this Drawable object
+         *   clock_t interval: The time in milliseconds between drawing and erasing this Drawable
+         *     object
+         */
+        void blink(int, clock_t);
 
-        static void setG(GLUT_Plotter *);
+        /*
+         * Assigns g the passed value. Should be called before using any Drawable objects.
+         * 
+         * Parameters:
+         *   GLUT_Plotter* plotter: The value to assign to Drawable's static GLUT_Plotter* g
+         */
+        static void setG(GLUT_Plotter*);
 
         virtual ~Drawable() {};
     protected:
+        
+        /*
+         * Instantiates a Drawable object using default values.
+         */
         Drawable();
+        
+        /*
+         * Instantiates a Drawable object using the passed parameters and other default values.
+         * 
+         * Parameters:
+         *   int x: The value to initialize this Drawable object's x with
+         *   int y: The value to initialize this Drawable object's y with
+         */
         Drawable(int x, int y);
+        
+        /*
+         * Instantiates a Drawable object using the passed parameters.
+         * 
+         * Parameters:
+         *   int x: The value to initialize this Drawable object's x with
+         *   int y: The value to initialize this Drawable object's y with
+         *   int width: The value to initialize this Drawable object's width with
+         *   int height: The value to initialize this Drawable object's height with
+         *   unsigned int foreground: The value to initialize this Drawable object's foreground
+         *     with, defaults to Color::WHITE
+         *   unsigned int background: The value to initialize this Drawable object's background
+         *     with, defaults to Color::BLACK
+         */
         Drawable(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
         		unsigned int background = Color::BLACK);
+        
+        /*
+         * Instantiates a Drawable object that is a copy of the passed Drawable object, except for
+         *   bool isVisible, which is initialized with false.
+         * 
+         * Parameters:
+         *   const Drawable& other: A reference to the Drawable object to copy from
+         */
         Drawable(const Drawable&);
+        
+        /*
+         * Assigns this Drawable object the values of the passed Drawable object, except for bool
+         *   isVisible, which is assigned false.
+         * 
+         * Parameters:
+         *   const Drawable& rhs: A reference to the Drawable object to assign from
+         * 
+         * Returns: A reference to this Drawable object
+         */
         Drawable& operator =(const Drawable&);
         
+        /*
+         * These variables are intended to represent the x and y coordinates of the bottom-left
+         *   corner of this Drawable object's bounding rectangle, however, they may be interpreted
+         *   by sub-classes of Drawable in whatever manner best suits the nature of that object.
+         */
         int x;
         int y;
         
+        /*
+         * These variables are intended to represent the width and height in pixels of this Drawable
+         *   object's bounding rectangle, however, they may be interpreted by sub-classes of
+         *   Drawable in whatever manner best suits the nature of that object.
+         */
         int width;
         int height;
         
+        /*
+         * These variables are intended to represent the color of this Drawable object and the color
+         *   of whatever lies behind this Drawable object, respectively.
+         */
         unsigned int foreground;
         unsigned int background;
         
+        /*
+         * This variable is intended to represent whether or not this Drawable object is currently 
+         *   visible on the screen. In implementations of draw() and erase(), this should be set
+         *   accordingly, 
+         */
         bool isVisible;
 
-        static GLUT_Plotter *g;
+        /*
+         * A shared GLUT_Plotter for all instances of objects that descend from Drawable. Should
+         *   have a proper value assigned to it through Drawable::setG(GLUT_Plotter*) prior to 
+         *   using a Drawable object.
+         */
+        static GLUT_Plotter* g;
 };
 
 #endif /* DRAWABLE_H_ */
