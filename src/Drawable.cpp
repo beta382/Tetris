@@ -241,5 +241,5 @@ Drawable& Drawable::operator =(const Drawable& rhs) {
  *   GLUT_Plotter* plotter: The value to assign to Drawable's static GLUT_Plotter* g
  */
 void Drawable::setG(GLUT_Plotter* plotter) {
-	g = plotter;
+    g = plotter;
 }
