@@ -141,7 +141,7 @@ class Drawable {
          */
         static void setG(GLUT_Plotter*);
 
-        virtual ~Drawable() {};
+        virtual ~Drawable() {}
     protected:
         
         /*

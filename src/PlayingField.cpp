@@ -604,7 +604,7 @@ void PlayingField::doFall(vector<Shape*>& fallingShapes) {
 		if (shiftIndex.size() > 0) {
 			for (unsigned int i = 0; i < shiftIndex.size(); i++) {
 				// These can be NULL since from previous calls, since all calls pass the same data
-				if (fallingShapes[shiftIndex[i]]) {
+				if (fallingShapes.size() > 0 && fallingShapes[shiftIndex[i]]) {
 					fallingShapes[shiftIndex[i]]->erase();
 					fallingShapes[shiftIndex[i]]->shiftDown();
 					fallingShapes[shiftIndex[i]]->draw();
