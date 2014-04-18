@@ -23,6 +23,19 @@
  */
 class Block: public Drawable {
     public:
+		
+		void* operator new(size_t size) {
+			void* mem = malloc(size);
+			cout << left << setw(35) << "Allocated Block at" << mem << endl;
+			leakcheck::n_new++;
+			return mem;
+		}
+	
+		void operator delete(void* mem) {
+			cout << left << setw(35) << "De-allocated Block at" << mem << endl;
+			leakcheck::n_delete++;
+			free(mem);
+		}
 
         /*
          * Instantiates a Block object using default values.

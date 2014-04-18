@@ -14,6 +14,7 @@
 #include "util.h"
 
 #include <ctime>
+#include <iomanip>
 
 /*
  * Drawable:
@@ -24,6 +25,20 @@
  */
 class Drawable {
     public:
+		
+		void* operator new(size_t size) {
+			void* mem = malloc(size);
+			cout << left << setw(35) << "Allocated Drawable at" << mem << endl;
+			leakcheck::n_new++;
+			return mem;
+		}
+	
+		void operator delete(void* mem) {
+			cout << left << setw(35) << "De-allocated Drawable at" << mem << endl;
+			leakcheck::n_delete++;
+			free(mem);
+		}
+	
         /*
          * Draws this Drawable object to the screen. Must be implimented by children of Drawable.
          */
@@ -142,18 +157,6 @@ class Drawable {
         static void setG(GLUT_Plotter*);
 
         virtual ~Drawable() {}
-
-        void* operator new(size_t size) {
-        	void* mem = malloc(size);
-        	cout << "Allocated Drawable at    " << mem << endl;
-        	leakcheck::n_new++;
-        	return mem;
-        }
-
-        void operator delete(void* mem) {
-        	cout << "De-allocated Drawable at " << mem << endl;
-        	free(mem);
-        }
     protected:
         
         /*

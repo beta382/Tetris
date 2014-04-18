@@ -30,6 +30,19 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  */
 class TetrominoBase: public Shape {
     public:
+	
+		void* operator new(size_t size) {
+			void* mem = malloc(size);
+			cout << left << setw(35) << "Allocated TetrominoBase at" << mem << endl;
+			leakcheck::n_new++;
+			return mem;
+		}
+	
+		void operator delete(void* mem) {
+			cout << left << setw(35) << "De-allocated TetrominoBase at" << mem << endl;
+			leakcheck::n_delete++;
+			free(mem);
+		}
 
         /*
          * Rotates this TetrominoBase clockwise, setting the locations of it's Blocks accordingly

@@ -24,6 +24,19 @@
  */
 class Screen: public Drawable {
     public:
+	
+		void* operator new(size_t size) {
+			void* mem = malloc(size);
+			cout << left << setw(35) << "Allocated Screen at" << mem << endl;
+			leakcheck::n_new++;
+			return mem;
+		}
+	
+		void operator delete(void* mem) {
+			cout << left << setw(35) << "De-allocated Screen at" << mem << endl;
+			leakcheck::n_delete++;
+			free(mem);
+		}
         
         /*
          * Performs an action based on the passed key. Must be implimented by children of Screen.

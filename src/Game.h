@@ -28,6 +28,19 @@
  */
 class Game: public Screen {
     public:
+		
+		void* operator new(size_t size) {
+			void* mem = malloc(size);
+			cout << left << setw(35) << "Allocated Game at" << mem << endl;
+			leakcheck::n_new++;
+			return mem;
+		}
+	
+		void operator delete(void* mem) {
+			cout << left << setw(35) << "De-allocated Game at" << mem << endl;
+			leakcheck::n_delete++;
+			free(mem);
+		}
         
         /*
          * Instantiates a Game object using the passed foreground color or default values.
