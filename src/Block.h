@@ -23,19 +23,19 @@
  */
 class Block: public Drawable {
     public:
-		
-		void* operator new(size_t size) {
-			void* mem = malloc(size);
-			cout << left << setw(35) << "Allocated Block at" << mem << endl;
-			leakcheck::n_new++;
-			return mem;
-		}
-	
-		void operator delete(void* mem) {
-			cout << left << setw(35) << "De-allocated Block at" << mem << endl;
-			leakcheck::n_delete++;
-			free(mem);
-		}
+        
+        void* operator new(size_t size) {
+            void* mem = malloc(size);
+            cout << left << setw(35) << "Allocated Block at" << mem << endl;
+            leakcheck::n_new++;
+            return mem;
+        }
+    
+        void operator delete(void* mem) {
+            cout << left << setw(35) << "De-allocated Block at" << mem << endl;
+            leakcheck::n_delete++;
+            free(mem);
+        }
 
         /*
          * Instantiates a Block object using default values.
@@ -56,7 +56,7 @@ class Block: public Drawable {
          *     defaults to Color::BLACK
          */
         Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
+                unsigned int background = Color::BLACK);
 
         /*
          * Instantiates a Block object that is a copy of the passed Block object, except for bool

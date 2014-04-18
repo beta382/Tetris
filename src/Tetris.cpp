@@ -32,12 +32,12 @@ void Tetris::Play (void) {
         switch (k) {
             case Key::ESC: // ESC
             case 'x':
-            	delete this;
-            	cout << endl;
-            	cout << "n_new:    " << leakcheck::n_new << endl;
-            	cout << "n_delete: " << leakcheck::n_delete << endl;
-            	cout << endl;
-            	cout << "leaking " << leakcheck::n_new - leakcheck::n_delete << " bytes" << endl;
+                delete this;
+                cout << endl;
+                cout << "n_new:    " << leakcheck::n_new << endl;
+                cout << "n_delete: " << leakcheck::n_delete << endl;
+                cout << endl;
+                cout << "leaking " << leakcheck::n_new - leakcheck::n_delete << " bytes" << endl;
                 exit(1);
                 break;
             default:

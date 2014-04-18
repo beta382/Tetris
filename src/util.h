@@ -54,8 +54,8 @@ namespace util {
 }
 
 struct leakcheck {
-	static unsigned int n_new;
-	static unsigned int n_delete;
+    static unsigned int n_new;
+    static unsigned int n_delete;
 };
 
 // More stuff later, maybe

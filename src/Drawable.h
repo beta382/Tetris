@@ -25,20 +25,20 @@
  */
 class Drawable {
     public:
-		
-		void* operator new(size_t size) {
-			void* mem = malloc(size);
-			cout << left << setw(35) << "Allocated Drawable at" << mem << endl;
-			leakcheck::n_new++;
-			return mem;
-		}
-	
-		void operator delete(void* mem) {
-			cout << left << setw(35) << "De-allocated Drawable at" << mem << endl;
-			leakcheck::n_delete++;
-			free(mem);
-		}
-	
+        
+        void* operator new(size_t size) {
+            void* mem = malloc(size);
+            cout << left << setw(35) << "Allocated Drawable at" << mem << endl;
+            leakcheck::n_new++;
+            return mem;
+        }
+    
+        void operator delete(void* mem) {
+            cout << left << setw(35) << "De-allocated Drawable at" << mem << endl;
+            leakcheck::n_delete++;
+            free(mem);
+        }
+    
         /*
          * Draws this Drawable object to the screen. Must be implimented by children of Drawable.
          */
@@ -187,7 +187,7 @@ class Drawable {
          *     with, defaults to Color::BLACK
          */
         Drawable(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
+                unsigned int background = Color::BLACK);
         
         /*
          * Instantiates a Drawable object that is a copy of the passed Drawable object, except for

@@ -22,19 +22,19 @@
  */
 class GhostBlock: public Block {
     public:
-	
-		void* operator new(size_t size) {
-			void* mem = malloc(size);
-			cout << left << setw(35) << "Allocated GhostBlock at" << mem << endl;
-			leakcheck::n_new++;
-			return mem;
-		}
-	
-		void operator delete(void* mem) {
-			cout << left << setw(35) << "De-allocated GhostBlock at" << mem << endl;
-			leakcheck::n_delete++;
-			free(mem);
-		}
+    
+        void* operator new(size_t size) {
+            void* mem = malloc(size);
+            cout << left << setw(35) << "Allocated GhostBlock at" << mem << endl;
+            leakcheck::n_new++;
+            return mem;
+        }
+    
+        void operator delete(void* mem) {
+            cout << left << setw(35) << "De-allocated GhostBlock at" << mem << endl;
+            leakcheck::n_delete++;
+            free(mem);
+        }
 
         /*
          * Instantiates a GhostBlock object using default values.
