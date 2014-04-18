@@ -142,6 +142,18 @@ class Drawable {
         static void setG(GLUT_Plotter*);
 
         virtual ~Drawable() {}
+
+        void* operator new(size_t size) {
+        	void* mem = malloc(size);
+        	cout << "Allocated Drawable at    " << mem << endl;
+        	leakcheck::n_new++;
+        	return mem;
+        }
+
+        void operator delete(void* mem) {
+        	cout << "De-allocated Drawable at " << mem << endl;
+        	free(mem);
+        }
     protected:
         
         /*

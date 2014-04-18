@@ -16,7 +16,6 @@
  */
 GLUT_Plotter* Drawable::g = NULL;
 
-
 /* ---------- Protected Constructors/Destructor ---------- */
 
 /*

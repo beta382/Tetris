@@ -20,3 +20,6 @@ void util::wait(clock_t ms) {
     
     while (clock() < start+ms);
 }
+
+unsigned int leakcheck::n_new = 0;
+unsigned int leakcheck::n_delete = 0;
