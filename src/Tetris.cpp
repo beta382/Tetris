@@ -32,6 +32,7 @@ void Tetris::Play (void) {
         switch (k) {
             case Key::ESC: // ESC
             case 'x':
+            	delete this;
                 exit(1);
                 break;
             default:
