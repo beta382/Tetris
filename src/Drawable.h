@@ -141,7 +141,7 @@ class Drawable {
          */
         static void setG(GLUT_Plotter*);
 
-        virtual ~Drawable() {};
+        virtual ~Drawable() {}
     protected:
         
         /*
@@ -172,7 +172,7 @@ class Drawable {
          *     with, defaults to Color::BLACK
          */
         Drawable(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
+                unsigned int background = Color::BLACK);
         
         /*
          * Instantiates a Drawable object that is a copy of the passed Drawable object, except for
