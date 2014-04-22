@@ -36,7 +36,7 @@ class Game: public Screen {
          *   unsigned int color: The value to initialize this Game object's foreground with,
          *     defaults to Color::BLACK
          */
-        Game(unsigned int color = Color::BLACK);
+        Game(unsigned int color = Color::TAN);
 
         /*
          * Destructs this Game object.

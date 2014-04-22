@@ -338,6 +338,21 @@ class PlayingField: public Drawable {
         MyRectangle bgRect;
         
         /*
+         * Represents the border fill for this PlayingField object.
+         */
+        MyRectangle bgRect2;
+        
+        /*
+         * Background rectange for next block
+         */
+        MyRectangle bgRectNext;
+        
+        /*
+         * Background rectange border for next block
+         */
+        MyRectangle bgRectNext2;
+        
+        /*
          * Represents the field of Blocks at the core of the playing field
          */
         vector<vector<Block*> > blockField;

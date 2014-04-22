@@ -20,6 +20,12 @@ Drawable(0, 0, 10, 20),
         blockSize(10), padding(0),
         bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
           foreground, background),
+        bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
+          Color::LIGHT_GRAY, background),
+        bgRectNext(x + (blockSize+padding)*width-padding + 20, 50, 100, 50,
+          Color::LIGHT_TAN, background),
+        bgRectNext2(x + (blockSize+padding)*width-padding + 17, 197, 156, 106,
+          Color::DARK_TAN, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
@@ -45,6 +51,12 @@ Drawable(x, y, width, height, foreground, background),
         blockSize(blockSize), padding(padding), 
         bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
           foreground, background),
+        bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
+          Color::LIGHT_GRAY, background),
+        bgRectNext(x + (blockSize+padding)*width-padding + 20, 200, 150, 100,
+          Color::LIGHT_TAN, background),
+        bgRectNext2(x + (blockSize+padding)*width-padding + 18, 198, 154, 104,
+          Color::DARK_TAN, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
@@ -59,6 +71,7 @@ Drawable(x, y, width, height, foreground, background),
 PlayingField::PlayingField(const PlayingField& other): 
 Drawable(other),
         blockSize(other.blockSize), padding(other.padding), bgRect(other.bgRect),
+        bgRect2(other.bgRect2),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
     for (int i = 0; i < getWidth(); i++) {
@@ -112,6 +125,7 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         blockSize = rhs.blockSize;
         padding = rhs.padding;
         bgRect = rhs.bgRect;
+        bgRect2 = rhs.bgRect2;
         
         blockField.assign(width, vector<Block*>(height, static_cast<Block*>(NULL)));
         
@@ -755,6 +769,7 @@ void PlayingField::setLocation(int x, int y) {
     }
     
     bgRect.setLocation(bgRect.getLocationX()+dX, getLocationY()+dY);
+    bgRect2.setLocation(bgRect2.getLocationX()+dX, getLocationY()+dY);
     
     draw();
     
@@ -769,7 +784,10 @@ void PlayingField::setLocation(int x, int y) {
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy.
  */
 void PlayingField::draw() {
+    bgRect2.draw();
     bgRect.draw();
+    bgRectNext2.draw();
+    bgRectNext.draw();
 
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
@@ -796,6 +814,7 @@ void PlayingField::erase() {
         }
         
         bgRect.erase();
+        bgRect2.erase();
         
         isVisible = false;
     }

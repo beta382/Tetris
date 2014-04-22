@@ -22,8 +22,11 @@ namespace Color {
     const unsigned int BROWN      = 0xab9c6d;
     const unsigned int GREEN      = 0xa6c238;
     const unsigned int GRAY       = 0x52656b;
+    const unsigned int LIGHT_GRAY = 0x92abb0;
     const unsigned int RED        = 0xb04747;
     const unsigned int TAN        = 0xe3decd;
+    const unsigned int LIGHT_TAN  = 0xfff9e6;
+    const unsigned int DARK_TAN   = 0xcdc7b9;
     const unsigned int DARK_GREEN = 0x69803e;
     const unsigned int CYAN       = 0x3cad91;
     
