@@ -80,7 +80,7 @@ class GhostBlock: public Block {
         GhostBlock& operator =(const GhostBlock&);
 
         /*
-         * Destructs this Block object.
+         * Destructs this GhostBlock object.
          */
         ~GhostBlock();
         
@@ -110,11 +110,6 @@ class GhostBlock: public Block {
          * Draws this GhostBlock to the screen.
          */
         void draw();
-
-        /*
-         * Erases this GhostBlock from the screen.
-         */
-        void erase();
 };
 
 #endif /* GHOSTBLOCK_H_ */

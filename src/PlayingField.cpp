@@ -616,7 +616,9 @@ void PlayingField::doFall(vector<Shape*>& fallingShapes) {
 
         g->Draw(); // Force redraw
 
-        util::wait(100);
+        if (didFall) {
+            util::wait(100);
+        }
     }
 }
 

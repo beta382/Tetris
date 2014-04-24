@@ -12,6 +12,8 @@
 
 #include "Block.h"
 #include "GhostBlock.h"
+#include "ExplodingBlock.h"
+#include "GravityBlock.h"
 
 // Include more Block subclasses here, then just include this file instead of all the subclasses
 

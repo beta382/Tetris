@@ -1,0 +1,187 @@
+/*
+ * Author:                 Austin Hash
+ * Assignment name:        Tetris: Spring 2014 Group Project
+ * Assignment description: Write an awesome Tetris clone
+ * Due date:               May  2, 2014
+ * Date created:           Apr 23, 2014
+ * Date last modified:     Apr 23, 2014
+ */
+
+#include "ExplodingBlock.h"
+
+
+/* ---------- Constructors/Destructor ---------- */
+
+/*
+ * Instantiates a ExplodingBlock object using default values.
+ */
+ExplodingBlock::ExplodingBlock():
+Block()
+{
+}
+
+/*
+ * Instantiates a ExplodingBlock object using the passed parameters.
+ * 
+ * Parameters:
+ *   int x: The value to initialize this ExplodingBlock object's x with
+ *   int y: The value to initialize this ExplodingBlock object's y with
+ *   int width: The value to initialize this ExplodingBlock object's size with
+ *   int padding: The value to initialize this ExplodingBlock object's padding with
+ *   unsigned int foreground: The value to initialize this ExplodingBlock object's foreground with,
+ *     defaults to Color::WHITE
+ *   unsigned int background: The value to initialize this ExplodingBlock object's background with,
+ *     defaults to Color::BLACK
+ */
+ExplodingBlock::ExplodingBlock(int x, int y, int size, int padding, unsigned int foreground,
+        unsigned int background):
+Block(x, y, size, padding, foreground, background)
+{
+}
+
+/*
+ * Instantiates a ExplodingBlock object that is a copy of the passed ExplodingBlock object, except
+ *   for bool isVisible, which is initialized with false, and unsigned int uniqueID, which is
+ *   initialized with 0.
+ * 
+ * Parameters:
+ *   const ExplodingBlock& other: A reference to the ExplodingBlock object to copy from
+ */
+ExplodingBlock::ExplodingBlock(const ExplodingBlock& other):
+Block(other)
+{
+}
+
+/*
+ * Destructs this ExplodingBlock object.
+ */
+ExplodingBlock::~ExplodingBlock() {
+    erase();
+}
+
+
+/* ---------- Public ---------- */
+
+/*
+ * Assigns this ExplodingBlock object the values of the passed ExplodingBlock object, except for
+ *   bool isVisible, which is assigned false, and unsigned int uniqueID, which is assigned 0.
+ * 
+ * Parameters:
+ *   const ExplodingBlock& rhs: A reference to the ExplodingBlock object to assign from
+ * 
+ * Returns: A reference to this ExplodingBlock object
+ */
+ExplodingBlock& ExplodingBlock::operator =(const ExplodingBlock& rhs) {
+    if (this != &rhs) {
+        Block::operator =(rhs);
+    }
+    
+    return *this;
+}
+
+
+/* ---------- Overriding from Block ---------- */
+
+/*
+ * Performs this ExplodingBlock's special effect on the given blockField from the passed
+ *   coordinates. Should be called when this ExplodingBlock is cleared from the PlayingField.
+ *   
+ * Parameters:
+ *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
+ *   int x: The x-coordinate of this ExplodingBlock within the blockField
+ *   int y: The y-coordinate of this ExplodingBlock within the blockField
+ */
+void ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+    // Make an explosion rectangle
+    
+    int explosionX = (x >= 2) ? getLocationX()-getTotalSize()*2 : getLocationX()-getTotalSize()*x;
+    int explosionY = (y >= 2) ? getLocationY()-getTotalSize()*2 : getLocationY()-getTotalSize()*y;
+    
+    int explosionWidth;
+    if (x >= 2 && (blockField.size()-x-1) >= 2) {
+        explosionWidth = getTotalSize()*5-getPadding();
+    } else if (x >= 2) {
+        explosionWidth = getTotalSize()*(blockField.size()-x+2)-getPadding();
+    } else {
+        explosionWidth = getTotalSize()*(x+3)-getPadding();
+    }
+
+    int explosionHeight;
+    if (y >= 2 && (blockField[0].size()-y-1) >= 2) {
+        explosionHeight = getTotalSize()*5-getPadding();
+    } else if (y >= 2) {
+        explosionHeight = getTotalSize()*(blockField.size()-y+2)-getPadding();
+    } else {
+        explosionHeight = getTotalSize()*(y+3)-getPadding();
+    }
+    
+    MyRectangle explosion(explosionX, explosionY, explosionWidth, explosionHeight, Color::RED,
+            getBackground());
+    
+    explosion.blink(3, 150);
+    
+    // Actually clear the blocks
+    for (int i = x-2; i <= x+2; i++) {
+        for (int j = y-2; j <= y+2; j++) {
+            if (i >= 0 && i < (int)blockField.size() && j >= 0 && j < (int)blockField[i].size() &&
+                    blockField[i][j]) {
+                blockField[i][j]->erase();
+                
+                Block* tmp = blockField[i][j];
+                blockField[i][j] = NULL;
+                
+                tmp->doEffect(blockField, i, j);
+                delete tmp;
+            }
+        }
+    }
+}
+
+/*
+ * Allocates a clone of this ExplodingBlock, including it's uniqueID.
+ *   
+ * Returns: The address of the newly instantiated clone of this ExplodingBlock
+ */
+ExplodingBlock* ExplodingBlock::makeNewClone() {
+    ExplodingBlock* tmp = new ExplodingBlock(*this);
+    
+    tmp->setUniqueID(getUniqueID());
+    
+    return tmp;
+}
+
+/*
+ * Draws this ExplodingBlock to the screen.
+ */
+void ExplodingBlock::draw() {
+    g->setColor(getForeground());
+    
+    for (int i = 0; i < getWidth(); i++) {
+        for (int j = 0; j < getHeight(); j++) {
+            
+            // Outline
+            if (i == 0 || i == getWidth()-1 || j == 0 || j == getHeight()-1) {
+                g->plot(getLocationX()+i, getLocationY()+j);
+            }
+            
+            // Vertical/Horizontal
+            if ((i >= (2*getWidth())/16 && i < (14*getWidth())/16) &&
+                (j >= (2*getHeight())/16 && j < (14*getHeight())/16) &&
+                     ((i >= (7*getWidth())/16 && i < (9*getWidth())/16) ||
+                     (j >= (7*getHeight())/16 && j < (9*getHeight())/16)))
+            {
+                g->plot(getLocationX()+i, getLocationY()+j);
+            }
+            
+            if ((i >= (3*getWidth())/16 && i < (13*getWidth())/16) &&
+                (j >= (3*getHeight())/16 && j < (13*getHeight())/16) &&
+                    ((j >= -i + (14*getHeight())/16 && j < -i + (17*getHeight())/16) ||
+                     (j >= i - (1*getHeight())/16 && j < i + (2*getHeight())/16)))
+            {
+                g->plot(getLocationX()+i, getLocationY()+j);
+            }
+        }
+    }
+    
+    isVisible = true;
+}

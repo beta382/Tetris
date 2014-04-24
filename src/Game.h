@@ -152,7 +152,6 @@ class Game: public Screen {
         /*
          * Joins the currentTetromino with the field and spawns a new one.
          */
-        template <typename BlockType>
         void doJoinAndRespawn();
         
         /*
@@ -182,32 +181,6 @@ template <typename BlockType>
 void Game::doResetTetromino() {
     delete currentTetromino;
     delete shadow;
-    
-    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
-        
-    // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<BlockType>(shape);
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
-            field.getForeground());
-    
-    // Have the shadow fall
-    while (field.canShiftDown(shadow)) {
-        shadow->shiftDown();
-    }
-    
-    // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
-    shadow->draw();
-    currentTetromino->draw();
-}
-
-/*
- * Joins the currentTetromino with the field and spawns a new one.
- */
-template <typename BlockType>
-void Game::doJoinAndRespawn() {
-    delete shadow;
-    field.mergeAndDelete(currentTetromino);
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
         
