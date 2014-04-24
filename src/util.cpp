@@ -23,3 +23,4 @@ void util::wait(clock_t ms) {
 
 unsigned int leakcheck::n_new = 0;
 unsigned int leakcheck::n_delete = 0;
+map<void*, pair<string, size_t> > leakcheck::allocated;

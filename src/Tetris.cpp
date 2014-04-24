@@ -37,8 +37,14 @@ void Tetris::Play (void) {
                 cout << "n_new:    " << leakcheck::n_new << endl;
                 cout << "n_delete: " << leakcheck::n_delete << endl;
                 cout << endl;
-                cout << "leaking " << leakcheck::n_new - leakcheck::n_delete << " bytes" << endl;
+                cout << "leaking " << leakcheck::bytes() << " bytes from " << 
+                        leakcheck::allocated.size() << " objects" << endl;
+                cout << endl;
+                leakcheck::print(cout);
                 exit(1);
+                break;
+            case 'p':
+                leakcheck::print(cout);
                 break;
             default:
                 newScreen = screen->respondToKey(k);

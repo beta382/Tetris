@@ -27,14 +27,14 @@ class Tetromino: public TetrominoBase {
     
         void* operator new(size_t size) {
             void* mem = malloc(size);
-            cout << left << setw(35) << "Allocated Tetromino at" << mem << endl;
             leakcheck::n_new++;
+            leakcheck::allocated.insert(pair<void*, pair<string, size_t> >(mem, pair<string, size_t>("Tetromino", size)));
             return mem;
         }
     
         void operator delete(void* mem) {
-            cout << left << setw(35) << "De-allocated Tetromino at" << mem << endl;
             leakcheck::n_delete++;
+            leakcheck::allocated.erase(mem);
             free(mem);
         }
         

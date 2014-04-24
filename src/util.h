@@ -11,6 +11,12 @@
 #define UTIL_H_
 
 #include <ctime>
+#include <map>
+#include <string>
+#include <ostream>
+#include <iomanip>
+
+using namespace std;
 
 /* ---------- Color codes ---------- */
 
@@ -56,6 +62,25 @@ namespace util {
 struct leakcheck {
     static unsigned int n_new;
     static unsigned int n_delete;
+    static map<void*, pair<string, size_t> > allocated;
+    
+    static ostream& print(ostream& out) {
+        for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin(); it != allocated.end(); it++) {
+            out << left << setw(12) << it->first << setw(20) << it->second.first << it->second.second << endl;
+        }
+        
+        return out;
+    }
+    
+    static size_t bytes() {
+        size_t sum = 0;
+        
+        for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin(); it != allocated.end(); it++) {
+            sum += it->second.second;
+        }
+        
+        return sum;
+    }
 };
 
 // More stuff later, maybe

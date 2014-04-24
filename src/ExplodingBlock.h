@@ -23,6 +23,19 @@
  */
 class ExplodingBlock: public Block {
     public:
+        
+        void* operator new(size_t size) {
+            void* mem = malloc(size);
+            leakcheck::n_new++;
+            leakcheck::allocated.insert(pair<void*, pair<string, size_t> >(mem, pair<string, size_t>("ExplodingBlock", size)));
+            return mem;
+        }
+    
+        void operator delete(void* mem) {
+            leakcheck::n_delete++;
+            leakcheck::allocated.erase(mem);
+            free(mem);
+        }
 
         /*
          * Instantiates a ExplodingBlock object using default values.
