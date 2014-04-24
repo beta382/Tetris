@@ -18,7 +18,7 @@
 PlayingField::PlayingField():
 Drawable(0, 0, 10, 20),
         blockSize(10), padding(0),
-        bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
+        bgRect(x, y, getWidth(), getHeight(),
           foreground, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
@@ -43,7 +43,7 @@ PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, i
   unsigned int foreground, unsigned int background):
 Drawable(x, y, width, height, foreground, background),
         blockSize(blockSize), padding(padding), 
-        bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
+        bgRect(x, y, getWidth(), getHeight(),
           foreground, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
@@ -61,8 +61,8 @@ Drawable(other),
         blockSize(other.blockSize), padding(other.padding), bgRect(other.bgRect),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             if (other.blockField.at(i).at(j)) {
                 blockField[i][j] = other.blockField.at(i).at(j)->makeNewClone();
             }
@@ -75,8 +75,8 @@ Drawable(other),
  */
 PlayingField::~PlayingField() {
     erase();
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             delete blockField[i][j];
         }
     }
@@ -98,8 +98,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     if  (this != &rhs) {
         erase();
         
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 delete blockField[i][j];
             }
             
@@ -115,8 +115,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         
         blockField.assign(width, vector<Block*>(height, static_cast<Block*>(NULL)));
         
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 if (rhs.blockField.at(i).at(j)) {
                     blockField[i][j] = rhs.blockField.at(i).at(j)->makeNewClone();
                 }
@@ -356,7 +356,7 @@ bool PlayingField::couldAdd(const Block* block) const {
     int yIndex = yIndexFromLocation(block);
     
     // Check that it isn't out-of-bounds or intersecting an existing Block
-    if (xIndex < 0 || xIndex >= getWidth() || yIndex < 0 || yIndex >= getHeight() ||
+    if (xIndex < 0 || xIndex >= width || yIndex < 0 || yIndex >= height ||
             blockField.at(xIndex).at(yIndex))
     {
         can = false;
@@ -383,7 +383,7 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
     // Extract all the clearable lines into a single Shape
     Shape clearedBlocks;
     for (unsigned int i = 0; i < clearableLines.size(); i++) {
-        for (int j = 0; j < getWidth(); j++) {
+        for (int j = 0; j < width; j++) {
             clearedBlocks.addBlock(blockField[j][clearableLines[i]]->makeNewClone());
             delete blockField[j][clearableLines[i]];
             blockField[j][clearableLines[i]] = NULL;
@@ -420,9 +420,9 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
 vector<int> PlayingField::getClearableLines() {
     vector<int> clearableLines;
     
-    for (int i = 0; i < getHeight(); i++) {
+    for (int i = 0; i < height; i++) {
         bool isClearable = true;
-        for (int j = 0; j < getWidth() && isClearable; j++) {
+        for (int j = 0; j < width && isClearable; j++) {
             if (!blockField[j][i]) {
                 isClearable = false;
             }
@@ -451,8 +451,8 @@ void PlayingField::normalizeBlocks(Shape& shape) {
         if (shape[i] && shape[i]->getUniqueID() != 0) {
             
             // blockField
-            for (int j = 0; j < getWidth(); j++) {
-                for (int k = 0; k < getHeight(); k++) {
+            for (int j = 0; j < width; j++) {
+                for (int k = 0; k < height; k++) {
                     if (blockField[j][k] &&
                             blockField[j][k]->getUniqueID() == shape[i]->getUniqueID())
                     {
@@ -732,6 +732,25 @@ int PlayingField::yIndexFromLocation(const Block* block) const {
 
 /* ---------- Overriding from Drawable ---------- */
 
+
+/*
+ * Getter for width.
+ * 
+ * Returns: The value of this PlayingField object's width
+ */
+int PlayingField::getWidth() const {
+    return width*(blockSize+padding) - padding;
+}
+
+/*
+ * Getter for height.
+ * 
+ * Returns: The value of this PlayingField object's height
+ */
+int PlayingField::getHeight() const {
+    return height*(blockSize+padding) - padding;
+}
+
 /*
  * Assigns x and y the values of the passed parameters, and properly offsets all Drawable member
  *   data to reflect the shift
@@ -745,8 +764,8 @@ void PlayingField::setLocation(int x, int y) {
     int dY = y - getLocationY();
     
     erase();
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             if (blockField[i][j]) {
                 blockField[i][j]->setLocation(blockField[i][j]->getLocationX()+dX,
                         blockField[i][j]->getLocationY()+dY);
@@ -771,8 +790,8 @@ void PlayingField::setLocation(int x, int y) {
 void PlayingField::draw() {
     bgRect.draw();
 
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             if (blockField[i][j]) {
                 blockField[i][j]->draw();
             }
@@ -787,8 +806,8 @@ void PlayingField::draw() {
  */
 void PlayingField::erase() {
     if (isVisible) {
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 if (blockField[i][j]) {
                     blockField[i][j]->erase();
                 }

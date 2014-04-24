@@ -178,6 +178,20 @@ class PlayingField: public Drawable {
         bool canRotateCCW(const TetrominoBase*) const;
         
         /* ---------- Overriding from Drawable ---------- */
+        
+        /*
+         * Getter for width.
+         * 
+         * Returns: The value of this PlayingField object's width
+         */
+        int getWidth() const;
+        
+        /*
+         * Getter for height.
+         * 
+         * Returns: The value of this PlayingField object's height
+         */
+        int getHeight() const;
 
         /*
          * Assigns x and y the values of the passed parameters, and properly offsets all Drawable
@@ -359,8 +373,8 @@ class PlayingField: public Drawable {
 template <typename BlockType>
 Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
     Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
-        getLocationX()+(blockSize+padding)*(getWidth()/2),
-        getLocationY()+(blockSize+padding)*getHeight(), blockSize, padding, type, getForeground()
+        getLocationX()+(blockSize+padding)*(width/2),
+        getLocationY()+(blockSize+padding)*height, blockSize, padding, type, getForeground()
     );
     
     // We spawn right above the field, this puts us at the top of the screen, properly centered

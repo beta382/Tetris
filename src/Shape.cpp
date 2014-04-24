@@ -269,6 +269,72 @@ void Shape::setBackground(unsigned int background) {
 /* ---------- Implemented from Drawable ---------- */
 
 /*
+ * Getter for width.
+ * 
+ * Returns: The value of this Shape object's width
+ */
+int Shape::getWidth() const {
+    int val = 0;
+    
+    if (width != 0) {
+        val = width*(blockSize+padding) - padding;
+    } else {
+        int min;
+        int max;
+        
+        for (int i = 0; i < numBlocks(); i++) {
+            if (blocks[i]) {
+                if (i == 0) {
+                    min = blocks[i]->getLocationX();
+                    max = min;
+                } else if (blocks[i]->getLocationX() < min) {
+                    min = blocks[i]->getLocationX();
+                } else if (blocks[i]->getLocationX() > max) {
+                    min = blocks[i]->getLocationX();
+                }
+            }
+        }
+        
+        val = max-min + blockSize;
+    }
+    
+    return val;
+}
+
+/*
+ * Getter for height.
+ * 
+ * Returns: The value of this Shape object's height
+ */
+int Shape::getHeight() const {
+    int val = 0;
+    
+    if (height != 0) {
+        val = height*(blockSize+padding) - padding;
+    } else {
+        int min;
+        int max;
+        
+        for (int i = 0; i < numBlocks(); i++) {
+            if (blocks[i]) {
+                if (i == 0) {
+                    min = blocks[i]->getLocationY();
+                    max = min;
+                } else if (blocks[i]->getLocationY() < min) {
+                    min = blocks[i]->getLocationY();
+                } else if (blocks[i]->getLocationY() > max) {
+                    min = blocks[i]->getLocationY();
+                }
+            }
+        }
+        
+        val = max-min + blockSize;
+    }
+    
+    return val;
+}
+
+/*
  * Draws all Drawable member data to the screen.
  */
 void Shape::draw() {

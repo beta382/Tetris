@@ -22,9 +22,6 @@
  *
  * Shape is intended to represent and be a wrapper for a collection of Blocks, and provide methods
  *   for interfacing with and manipulating the Blocks. Shape IS intended to be inherited from.
- *
- * Shape DOES NOT use `int width`or `int height`. However subclasses of Shape MAY use these member
- *   data.
  */
 class Shape: public Drawable {
     public:
@@ -186,6 +183,20 @@ class Shape: public Drawable {
         void setBackground (unsigned int);
         
         /* ---------- Implemented from Drawable ---------- */
+        
+        /*
+         * Getter for width.
+         * 
+         * Returns: The value of this Shape object's width
+         */
+        int getWidth() const;
+        
+        /*
+         * Getter for height.
+         * 
+         * Returns: The value of this Shape object's height
+         */
+        int getHeight() const;
         
         /*
          * Draws all Drawable member data to the screen.
