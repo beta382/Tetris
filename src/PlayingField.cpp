@@ -162,19 +162,18 @@ void PlayingField::mergeAndDelete (Shape* shape) {
 bool PlayingField::canShiftUp(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX(), tmp->getLocationY()+tmp->getTotalSize());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftUp();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -191,19 +190,18 @@ bool PlayingField::canShiftUp(const Shape* shape) const {
 bool PlayingField::canShiftDown(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX(), tmp->getLocationY()-tmp->getTotalSize());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftDown();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -220,19 +218,18 @@ bool PlayingField::canShiftDown(const Shape* shape) const {
 bool PlayingField::canShiftLeft(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX()-tmp->getTotalSize(), tmp->getLocationY());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftLeft();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -249,19 +246,18 @@ bool PlayingField::canShiftLeft(const Shape* shape) const {
 bool PlayingField::canShiftRight(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX()+tmp->getTotalSize(), tmp->getLocationY());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftRight();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -279,24 +275,18 @@ bool PlayingField::canShiftRight(const Shape* shape) const {
 bool PlayingField::canRotateCW(const TetrominoBase* t) const {
     bool can = true;
     
-    for (int i = 0; i < t->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = t->getBlock(i)->makeNewClone();
-        
-        // Apply rotation transformation to our tmp Block
-        tmp->setLocation(
-            ((tmp->getLocationY()-t->getLocationY())/tmp->getTotalSize()-t->getOffsetY()-
-              t->getOffsetX())*tmp->getTotalSize()+t->getLocationX(),
-            (t->getWidth()-((tmp->getLocationX()-t->getLocationX())/tmp->getTotalSize()+
-              t->getOffsetX())-1+t->getOffsetY())*tmp->getTotalSize()+t->getLocationY()
-        );
-        
-        if (!couldAdd(tmp)) {
+    TetrominoBase* tmp = t->makeNewClone();
+    
+    tmp->rotateCW();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -314,24 +304,18 @@ bool PlayingField::canRotateCW(const TetrominoBase* t) const {
 bool PlayingField::canRotateCCW(const TetrominoBase* t) const {
     bool can = true;
     
-    for (int i = 0; i < t->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = t->getBlock(i)->makeNewClone();
-        
-        // Apply rotation transformation to our tmp Block
-        tmp->setLocation(
-            (t->getHeight()-((tmp->getLocationY()-t->getLocationY())/tmp->getTotalSize()-
-              t->getOffsetY())-1-t->getOffsetX())*tmp->getTotalSize()+t->getLocationX(),
-            ((tmp->getLocationX()-t->getLocationX())/tmp->getTotalSize()+t->getOffsetX()+
-              t->getOffsetY())*tmp->getTotalSize()+t->getLocationY()
-        );
+    TetrominoBase* tmp = t->makeNewClone();
+    
+    tmp->rotateCCW();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
          
-        if (!couldAdd(tmp)) {
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }

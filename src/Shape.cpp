@@ -209,66 +209,6 @@ Block*& Shape::operator [](int index) {
 /* ---------- Overriding from Drawable ---------- */
 
 /*
- * Assigns x and y the values of the passed parameters, and properly offsets all Drawable member
- *   data to reflect the shift
- * 
- * Parameters:
- *   int x: The value to assign to this Shape object's x
- *   int y: The value to assign to this Shape object's y
- */
-void Shape::setLocation(int x, int y) {
-    int dX = x - getLocationX();
-    int dY = y - getLocationY();
-    for (unsigned int i = 0; i < blocks.size(); i++) {
-        if (blocks[i]) {
-            blocks[i]->setLocation(blocks[i]->getLocationX()+dX, blocks[i]->getLocationY()+dY);
-        }
-    }
-    
-    this->x = x;
-    this->y = y;
-}
-
-/*
- * Assigns foreground the value of the passed parameter, and applies the same foreground color to 
- *   all Drawable member data.
- *  
- * Parameters:
- *   unsigned int foreground: The value to assign to this Shape object's foreground
- */
-void Shape::setForeground (unsigned int foreground) {
-    for (unsigned int i = 0; i < blocks.size(); i++){
-        if (blocks[i]) {
-            blocks[i]->setForeground(foreground);
-        }
-    }
-    
-    this->foreground = foreground;
-}
-
-/*
- * Assigns background the value of the passed parameter, and applies the same background color to 
- *   all Drawable member data.
- *  
- * Parameters:
- *   unsigned int background: The value to assign to this Shape object's background
- */
-void Shape::setBackground(unsigned int background) {
-    for (unsigned int i = 0; i < blocks.size(); i++){
-        if (blocks[i]) {
-            if (blocks[i]) {
-                blocks[i]->setBackground(background);
-            }
-        }
-    }
-    
-    this->background = background;
-}
-
-
-/* ---------- Implemented from Drawable ---------- */
-
-/*
  * Getter for width.
  * 
  * Returns: The value of this Shape object's width
@@ -333,6 +273,66 @@ int Shape::getHeight() const {
     
     return val;
 }
+
+/*
+ * Assigns x and y the values of the passed parameters, and properly offsets all Drawable member
+ *   data to reflect the shift
+ * 
+ * Parameters:
+ *   int x: The value to assign to this Shape object's x
+ *   int y: The value to assign to this Shape object's y
+ */
+void Shape::setLocation(int x, int y) {
+    int dX = x - getLocationX();
+    int dY = y - getLocationY();
+    for (unsigned int i = 0; i < blocks.size(); i++) {
+        if (blocks[i]) {
+            blocks[i]->setLocation(blocks[i]->getLocationX()+dX, blocks[i]->getLocationY()+dY);
+        }
+    }
+    
+    this->x = x;
+    this->y = y;
+}
+
+/*
+ * Assigns foreground the value of the passed parameter, and applies the same foreground color to 
+ *   all Drawable member data.
+ *  
+ * Parameters:
+ *   unsigned int foreground: The value to assign to this Shape object's foreground
+ */
+void Shape::setForeground (unsigned int foreground) {
+    for (unsigned int i = 0; i < blocks.size(); i++){
+        if (blocks[i]) {
+            blocks[i]->setForeground(foreground);
+        }
+    }
+    
+    this->foreground = foreground;
+}
+
+/*
+ * Assigns background the value of the passed parameter, and applies the same background color to 
+ *   all Drawable member data.
+ *  
+ * Parameters:
+ *   unsigned int background: The value to assign to this Shape object's background
+ */
+void Shape::setBackground(unsigned int background) {
+    for (unsigned int i = 0; i < blocks.size(); i++){
+        if (blocks[i]) {
+            if (blocks[i]) {
+                blocks[i]->setBackground(background);
+            }
+        }
+    }
+    
+    this->background = background;
+}
+
+
+/* ---------- Implemented from Drawable ---------- */
 
 /*
  * Draws all Drawable member data to the screen.

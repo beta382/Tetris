@@ -152,7 +152,22 @@ class Shape: public Drawable {
          */
         Block*& operator [](int);
         
+        
         /* ---------- Overriding from Drawable ---------- */
+        
+        /*
+         * Getter for width.
+         * 
+         * Returns: The value of this Shape object's width
+         */
+        int getWidth() const;
+        
+        /*
+         * Getter for height.
+         * 
+         * Returns: The value of this Shape object's height
+         */
+        int getHeight() const;
 
         /*
          * Assigns x and y the values of the passed parameters, and properly offsets all Drawable
@@ -183,20 +198,6 @@ class Shape: public Drawable {
         void setBackground (unsigned int);
         
         /* ---------- Implemented from Drawable ---------- */
-        
-        /*
-         * Getter for width.
-         * 
-         * Returns: The value of this Shape object's width
-         */
-        int getWidth() const;
-        
-        /*
-         * Getter for height.
-         * 
-         * Returns: The value of this Shape object's height
-         */
-        int getHeight() const;
         
         /*
          * Draws all Drawable member data to the screen.

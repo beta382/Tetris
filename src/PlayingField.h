@@ -374,13 +374,14 @@ template <typename BlockType>
 Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
     Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
         getLocationX()+(blockSize+padding)*(width/2),
-        getLocationY()+(blockSize+padding)*height, blockSize, padding, type, getForeground()
+        getLocationY()+(blockSize+padding)*height, 
+        blockSize, padding, type, getForeground()
     );
     
-    // We spawn right above the field, this puts us at the top of the screen, properly centered
     tetromino->setLocation(
-        tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),
-        tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight()
+        tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
+                tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
+        tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
     
     // TODO: Later on, change the spawn point based on if it can actually spawn there.
