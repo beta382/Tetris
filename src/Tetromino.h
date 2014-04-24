@@ -77,6 +77,15 @@ class Tetromino: public TetrominoBase {
          * Returns: A reference to this Tetromino<BlockType> object
          */
         Tetromino<BlockType>& operator =(const Tetromino<BlockType>&);
+        
+        /* ---------- Implemented from TetrominoBase ---------- */
+        
+        /*
+         * Allocates a clone of this Tetromino<BlockType>.
+         *   
+         * Returns: The address of the newly instantiated clone of this Tetromino<BlockType>
+         */
+        Tetromino<BlockType>* makeNewClone() const;
     private:
         
         /* ---------- Implemented from TetrominoBase ---------- */
@@ -157,7 +166,20 @@ Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType
 }
 
 
-/* ---------- Implemented from TetrominoBase ---------- */
+/* ---------- Publicly Implemented from TetrominoBase ---------- */
+
+/*
+ * Allocates a clone of this Tetromino<BlockType>.
+ *   
+ * Returns: The address of the newly instantiated clone of this Tetromino<BlockType>
+ */
+template <typename BlockType>
+Tetromino<BlockType>* Tetromino<BlockType>::makeNewClone() const {
+    return new Tetromino<BlockType>(*this);
+}
+
+
+/* ---------- Privately Implemented from TetrominoBase ---------- */
 
 /*
  * Initializes this Tetromino<BlockType> object with the passed TetrominoShape.

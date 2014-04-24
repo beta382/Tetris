@@ -57,14 +57,14 @@ class Drawable {
          * Parameters:
          *   int width: The value to assign to this Drawable object's width
          */
-        void setWidth(int);
+        virtual void setWidth(int);
         
         /*
          * Getter for width.
          * 
          * Returns: The value of this Drawable object's width
          */
-        int getWidth() const;
+        virtual int getWidth() const;
         
         /*
          * Assigns height the value of the passed parameter.
@@ -72,14 +72,14 @@ class Drawable {
          * Parameters:
          *   int height: The value to assign to this Drawable object's height
          */
-        void setHeight(int);
+        virtual void setHeight(int);
         
         /*
          * Getter for height.
          * 
          * Returns: The value of this Drawable object's height.
          */
-        int getHeight() const;
+        virtual int getHeight() const;
         
         
         /*
@@ -96,14 +96,14 @@ class Drawable {
          * 
          * Returns: The value of this Drawable object's x.
          */
-        int getLocationX() const;
+        virtual int getLocationX() const;
         
         /*
          * Getter for y.
          * 
          * Returns: The value of this Drawable object's y.
          */
-        int getLocationY() const;
+        virtual int getLocationY() const;
         
         
         /*
@@ -119,7 +119,7 @@ class Drawable {
          * 
          * Returns: The value of this Drawable object's foreground.
          */
-        unsigned int getForeground() const;
+        virtual unsigned int getForeground() const;
         
         /*
          * Assigns background the value of the passed parameter.
@@ -134,7 +134,7 @@ class Drawable {
          * 
          * Returns: The value of this Drawable object's background.
          */
-        unsigned int getBackground() const;
+        virtual unsigned int getBackground() const;
         
         
         /*
@@ -146,7 +146,7 @@ class Drawable {
          *   clock_t interval: The time in milliseconds between drawing and erasing this Drawable
          *     object
          */
-        void blink(int, clock_t);
+        virtual void blink(int, clock_t);
 
         /*
          * Assigns g the passed value. Should be called before using any Drawable objects.
@@ -213,6 +213,7 @@ class Drawable {
          * These variables are intended to represent the x and y coordinates of the bottom-left
          *   corner of this Drawable object's bounding rectangle, however, they may be interpreted
          *   by sub-classes of Drawable in whatever manner best suits the nature of that object.
+         *   Their respective getters should always return the width and height in pixels.
          */
         int x;
         int y;
@@ -220,7 +221,8 @@ class Drawable {
         /*
          * These variables are intended to represent the width and height in pixels of this Drawable
          *   object's bounding rectangle, however, they may be interpreted by sub-classes of
-         *   Drawable in whatever manner best suits the nature of that object.
+         *   Drawable in whatever manner best suits the nature of that object. Their respective
+         *   getters should always return the width and height in pixels.
          */
         int width;
         int height;
