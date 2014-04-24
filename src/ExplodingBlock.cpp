@@ -124,13 +124,15 @@ void ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y)
     for (int i = x-2; i <= x+2; i++) {
         for (int j = y-2; j <= y+2; j++) {
             if (i >= 0 && i < (int)blockField.size() && j >= 0 && j < (int)blockField[i].size() &&
-                    blockField[i][j]) {
-                blockField[i][j]->erase();
-                
+                    blockField[i][j])
+            {
                 Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;
                 
-                tmp->doEffect(blockField, i, j);
+                if (tmp->getUniqueID() != getUniqueID()) {
+                    tmp->doEffect(blockField, i, j);
+                }
+                
                 delete tmp;
             }
         }
