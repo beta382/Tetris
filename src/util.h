@@ -12,13 +12,13 @@
 
 #include <ctime>
 
-#ifdef DO_LEAKCHECK
-    #include <cstdlib>
-    #include <map>
-    #include <string>
-    #include <ostream>
-    #include <iomanip>
-#endif
+#include <cstdlib>
+#include <map>
+#include <string>
+#include <ostream>
+#include <iomanip>
+
+using namespace std;
 
 /* ---------- Color codes ---------- */
 
@@ -65,7 +65,6 @@ namespace util {
 }
 
 #ifdef DO_LEAKCHECK
-
     #define _registerForLeakcheckWithID(id) \
         public: \
         void* operator new(size_t bytes) { \
@@ -80,18 +79,18 @@ namespace util {
             leakcheck::allocated.erase(mem); \
             free(mem); \
         }
-
-    using namespace std;
-    
-    namespace leakcheck {
-        extern unsigned int n_new;
-        extern unsigned int n_delete;
-        extern map<void*, pair<string, size_t> > allocated;
-        
-        void report(ostream& out);
-        size_t bytes();
-    }
+#else // Define empty macro if we aren't checking for leaks
+    #define _registerForLeakcheckWithID(id)
 #endif
+
+namespace leakcheck {
+    extern unsigned int n_new;
+    extern unsigned int n_delete;
+    extern map<void*, pair<string, size_t> > allocated;
+    
+    void report(ostream& out);
+    size_t bytes();
+}
 
 // More stuff later, maybe
 

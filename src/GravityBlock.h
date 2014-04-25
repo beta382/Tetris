@@ -24,10 +24,7 @@
  *   it is cleared. GravityBlock IS NOT intended to be inherited from.
  */
 class GravityBlock: public Block {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(GravityBlock)
-#endif
-    
+_registerForLeakcheckWithID(GravityBlock)
     public:
 
         /*

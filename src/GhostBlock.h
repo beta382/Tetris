@@ -22,10 +22,7 @@
  *   end up. GhostBlock IS NOT intended to be inherited from.
  */
 class GhostBlock: public Block {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(GhostBlock)
-#endif
-    
+_registerForLeakcheckWithID(GhostBlock)
     public:
 
         /*

@@ -25,10 +25,7 @@
  *   for interfacing with and manipulating the Blocks. Shape IS intended to be inherited from.
  */
 class Shape: public Drawable {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(Shape)
-#endif
-    
+_registerForLeakcheckWithID(Shape)
     public:
 
         /*

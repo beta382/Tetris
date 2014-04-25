@@ -23,10 +23,7 @@
  *   the constructors protected.
  */
 class Drawable {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(Drawable)
-#endif
-    
+_registerForLeakcheckWithID(Drawable)
     public:
     
         /*

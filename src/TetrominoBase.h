@@ -30,10 +30,7 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  *   making the constructors protected.
  */
 class TetrominoBase: public Shape {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(TetrominoBase)
-#endif
-    
+_registerForLeakcheckWithID(TetrominoBase)
     public:
 
         /*

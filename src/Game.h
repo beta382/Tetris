@@ -28,10 +28,7 @@
  *   screen contains. Game IS NOT intended to be inherited from.
  */
 class Game: public Screen {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(Game)
-#endif
-    
+_registerForLeakcheckWithID(Game)
     public:
         
         /*

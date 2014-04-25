@@ -23,10 +23,7 @@
  *   IS NOT intended to be inherited from.
  */
 class ExplodingBlock: public Block {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(ExplodingBlock)
-#endif
-    
+_registerForLeakcheckWithID(ExplodingBlock)
     public:
 
         /*

@@ -30,25 +30,16 @@ void Tetris::Play (void) {
         int k = g->getKey();
         
         switch (k) {
-            
-#ifdef DO_LEAKCHECK
             case Key::ESC: // ESC
             case 'x':
                 delete this;
                 
                 leakcheck::report(cout);
-                exit(1);
+                exit(0);
                 break;
             case 'p':
                 leakcheck::report(cout);
                 break;
-#else
-            case Key::ESC:
-            case 'x':
-                delete this;
-                exit(1);
-                break;
-#endif
             
             default:
                 newScreen = screen->respondToKey(k);

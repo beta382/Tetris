@@ -21,11 +21,11 @@ void util::wait(clock_t ms) {
     while (clock() < start+ms);
 }
 
+unsigned int leakcheck::n_new = 0;
+unsigned int leakcheck::n_delete = 0;
+map<void*, pair<string, size_t> > leakcheck::allocated;
+
 #ifdef DO_LEAKCHECK
-    unsigned int leakcheck::n_new = 0;
-    unsigned int leakcheck::n_delete = 0;
-    map<void*, pair<string, size_t> > leakcheck::allocated;
-    
     void leakcheck::report(ostream& out) {
         out << setfill('-') << setw(79) << "" << endl;
         out << endl;
@@ -58,5 +58,8 @@ void util::wait(clock_t ms) {
         
         return sum;
     }
-    
+#else // Define empty functions if we aren't checking for leaks
+    void leakcheck::report(ostream& out) {}
+    size_t leakcheck::bytes() {return 0;}
 #endif
+    

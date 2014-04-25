@@ -34,10 +34,7 @@
  *   and tall the block field is.
  */
 class PlayingField: public Drawable {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(PlayingField)
-#endif
-    
+_registerForLeakcheckWithID(PlayingField)
     public:
         
         /*

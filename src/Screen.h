@@ -24,10 +24,7 @@
  *   enforced by making the constructors protected.
  */
 class Screen: public Drawable {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(Screen)
-#endif
-    
+_registerForLeakcheckWithID(Screen)
     public:
         
         /*

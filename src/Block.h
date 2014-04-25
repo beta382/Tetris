@@ -24,10 +24,7 @@
  *   Block IS intended to be inherited from.
  */
 class Block: public Drawable {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(Block)
-#endif
-    
+_registerForLeakcheckWithID(Block)
     public:
 
         /*

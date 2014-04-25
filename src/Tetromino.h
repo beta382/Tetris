@@ -24,10 +24,7 @@
 
 template <typename BlockType>
 class Tetromino: public TetrominoBase {
-#ifdef DO_LEAKCHECK
-    _registerForLeakcheckWithID(Tetromino)
-#endif
-    
+_registerForLeakcheckWithID(Tetromino)
     public:
         
         /*
