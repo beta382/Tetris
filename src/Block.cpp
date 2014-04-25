@@ -136,9 +136,11 @@ void Block::setUniqueID(unsigned int id) {
  *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this Block within the blockField
  *   int y: The y-coordinate of this Block within the blockField
+ *   
+ * Returns: The number of points the special effect accumulated
  */
-void Block::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    // Do nothing
+int Block::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+    return 0;
 }
 
 /*

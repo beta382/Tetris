@@ -21,7 +21,12 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
-        field(10+x, 10+y, 10, 20, 16, 2, Color::WHITE, foreground)
+        field(10+x, 10+y, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
+        bgRectNext(field.getLocationX()+field.getWidth() + 20, 250, 
+                field.getTotalBlockSize()*5+field.getPadding(), 
+                field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
+        bgRectNext2(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2,
+                bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, foreground)
 {
     init();
 }
@@ -160,6 +165,9 @@ void Game::draw() {
     field.draw();
     shadow->draw();
     currentTetromino->draw();
+    
+    bgRectNext2.draw();
+    bgRectNext.draw();
     
     isVisible = true;
 }

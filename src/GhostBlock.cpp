@@ -89,9 +89,11 @@ GhostBlock& GhostBlock::operator =(const GhostBlock& rhs) {
  *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this GhostBlock within the blockField
  *   int y: The y-coordinate of this GhostBlock within the blockField
+ *   
+ * Returns: The number of points the special effect accumulated
  */
-void GhostBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    // Do nothing
+int GhostBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+    return 0;
 }
 
 /*

@@ -67,9 +67,14 @@ class PlayingField: public Drawable {
          *     with, defaults to Color::WHITE
          *   unsigned int background: The value to initialize this PlayingField object's background
          *     with, defaults to Color::BLACK
+         *   int borderWidth: The value to initialize this PlayingField object's borderWidth with,
+         *     defaults to 0
+         *   unsigned int borderColor: The value to initialize this PlayingField object's
+         *     borderColor with, defaults to Color::GREY
          */
         PlayingField(int x, int y, int width, int height, int blockSize, int padding,
-                unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK);
+                unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK, 
+                int borderWidth = 0, unsigned int borderColor = Color::GRAY);
 
         /*
          * Instantiates a PlayingField object that is a copy of the passed PlayingField object,
@@ -117,8 +122,32 @@ class PlayingField: public Drawable {
          *   
          * Parameters:
          *   Shape* shape: A pointer to the Shape object to merge and delete
+         *   
+         * Returns: The number of points the merge accumulated
          */
-        void mergeAndDelete(Shape*);
+        int mergeAndDelete(Shape*);
+        
+        
+        /*
+         * Getter for blockSize.
+         * 
+         * Returns: The value of this PlayingField object's blockSize
+         */
+        int getBlockSize() const;
+
+        /*
+         * Getter for padding.
+         * 
+         * Returns: The value of this PlayingField object's padding
+         */
+        int getPadding() const;
+
+        /*
+         * Getter for the sum of blockSize and padding.
+         * 
+         * Returns: The value of this PlayingField object's blockSize+padding
+         */
+        int getTotalBlockSize() const;
 
         
         /*
@@ -250,8 +279,10 @@ class PlayingField: public Drawable {
          * 
          * Parameters:
          *   vector<int> clearableLines: The lines to clear
+         *   
+         * Returns: The number of points the line clear accumulated
          */
-        void doLineClear(vector<int>);
+        int doLineClear(vector<int>);
 
         /*
          * Checks the blockField for lines that are able to be cleared.
@@ -280,8 +311,10 @@ class PlayingField: public Drawable {
          *   vector<Shape*>& fallingShapes: A reference to the vector<Shape*> containing pointers
          *     to the  Shape objects currently falling; since these are separate from the
          *     blockField, they must be passed separately
+         *     
+         * Returns: The number of points the special effects accumulated
          */
-        void doClearedBlockEffects(Shape&, vector<Shape*>&);
+        int doClearedBlockEffects(Shape&, vector<Shape*>&);
 
         /*
          * Performs a falling animation for each of the Shapes pointed to by the pointers in the
@@ -292,8 +325,10 @@ class PlayingField: public Drawable {
          * Parameters:
          *   vector<Shape*>& fallingShapes: A vector of pointers to Shape objects that need to
          *     have a falling animation performed on them, may contain NULL pointers
+         *     
+         * Returns: The number of points the fall accumulated
          */
-        void doFall(vector<Shape*>&);
+        int doFall(vector<Shape*>&);
 
         
         /*
@@ -360,9 +395,24 @@ class PlayingField: public Drawable {
         int padding;
         
         /*
+         * Represents the width in pixels of the border outline around this BlockField
+         */
+        int borderWidth;
+        
+        /*
+         * Represents the color of this BlockField's border
+         */
+        unsigned int borderColor;
+        
+        /*
          * Represents the background fill for this PlayingField object.
          */
         MyRectangle bgRect;
+        
+        /*
+         * Represents the border fill for this PlayingField object.
+         */
+        MyRectangle bgRect2;
         
         /*
          * Represents the field of Blocks at the core of the playing field
@@ -386,9 +436,9 @@ class PlayingField: public Drawable {
 template <typename BlockType>
 Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
     Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
-        getLocationX()+(blockSize+padding)*(width/2),
-        getLocationY()+(blockSize+padding)*height, 
-        blockSize, padding, type, getForeground()
+        getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+        getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
+        getBlockSize(), getPadding(), type, getForeground()
     );
     
     tetromino->setLocation(

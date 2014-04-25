@@ -169,6 +169,16 @@ class Game: public Screen {
          *   shadow.
          */
         Tetromino<GhostBlock>* shadow;
+        
+        /*
+         * Background rectangle for next block
+         */
+        MyRectangle bgRectNext;
+        
+        /*
+         * Background rectangle border for next block
+         */
+        MyRectangle bgRectNext2;
 };
 
 
