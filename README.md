@@ -304,9 +304,10 @@ size_t bytes();
 
 It's super simple. First, either tell your compiler to define DO_LEAKCHECK (for g++, just add the `-DDO_LEAKCHECK` flag
 to your compile options; your IDE should allow you to define build configurations for Release and Debug separately, add
-this flag to the Debug build configuration), or define DO_LEAKCHECK manually at the top of "util.h". Then in the
-header(s) of the object(s) you want to track, include "util.h" and add the following code inside your object
-declaration:
+this flag to the Debug build configuration), or define DO_LEAKCHECK manually at the top of "util.h" (Note that if you
+don't define DO_LEAKCHECK, or build from a configuration that doesn't define DO_LEAKCHECK, you can add the code detailed
+below, and it will safely have no effect). Then in the header(s) of the object(s) you want to track, include "util.h"
+and add the following code inside your object declaration:
 
 ```c++
 _registerForLeakcheckWithID(ID)
