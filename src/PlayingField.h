@@ -106,6 +106,28 @@ class PlayingField: public Drawable {
          *   Shape* shape: A pointer to the Shape object to merge and delete
          */
         void mergeAndDelete(Shape*);
+        
+        
+        /*
+         * Getter for blockSize.
+         * 
+         * Returns: The value of this PlayingField object's blockSize
+         */
+        int getBlockSize() const;
+
+        /*
+         * Getter for padding.
+         * 
+         * Returns: The value of this PlayingField object's padding
+         */
+        int getPadding() const;
+
+        /*
+         * Getter for the sum of blockSize and padding.
+         * 
+         * Returns: The value of this PlayingField object's blockSize+padding
+         */
+        int getTotalBlockSize() const;
 
         
         /*
@@ -178,6 +200,20 @@ class PlayingField: public Drawable {
         bool canRotateCCW(const TetrominoBase*) const;
         
         /* ---------- Overriding from Drawable ---------- */
+        
+        /*
+         * Getter for width.
+         * 
+         * Returns: The value of this PlayingField object's width
+         */
+        int getWidth() const;
+        
+        /*
+         * Getter for height.
+         * 
+         * Returns: The value of this PlayingField object's height
+         */
+        int getHeight() const;
 
         /*
          * Assigns x and y the values of the passed parameters, and properly offsets all Drawable
@@ -338,6 +374,11 @@ class PlayingField: public Drawable {
         MyRectangle bgRect;
         
         /*
+         * Represents the border fill for this PlayingField object.
+         */
+        MyRectangle bgRect2;
+        
+        /*
          * Represents the field of Blocks at the core of the playing field
          */
         vector<vector<Block*> > blockField;
@@ -359,14 +400,15 @@ class PlayingField: public Drawable {
 template <typename BlockType>
 Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
     Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
-        getLocationX()+(blockSize+padding)*(getWidth()/2),
-        getLocationY()+(blockSize+padding)*getHeight(), blockSize, padding, type, getForeground()
+        getLocationX()+(blockSize+padding)*(width/2),
+        getLocationY()+(blockSize+padding)*height, 
+        blockSize, padding, type, getForeground()
     );
     
-    // We spawn right above the field, this puts us at the top of the screen, properly centered
     tetromino->setLocation(
-        tetromino->getLocationX()-tetromino->getTotalBlockSize()*((tetromino->getWidth()+1)/2),
-        tetromino->getLocationY()-tetromino->getTotalBlockSize()*tetromino->getHeight()
+        tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
+                tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
+        tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
     
     // TODO: Later on, change the spawn point based on if it can actually spawn there.
