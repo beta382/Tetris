@@ -54,9 +54,14 @@ class PlayingField: public Drawable {
          *     with, defaults to Color::WHITE
          *   unsigned int background: The value to initialize this PlayingField object's background
          *     with, defaults to Color::BLACK
+         *   int borderWidth: The value to initialize this PlayingField object's borderWidth with,
+         *     defaults to 0
+         *   unsigned int borderColor: The value to initialize this PlayingField object's
+         *     borderColor with, defaults to Color::GREY
          */
         PlayingField(int x, int y, int width, int height, int blockSize, int padding,
-                unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK);
+                unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK, 
+                int borderWidth = 0, unsigned int borderColor = Color::GRAY);
 
         /*
          * Instantiates a PlayingField object that is a copy of the passed PlayingField object,
@@ -369,6 +374,16 @@ class PlayingField: public Drawable {
         int padding;
         
         /*
+         * Represents the width in pixels of the border outline around this BlockField
+         */
+        int borderWidth;
+        
+        /*
+         * Represents the color of this BlockField's border
+         */
+        unsigned int borderColor;
+        
+        /*
          * Represents the background fill for this PlayingField object.
          */
         MyRectangle bgRect;
@@ -400,9 +415,9 @@ class PlayingField: public Drawable {
 template <typename BlockType>
 Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
     Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
-        getLocationX()+(blockSize+padding)*(width/2),
-        getLocationY()+(blockSize+padding)*height, 
-        blockSize, padding, type, getForeground()
+        getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+        getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
+        getBlockSize(), getPadding(), type, getForeground()
     );
     
     tetromino->setLocation(
