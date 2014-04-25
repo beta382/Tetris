@@ -29,17 +29,12 @@
 class Game: public Screen {
     public:
         
-        void* operator new(size_t size) {
-            void* mem = malloc(size);
-            leakcheck::n_new++;
-            leakcheck::allocated.insert(pair<void*, pair<string, size_t> >(mem, pair<string, size_t>("Game", size)));
-            return mem;
+        void* operator new(size_t bytes) {
+            return leakcheck::alloc(bytes, "Game");
         }
-    
+        
         void operator delete(void* mem) {
-            leakcheck::n_delete++;
-            leakcheck::allocated.erase(mem);
-            free(mem);
+            leakcheck::dealloc(mem);
         }
         
         /*

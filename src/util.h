@@ -10,6 +10,7 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include <cstdlib>
 #include <ctime>
 #include <map>
 #include <string>
@@ -84,7 +85,22 @@ struct leakcheck {
         
         return sum;
     }
+    
+    static void* alloc(size_t bytes, string id) {
+        void* mem = malloc(bytes);
+        n_new++;
+        allocated.insert(pair<void*, pair<string, size_t> >(mem, pair<string, size_t>(id, bytes)));
+        return mem;
+    }
+
+    static void dealloc(void* mem) throw () {
+        leakcheck::n_delete++;
+        leakcheck::allocated.erase(mem);
+        free(mem);
+    }
 };
+
+void operator delete(void*) throw();
 
 // More stuff later, maybe
 
