@@ -45,21 +45,6 @@ class TetrominoBase: public Shape {
          * Rotates this TetrominoBase clockwise, setting the locations of it's Blocks accordingly.
          */
         void rotateCCW();
-
-
-        /*
-         * Getter for offsetX.
-         * 
-         * Returns:  The value of this TetrominoBase object's offsetX
-         */
-        int getOffsetX() const;
-
-        /*
-         * Getter for offsettY.
-         * 
-         * Returns:  The value of this TetrominoBase object's offsetY
-         */
-        int getOffsetY() const;
         
         /*
          * Allocates a clone of this TetrominoBase.
