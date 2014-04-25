@@ -21,30 +21,30 @@ void util::wait(clock_t ms) {
     while (clock() < start+ms);
 }
 
-unsigned int leakcheck::n_new = 0;
-unsigned int leakcheck::n_delete = 0;
 map<void*, pair<string, size_t> > leakcheck::allocated;
 
 #ifdef DO_LEAKCHECK
     void leakcheck::report(ostream& out) {
         out << setfill('-') << setw(79) << "" << endl;
-        out << endl;
-        out << "n_new:    " << n_new << endl;
-        out << "n_delete: " << n_delete << endl;
-        out << endl;
-        out << "Currently have " << bytes() << " bytes allocated from " << 
-                allocated.size() << " objects." << endl;
-        out << setfill(' ');
+        out << setfill(' ') << endl;
         
-        for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin();
-                it != allocated.end(); it++)
-        {
-            out << left << setw(12) << it->first << setw(20) << it->second.first <<
-                    it->second.second << endl;
+        if (allocated.size() > 0) {
+            out << "Tracked objects on heap:" << endl;
+            for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin();
+                    it != allocated.end(); it++)
+            {
+                out << left << setw(12) << it->first << setw(20) << it->second.first <<
+                        it->second.second << endl;
+            }
+        } else {
+            out << "No tracked objects on heap." << endl;
         }
         
         out << endl;
-        out << setfill('-') << setw(79) << "" << endl << endl;
+        out << "Currently have " << allocated.size() << " objects allocated consuming " << 
+                bytes() << " bytes." << endl;
+        out << endl;
+        out << setfill('-') << setw(79) << "" << endl;
     }
     
     size_t leakcheck::bytes() {

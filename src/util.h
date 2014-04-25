@@ -69,13 +69,11 @@ namespace util {
         public: \
         void* operator new(size_t bytes) { \
             void* mem = malloc(bytes); \
-            leakcheck::n_new++; \
             leakcheck::allocated.insert(std::pair<void*, std::pair<std::string, size_t> > \
                     (mem, std::pair<std::string, size_t>(#id, bytes))); \
             return mem; \
         } \
         void operator delete(void* mem) { \
-            leakcheck::n_delete++; \
             leakcheck::allocated.erase(mem); \
             free(mem); \
         }
@@ -84,8 +82,6 @@ namespace util {
 #endif
 
 namespace leakcheck {
-    extern unsigned int n_new;
-    extern unsigned int n_delete;
     extern map<void*, pair<string, size_t> > allocated;
     
     void report(ostream& out);
