@@ -55,6 +55,13 @@ class TetrominoBase: public Shape {
          * Returns:  The value of this TetrominoBase object's offsetY
          */
         int getOffsetY() const;
+        
+        /*
+         * Allocates a clone of this TetrominoBase.
+         *   
+         * Returns: The address of the newly instantiated clone of this TetrominoBase
+         */
+        virtual TetrominoBase* makeNewClone() const = 0;
     protected:
 
         /*

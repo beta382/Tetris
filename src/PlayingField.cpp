@@ -18,7 +18,7 @@
 PlayingField::PlayingField():
 Drawable(0, 0, 10, 20),
         blockSize(10), padding(0),
-        bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
+        bgRect(x, y, getWidth(), getHeight(),
           foreground, background),
         bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
           Color::LIGHT_GRAY, background),
@@ -49,7 +49,7 @@ PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, i
   unsigned int foreground, unsigned int background):
 Drawable(x, y, width, height, foreground, background),
         blockSize(blockSize), padding(padding), 
-        bgRect(x, y, (blockSize+padding)*width-padding, (blockSize+padding)*height-padding,
+        bgRect(x, y, getWidth(), getHeight(),
           foreground, background),
         bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
           Color::LIGHT_GRAY, background),
@@ -74,8 +74,8 @@ Drawable(other),
         bgRect2(other.bgRect2),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             if (other.blockField.at(i).at(j)) {
                 blockField[i][j] = other.blockField.at(i).at(j)->makeNewClone();
             }
@@ -88,8 +88,8 @@ Drawable(other),
  */
 PlayingField::~PlayingField() {
     erase();
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             delete blockField[i][j];
         }
     }
@@ -111,8 +111,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     if  (this != &rhs) {
         erase();
         
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 delete blockField[i][j];
             }
             
@@ -129,8 +129,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         
         blockField.assign(width, vector<Block*>(height, static_cast<Block*>(NULL)));
         
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 if (rhs.blockField.at(i).at(j)) {
                     blockField[i][j] = rhs.blockField.at(i).at(j)->makeNewClone();
                 }
@@ -176,19 +176,18 @@ void PlayingField::mergeAndDelete (Shape* shape) {
 bool PlayingField::canShiftUp(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX(), tmp->getLocationY()+tmp->getTotalSize());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftUp();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -205,19 +204,18 @@ bool PlayingField::canShiftUp(const Shape* shape) const {
 bool PlayingField::canShiftDown(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX(), tmp->getLocationY()-tmp->getTotalSize());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftDown();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -234,19 +232,18 @@ bool PlayingField::canShiftDown(const Shape* shape) const {
 bool PlayingField::canShiftLeft(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX()-tmp->getTotalSize(), tmp->getLocationY());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftLeft();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -263,19 +260,18 @@ bool PlayingField::canShiftLeft(const Shape* shape) const {
 bool PlayingField::canShiftRight(const Shape* shape) const {
     bool can = true;
     
-    for (int i = 0; i < shape->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = shape->getBlock(i)->makeNewClone();
-        
-        // Apply transformation to our tmp Block
-        tmp->setLocation(tmp->getLocationX()+tmp->getTotalSize(), tmp->getLocationY());
-                
-        if (!couldAdd(tmp)) {
+    Shape* tmp = new Shape(*shape);
+    
+    tmp->shiftRight();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -293,24 +289,18 @@ bool PlayingField::canShiftRight(const Shape* shape) const {
 bool PlayingField::canRotateCW(const TetrominoBase* t) const {
     bool can = true;
     
-    for (int i = 0; i < t->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = t->getBlock(i)->makeNewClone();
-        
-        // Apply rotation transformation to our tmp Block
-        tmp->setLocation(
-            ((tmp->getLocationY()-t->getLocationY())/tmp->getTotalSize()-t->getOffsetY()-
-              t->getOffsetX())*tmp->getTotalSize()+t->getLocationX(),
-            (t->getWidth()-((tmp->getLocationX()-t->getLocationX())/tmp->getTotalSize()+
-              t->getOffsetX())-1+t->getOffsetY())*tmp->getTotalSize()+t->getLocationY()
-        );
-        
-        if (!couldAdd(tmp)) {
+    TetrominoBase* tmp = t->makeNewClone();
+    
+    tmp->rotateCW();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
+         
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -328,24 +318,18 @@ bool PlayingField::canRotateCW(const TetrominoBase* t) const {
 bool PlayingField::canRotateCCW(const TetrominoBase* t) const {
     bool can = true;
     
-    for (int i = 0; i < t->numBlocks() && can; i++) {
-        // Create a tmp duplicate, since we actually are applying transformations
-        Block* tmp = t->getBlock(i)->makeNewClone();
-        
-        // Apply rotation transformation to our tmp Block
-        tmp->setLocation(
-            (t->getHeight()-((tmp->getLocationY()-t->getLocationY())/tmp->getTotalSize()-
-              t->getOffsetY())-1-t->getOffsetX())*tmp->getTotalSize()+t->getLocationX(),
-            ((tmp->getLocationX()-t->getLocationX())/tmp->getTotalSize()+t->getOffsetX()+
-              t->getOffsetY())*tmp->getTotalSize()+t->getLocationY()
-        );
+    TetrominoBase* tmp = t->makeNewClone();
+    
+    tmp->rotateCCW();
+    
+    for (int i = 0; i < tmp->numBlocks() && can; i++) {
          
-        if (!couldAdd(tmp)) {
+        if (!couldAdd((*tmp)[i])) {
             can = false;
         }
-        
-        delete tmp;
     }
+    
+    delete tmp;
     
     return can;
 }
@@ -370,7 +354,7 @@ bool PlayingField::couldAdd(const Block* block) const {
     int yIndex = yIndexFromLocation(block);
     
     // Check that it isn't out-of-bounds or intersecting an existing Block
-    if (xIndex < 0 || xIndex >= getWidth() || yIndex < 0 || yIndex >= getHeight() ||
+    if (xIndex < 0 || xIndex >= width || yIndex < 0 || yIndex >= height ||
             blockField.at(xIndex).at(yIndex))
     {
         can = false;
@@ -397,7 +381,7 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
     // Extract all the clearable lines into a single Shape
     Shape clearedBlocks;
     for (unsigned int i = 0; i < clearableLines.size(); i++) {
-        for (int j = 0; j < getWidth(); j++) {
+        for (int j = 0; j < width; j++) {
             clearedBlocks.addBlock(blockField[j][clearableLines[i]]->makeNewClone());
             delete blockField[j][clearableLines[i]];
             blockField[j][clearableLines[i]] = NULL;
@@ -434,9 +418,9 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
 vector<int> PlayingField::getClearableLines() {
     vector<int> clearableLines;
     
-    for (int i = 0; i < getHeight(); i++) {
+    for (int i = 0; i < height; i++) {
         bool isClearable = true;
-        for (int j = 0; j < getWidth() && isClearable; j++) {
+        for (int j = 0; j < width && isClearable; j++) {
             if (!blockField[j][i]) {
                 isClearable = false;
             }
@@ -465,8 +449,8 @@ void PlayingField::normalizeBlocks(Shape& shape) {
         if (shape[i] && shape[i]->getUniqueID() != 0) {
             
             // blockField
-            for (int j = 0; j < getWidth(); j++) {
-                for (int k = 0; k < getHeight(); k++) {
+            for (int j = 0; j < width; j++) {
+                for (int k = 0; k < height; k++) {
                     if (blockField[j][k] &&
                             blockField[j][k]->getUniqueID() == shape[i]->getUniqueID())
                     {
@@ -746,6 +730,25 @@ int PlayingField::yIndexFromLocation(const Block* block) const {
 
 /* ---------- Overriding from Drawable ---------- */
 
+
+/*
+ * Getter for width.
+ * 
+ * Returns: The value of this PlayingField object's width
+ */
+int PlayingField::getWidth() const {
+    return width*(blockSize+padding) - padding;
+}
+
+/*
+ * Getter for height.
+ * 
+ * Returns: The value of this PlayingField object's height
+ */
+int PlayingField::getHeight() const {
+    return height*(blockSize+padding) - padding;
+}
+
 /*
  * Assigns x and y the values of the passed parameters, and properly offsets all Drawable member
  *   data to reflect the shift
@@ -759,8 +762,8 @@ void PlayingField::setLocation(int x, int y) {
     int dY = y - getLocationY();
     
     erase();
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             if (blockField[i][j]) {
                 blockField[i][j]->setLocation(blockField[i][j]->getLocationX()+dX,
                         blockField[i][j]->getLocationY()+dY);
@@ -789,8 +792,8 @@ void PlayingField::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
 
-    for (int i = 0; i < getWidth(); i++) {
-        for (int j = 0; j < getHeight(); j++) {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
             if (blockField[i][j]) {
                 blockField[i][j]->draw();
             }
@@ -805,8 +808,8 @@ void PlayingField::draw() {
  */
 void PlayingField::erase() {
     if (isVisible) {
-        for (int i = 0; i < getWidth(); i++) {
-            for (int j = 0; j < getHeight(); j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 if (blockField[i][j]) {
                     blockField[i][j]->erase();
                 }
