@@ -100,8 +100,6 @@ struct leakcheck {
     }
 };
 
-void operator delete(void*) throw();
-
 // More stuff later, maybe
 
 #endif /* UTIL_H_ */
