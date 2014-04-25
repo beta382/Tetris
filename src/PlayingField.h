@@ -106,6 +106,28 @@ class PlayingField: public Drawable {
          *   Shape* shape: A pointer to the Shape object to merge and delete
          */
         void mergeAndDelete(Shape*);
+        
+        
+        /*
+         * Getter for blockSize.
+         * 
+         * Returns: The value of this PlayingField object's blockSize
+         */
+        int getBlockSize() const;
+
+        /*
+         * Getter for padding.
+         * 
+         * Returns: The value of this PlayingField object's padding
+         */
+        int getPadding() const;
+
+        /*
+         * Getter for the sum of blockSize and padding.
+         * 
+         * Returns: The value of this PlayingField object's blockSize+padding
+         */
+        int getTotalBlockSize() const;
 
         
         /*
@@ -355,16 +377,6 @@ class PlayingField: public Drawable {
          * Represents the border fill for this PlayingField object.
          */
         MyRectangle bgRect2;
-        
-        /*
-         * Background rectange for next block
-         */
-        MyRectangle bgRectNext;
-        
-        /*
-         * Background rectange border for next block
-         */
-        MyRectangle bgRectNext2;
         
         /*
          * Represents the field of Blocks at the core of the playing field

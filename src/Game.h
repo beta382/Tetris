@@ -36,7 +36,7 @@ class Game: public Screen {
          *   unsigned int color: The value to initialize this Game object's foreground with,
          *     defaults to Color::BLACK
          */
-        Game(unsigned int color = Color::TAN);
+        Game(unsigned int color = Color::BLACK);
 
         /*
          * Destructs this Game object.
@@ -156,6 +156,16 @@ class Game: public Screen {
          *   shadow.
          */
         Tetromino<GhostBlock>* shadow;
+        
+        /*
+         * Background rectangle for next block
+         */
+        MyRectangle bgRectNext;
+        
+        /*
+         * Background rectangle border for next block
+         */
+        MyRectangle bgRectNext2;
 };
 
 

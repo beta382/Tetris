@@ -22,10 +22,6 @@ Drawable(0, 0, 10, 20),
           foreground, background),
         bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
           Color::LIGHT_GRAY, background),
-        bgRectNext(x + (blockSize+padding)*width-padding + 20, 50, 100, 50,
-          Color::LIGHT_TAN, background),
-        bgRectNext2(x + (blockSize+padding)*width-padding + 17, 197, 156, 106,
-          Color::DARK_TAN, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
@@ -53,10 +49,6 @@ Drawable(x, y, width, height, foreground, background),
           foreground, background),
         bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
           Color::LIGHT_GRAY, background),
-        bgRectNext(x + (blockSize+padding)*width-padding + 20, 200, 150, 100,
-          Color::LIGHT_TAN, background),
-        bgRectNext2(x + (blockSize+padding)*width-padding + 18, 198, 154, 104,
-          Color::DARK_TAN, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
@@ -163,6 +155,35 @@ void PlayingField::mergeAndDelete (Shape* shape) {
         doLineClear(clearableLines);
     }
 }
+
+
+/*
+ * Getter for blockSize.
+ * 
+ * Returns: The value of this PlayingField object's blockSize
+ */
+int PlayingField::getBlockSize() const {
+    return blockSize;
+}
+
+/*
+ * Getter for padding.
+ * 
+ * Returns: The value of this PlayingField object's padding
+ */
+int PlayingField::getPadding() const {
+    return padding;
+}
+
+/*
+ * Getter for the sum of blockSize and padding.
+ * 
+ * Returns: The value of this PlayingField object's blockSize+padding
+ */
+int PlayingField::getTotalBlockSize() const {
+    return getBlockSize()+getPadding();
+}
+
 
 /*
  * Determines whether or not the Shape object pointed to by the passed pointer can be shifted up
@@ -789,8 +810,6 @@ void PlayingField::setLocation(int x, int y) {
 void PlayingField::draw() {
     bgRect2.draw();
     bgRect.draw();
-    bgRectNext2.draw();
-    bgRectNext.draw();
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
