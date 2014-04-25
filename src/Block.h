@@ -11,6 +11,8 @@
 #define BLOCK_H_
 
 #include "Drawable.h"
+#include "util.h"
+
 #include <vector>
 
 /*
@@ -22,6 +24,10 @@
  *   Block IS intended to be inherited from.
  */
 class Block: public Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Block)
+#endif
+    
     public:
 
         /*
@@ -43,7 +49,7 @@ class Block: public Drawable {
          *     defaults to Color::BLACK
          */
         Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
+                unsigned int background = Color::BLACK);
 
         /*
          * Instantiates a Block object that is a copy of the passed Block object, except for bool

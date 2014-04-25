@@ -14,6 +14,7 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "Rectangle.h"
+#include "util.h"
 
 #include <vector>
 #include <algorithm>
@@ -33,6 +34,10 @@
  *   and tall the block field is.
  */
 class PlayingField: public Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(PlayingField)
+#endif
+    
     public:
         
         /*

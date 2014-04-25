@@ -11,6 +11,7 @@
 #define TETROMINOBASE_H_
 
 #include "Shape.h"
+#include "util.h"
 
 /*
  * TetrominoShape:
@@ -29,6 +30,10 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  *   making the constructors protected.
  */
 class TetrominoBase: public Shape {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(TetrominoBase)
+#endif
+    
     public:
 
         /*

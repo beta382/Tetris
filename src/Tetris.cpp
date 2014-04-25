@@ -33,8 +33,23 @@ void Tetris::Play (void) {
             case Key::ESC: // ESC
             case 'x':
                 delete this;
+                
+#ifdef DO_LEAKCHECK
+                cout << "n_new:    " << leakcheck::n_new << endl;
+                cout << "n_delete: " << leakcheck::n_delete << endl;
+                cout << endl;
+                cout << "leaking " << leakcheck::bytes() << " bytes from " << 
+                        leakcheck::allocated.size() << " objects" << endl;
+                cout << endl;
+                leakcheck::print(cout);
+#endif
                 exit(1);
                 break;
+#ifdef DO_LEAKCHECK
+            case 'p':
+                leakcheck::print(cout);
+                break;
+#endif
             default:
                 newScreen = screen->respondToKey(k);
         }

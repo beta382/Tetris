@@ -12,6 +12,7 @@
 
 #include "Drawable.h"
 #include "Block.h"
+#include "util.h"
 
 #include <vector>
 
@@ -24,6 +25,10 @@
  *   for interfacing with and manipulating the Blocks. Shape IS intended to be inherited from.
  */
 class Shape: public Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Shape)
+#endif
+    
     public:
 
         /*

@@ -23,7 +23,12 @@
  *   the constructors protected.
  */
 class Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Drawable)
+#endif
+    
     public:
+    
         /*
          * Draws this Drawable object to the screen. Must be implimented by children of Drawable.
          */

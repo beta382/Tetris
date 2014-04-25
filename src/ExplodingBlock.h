@@ -12,6 +12,7 @@
 
 #include "Block.h"
 #include "Rectangle.h"
+#include "util.h"
 
 /*
  * ExplodingBlock:
@@ -22,6 +23,10 @@
  *   IS NOT intended to be inherited from.
  */
 class ExplodingBlock: public Block {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(ExplodingBlock)
+#endif
+    
     public:
 
         /*

@@ -12,6 +12,14 @@
 
 #include <ctime>
 
+#ifdef DO_LEAKCHECK
+    #include <cstdlib>
+    #include <map>
+    #include <string>
+    #include <ostream>
+    #include <iomanip>
+#endif
+
 /* ---------- Color codes ---------- */
 
 namespace Color {
@@ -55,6 +63,35 @@ namespace util {
     void wait(clock_t ms);
     
 }
+
+#ifdef DO_LEAKCHECK
+
+    #define _registerForLeakcheckWithID(id) \
+        public: \
+        void* operator new(size_t bytes) { \
+            void* mem = malloc(bytes); \
+            leakcheck::n_new++; \
+            leakcheck::allocated.insert(std::pair<void*, std::pair<std::string, size_t> > \
+                    (mem, std::pair<std::string, size_t>(#id, bytes))); \
+            return mem; \
+        } \
+        void operator delete(void* mem) { \
+            leakcheck::n_delete++; \
+            leakcheck::allocated.erase(mem); \
+            free(mem); \
+        }
+
+    using namespace std;
+    
+    struct leakcheck {
+        static unsigned int n_new;
+        static unsigned int n_delete;
+        static map<void*, pair<string, size_t> > allocated;
+        
+        static ostream& print(ostream& out);
+        static size_t bytes();
+    };
+#endif
 
 // More stuff later, maybe
 

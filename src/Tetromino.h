@@ -11,6 +11,7 @@
 #define TETROMINO_H_
 
 #include "TetrominoBase.h"
+#include "util.h"
 
 /*
  * Tetromino<BlockType>:
@@ -23,6 +24,10 @@
 
 template <typename BlockType>
 class Tetromino: public TetrominoBase {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Tetromino)
+#endif
+    
     public:
         
         /*
@@ -113,7 +118,7 @@ TetrominoBase()
  */
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino (int x, int y, int blockSize, int padding, TetrominoShape shape,
-		unsigned int background):
+        unsigned int background):
 TetrominoBase(x, y, blockSize, padding, background)
 {
     initTetromino(shape);

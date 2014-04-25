@@ -11,6 +11,7 @@
 #define GHOSTBLOCK_H_
 
 #include "Block.h"
+#include "util.h"
 
 /*
  * GhostBlock:
@@ -21,6 +22,10 @@
  *   end up. GhostBlock IS NOT intended to be inherited from.
  */
 class GhostBlock: public Block {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(GhostBlock)
+#endif
+    
     public:
 
         /*

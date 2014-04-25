@@ -2,11 +2,12 @@
 .metadata/
 .settings/
 Debug/
+Release/
 
 .cproject
 .project
 
-## OS_X Codeblocks
+## Code::Blocks
 .DS_Store
 *.layout
 *.depend
