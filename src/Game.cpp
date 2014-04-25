@@ -334,7 +334,7 @@ void Game::doJoinAndRespawn() {
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
-    int blockType = rand()%(1 << 16); // 16-bit number
+    int blockType = (rand()*rand())%(1 << 16); // 16-bit number, but rand maxes at 0x7FFF
         
     // Spawn a new tetromino and create a shadow in the same place
     
