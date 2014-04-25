@@ -14,6 +14,7 @@
 #include "PlayingField.h"
 #include "TetrominoBase.h"
 #include "blocks.h"
+#include "util.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -27,6 +28,7 @@
  *   screen contains. Game IS NOT intended to be inherited from.
  */
 class Game: public Screen {
+_registerForLeakcheckWithID(Game)
     public:
         
         /*

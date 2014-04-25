@@ -11,6 +11,7 @@
 #define GRAVITYBLOCK_H_
 
 #include "Block.h"
+#include "util.h"
 
 #include <ctime>
 
@@ -23,6 +24,7 @@
  *   it is cleared. GravityBlock IS NOT intended to be inherited from.
  */
 class GravityBlock: public Block {
+_registerForLeakcheckWithID(GravityBlock)
     public:
 
         /*
@@ -84,15 +86,17 @@ class GravityBlock: public Block {
          *     effect on
          *   int x: The x-coordinate of this GravityBlock within the blockField
          *   int y: The y-coordinate of this GravityBlock within the blockField
+         *   
+         * Returns: The number of points the special effect accumulated
          */
-        void doEffect(vector<vector<Block*> >&, int x, int y);
+        int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this GravityBlock, including it's uniqueID.
          *   
          * Returns: The address of the newly instantiated clone of this GravityBlock
          */
-        GravityBlock* makeNewClone();
+        GravityBlock* makeNewClone() const;
 
 
         /*

@@ -67,10 +67,10 @@ Shape(other),
  */
 void TetrominoBase::rotateCW() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-getOffsetY()-
-                  getOffsetX())*blocks[i]->getTotalSize()+getLocationX(),
-                (width-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+getOffsetX())-1+
-                  getOffsetY())*blocks[i]->getTotalSize()+getLocationY());
+        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY-
+                  offsetX)*blocks[i]->getTotalSize()+getLocationX(),
+                (width-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX)-1+
+                  offsetY)*blocks[i]->getTotalSize()+getLocationY());
     }
     
     swap(width, height);
@@ -82,30 +82,12 @@ void TetrominoBase::rotateCW() {
 void TetrominoBase::rotateCCW() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
         blocks[i]->setLocation((height-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-
-                  getOffsetY())-1-getOffsetX())*blocks[i]->getTotalSize()+getLocationX(),
-                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+getOffsetX()+getOffsetY())*
+                  offsetY)-1-offsetX)*blocks[i]->getTotalSize()+getLocationX(),
+                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX+offsetY)*
                   blocks[i]->getTotalSize()+getLocationY());
     }
     
     swap(width, height);
-}
-
-/*
- * Getter for offsetX.
- * 
- * Returns:  The value of this TetrominoBase object's offsetX
- */
-int TetrominoBase::getOffsetX() const {
-    return offsetX;
-}
-
-/*
- * Getter for offsettY.
- * 
- * Returns:  The value of this TetrominoBase object's offsetY
- */
-int TetrominoBase::getOffsetY() const {
-    return offsetY;
 }
 
 

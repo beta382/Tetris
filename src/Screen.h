@@ -12,6 +12,7 @@
 
 #include "Drawable.h"
 #include "Rectangle.h"
+#include "util.h"
 
 /*
  * Screen:
@@ -23,6 +24,7 @@
  *   enforced by making the constructors protected.
  */
 class Screen: public Drawable {
+_registerForLeakcheckWithID(Screen)
     public:
         
         /*

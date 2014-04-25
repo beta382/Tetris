@@ -17,11 +17,10 @@
  */
 PlayingField::PlayingField():
 Drawable(0, 0, 10, 20),
-        blockSize(10), padding(0),
-        bgRect(x, y, getWidth(), getHeight(),
-          foreground, background),
-        bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
-          Color::LIGHT_GRAY, background),
+        blockSize(10), padding(0), borderWidth(0), borderColor(Color::GRAY),
+        bgRect(x+borderWidth, y+borderWidth, getWidth()-borderWidth*2, getHeight()-borderWidth*2, 
+                foreground, background),
+        bgRect2(x, y, getWidth(), getHeight(), borderColor, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
@@ -39,16 +38,19 @@ Drawable(0, 0, 10, 20),
  *   unsigned int foreground: The value to initialize this PlayingField object's foreground with,
  *     defaults to Color::WHITE
  *   unsigned int background: The value to initialize this PlayingField object's background with,
- *     defaults to Color::BLACK
+ *     defaults to Color::BLACK         
+ *   int borderWidth: The value to initialize this PlayingField object's borderWidth with, defaults
+ *     to 0
+ *   unsigned int borderColor: The value to initialize this PlayingField object's borderColor with,
+ *     defaults to Color::GREY
  */
 PlayingField::PlayingField(int x, int y, int width, int height, int blockSize, int padding,
-  unsigned int foreground, unsigned int background):
+  unsigned int foreground, unsigned int background, int borderWidth, unsigned int borderColor):
 Drawable(x, y, width, height, foreground, background),
-        blockSize(blockSize), padding(padding), 
-        bgRect(x, y, getWidth(), getHeight(),
-          foreground, background),
-        bgRect2(x - 3, y - 3, (blockSize+padding)*width-padding + 6, (blockSize+padding)*height-padding + 6,
-          Color::LIGHT_GRAY, background),
+        blockSize(blockSize), padding(padding), borderWidth(borderWidth), borderColor(borderColor),
+        bgRect(x+borderWidth, y+borderWidth, getWidth()-borderWidth*2, getHeight()-borderWidth*2, 
+                foreground, background),
+        bgRect2(x, y, getWidth(), getHeight(), borderColor, background),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
@@ -62,8 +64,8 @@ Drawable(x, y, width, height, foreground, background),
  */
 PlayingField::PlayingField(const PlayingField& other): 
 Drawable(other),
-        blockSize(other.blockSize), padding(other.padding), bgRect(other.bgRect),
-        bgRect2(other.bgRect2),
+        blockSize(other.blockSize), padding(other.padding), borderWidth(other.borderWidth), 
+        borderColor(other.borderColor),bgRect(other.bgRect), bgRect2(other.bgRect2),
         blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
     for (int i = 0; i < width; i++) {
@@ -116,6 +118,8 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         Drawable::operator =(rhs);
         blockSize = rhs.blockSize;
         padding = rhs.padding;
+        borderWidth = rhs.borderWidth;
+        borderColor = rhs.borderColor;
         bgRect = rhs.bgRect;
         bgRect2 = rhs.bgRect2;
         
@@ -141,8 +145,12 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
  *   
  * Parameters:
  *   Shape* shape: A pointer to the Shape object to merge and delete
+ *   
+ * Returns: The number of points the merge accumulated
  */
-void PlayingField::mergeAndDelete (Shape* shape) {
+int PlayingField::mergeAndDelete (Shape* shape) {
+    int points = 0;
+    
     mergeCopy(shape);
     
     delete shape;
@@ -152,8 +160,10 @@ void PlayingField::mergeAndDelete (Shape* shape) {
     vector<int> clearableLines = getClearableLines();
 
     if (clearableLines.size() > 0) {
-        doLineClear(clearableLines);
+        points += doLineClear(clearableLines);
     }
+    
+    return points;
 }
 
 
@@ -391,11 +401,15 @@ bool PlayingField::couldAdd(const Block* block) const {
  * 
  * Parameters:
  *   vector<int> clearableLines: The lines to clear
+ *   
+ * Returns: The number of points the line clear accumulated
  */
-void PlayingField::doLineClear(vector<int> clearableLines) {
+int PlayingField::doLineClear(vector<int> clearableLines) { // TODO: Proper scoring
     // Static because this recurses with doFall, maintains the remaining shapes across calls, is
     // always cleared/reset before exiting the top-level of a single call.
     static vector<Shape*> fallingShapes;
+    
+    int points = clearableLines.size()*50;
     
     vector<Shape*> newFallingShapes;
 
@@ -413,7 +427,7 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
 
     normalizeBlocks(clearedBlocks);
 
-    doClearedBlockEffects(clearedBlocks, fallingShapes);
+    points += doClearedBlockEffects(clearedBlocks, fallingShapes);
 
     // See if we have any new shapes to form, and add them to fallingShapes
     newFallingShapes = formNewContiguousShapes(blockField);
@@ -425,10 +439,12 @@ void PlayingField::doLineClear(vector<int> clearableLines) {
     // Maintains proper order since we might add new shapes out-of-order
     sort(fallingShapes.begin(), fallingShapes.end(), compareShapePointerByLocation);
 
-    doFall(fallingShapes);
+    points += doFall(fallingShapes);
     
     // Clear fallingShapes when this finally exits, should be totally NULL at this point
     fallingShapes.clear();
+    
+    return points;
 }
 
 /*
@@ -509,10 +525,14 @@ void PlayingField::normalizeBlocks(Shape& shape) {
  *   vector<Shape*>& fallingShapes: A reference to the vector<Shape*> containing pointers to the 
  *     Shape objects currently falling; since these are separate from the blockField, they must
  *     be passed separately
+ *     
+ * Returns: The number of points the special effects accumulated
  */
-void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) {
+int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) { // TODO: Proper scoring
     vector<vector<Block*> > remainingBlockField(width,
             vector<Block*>(height, static_cast<Block*>(NULL)));
+    
+    int points = 0;
     
     // Before we perform any special effects, temporarily directly merge any fallingShapes
     for (unsigned int i = 0; i < fallingShapes.size(); i++) {
@@ -533,7 +553,7 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& f
     
     // For each cleared block, perform the block's special effect, and then delete the block
     for (int i = 0; i < clearedBlocks.numBlocks(); i++) {
-        clearedBlocks[i]->doEffect(blockField, 
+        points += clearedBlocks[i]->doEffect(blockField, 
                 xIndexFromLocation(clearedBlocks[i]), yIndexFromLocation(clearedBlocks[i]));
     }
     
@@ -558,6 +578,8 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& f
     // Takes a blockField made from the potentially modified original fallingShapes and forms new
     // shapes out of them. Effectively refreshes fallingShapes post-special effects
     fallingShapes = formNewContiguousShapes(remainingBlockField);
+    
+    return points;
 }
 
 /*
@@ -569,8 +591,12 @@ void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& f
  * Parameters:
  *   vector<Shape*>& fallingShapes: A vector of pointers to Shape objects that need to have a
  *     falling animation performed on them, may contain NULL pointers
+ *     
+ * Returns: The number of points the fall accumulated
  */
-void PlayingField::doFall(vector<Shape*>& fallingShapes) {
+int PlayingField::doFall(vector<Shape*>& fallingShapes) {
+    int points = 0;
+    
     bool didFall = true;
     // While we are still shifting down...
     while(didFall) {
@@ -613,7 +639,7 @@ void PlayingField::doFall(vector<Shape*>& fallingShapes) {
             vector<int> clearableLines = getClearableLines();
 
             if (clearableLines.size() > 0) {
-                doLineClear(clearableLines);
+                points += doLineClear(clearableLines)*2; // Double points for each cascading clear
             }
 
             didFall = false;
@@ -639,6 +665,8 @@ void PlayingField::doFall(vector<Shape*>& fallingShapes) {
             util::wait(100);
         }
     }
+    
+    return points;
 }
 
 /*
@@ -732,7 +760,7 @@ void PlayingField::mergeCopy(const Shape* shape) {
  * Return: The x-index of the Block pointed to by the passed pointer
  */
 int PlayingField::xIndexFromLocation(const Block* block) const {
-    return (block->getLocationX()-getLocationX())/block->getTotalSize();
+    return (block->getLocationX()-getLocationX()-getPadding()-borderWidth)/block->getTotalSize();
 }
 
 /*
@@ -745,7 +773,7 @@ int PlayingField::xIndexFromLocation(const Block* block) const {
  * Return: The y-index of the Block pointed to by the passed pointer
  */
 int PlayingField::yIndexFromLocation(const Block* block) const {
-    return (block->getLocationY()-getLocationY())/block->getTotalSize();
+    return (block->getLocationY()-getLocationY()-getPadding()-borderWidth)/block->getTotalSize();
 }
 
 
@@ -758,7 +786,7 @@ int PlayingField::yIndexFromLocation(const Block* block) const {
  * Returns: The value of this PlayingField object's width
  */
 int PlayingField::getWidth() const {
-    return width*(blockSize+padding) - padding;
+    return width*(blockSize+padding) + padding + borderWidth*2;
 }
 
 /*
@@ -767,7 +795,7 @@ int PlayingField::getWidth() const {
  * Returns: The value of this PlayingField object's height
  */
 int PlayingField::getHeight() const {
-    return height*(blockSize+padding) - padding;
+    return height*(blockSize+padding) + padding + borderWidth*2;
 }
 
 /*

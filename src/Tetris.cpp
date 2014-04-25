@@ -33,8 +33,14 @@ void Tetris::Play (void) {
             case Key::ESC: // ESC
             case 'x':
                 delete this;
-                exit(1);
+                
+                leakcheck::report(cout);
+                exit(0);
                 break;
+            case 'p':
+                leakcheck::report(cout);
+                break;
+            
             default:
                 newScreen = screen->respondToKey(k);
         }

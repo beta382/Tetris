@@ -21,7 +21,7 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
-        field(10+x, 10+y, 10, 20, 16, 2, Color::WHITE, foreground),
+        field(10+x, 10+y, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
         bgRectNext(field.getLocationX()+field.getWidth() + 20, 250, 
                 field.getTotalBlockSize()*5+field.getPadding(), 
                 field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
@@ -334,7 +334,7 @@ void Game::doJoinAndRespawn() {
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
-    int blockType = rand()%(1 << 16); // 16-bit number
+    int blockType = (rand()*rand())%(1 << 16); // 16-bit number, but rand maxes at 0x7FFF
         
     // Spawn a new tetromino and create a shadow in the same place
     

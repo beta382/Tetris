@@ -90,10 +90,13 @@ ExplodingBlock& ExplodingBlock::operator =(const ExplodingBlock& rhs) {
  *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this ExplodingBlock within the blockField
  *   int y: The y-coordinate of this ExplodingBlock within the blockField
+ *   
+ * Returns: The number of points the special effect accumulated
  */
-void ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    // Make an explosion rectangle
+int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+    int points = 100;
     
+    // Make an explosion rectangle
     int explosionX = (x >= 2) ? getLocationX()-getTotalSize()*2 : getLocationX()-getTotalSize()*x;
     int explosionY = (y >= 2) ? getLocationY()-getTotalSize()*2 : getLocationY()-getTotalSize()*y;
     
@@ -130,13 +133,15 @@ void ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y)
                 blockField[i][j] = NULL;
                 
                 if (tmp->getUniqueID() != getUniqueID()) {
-                    tmp->doEffect(blockField, i, j);
+                    points += tmp->doEffect(blockField, i, j);
                 }
                 
                 delete tmp;
             }
         }
     }
+    
+    return points;
 }
 
 /*
@@ -144,7 +149,7 @@ void ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y)
  *   
  * Returns: The address of the newly instantiated clone of this ExplodingBlock
  */
-ExplodingBlock* ExplodingBlock::makeNewClone() {
+ExplodingBlock* ExplodingBlock::makeNewClone() const {
     ExplodingBlock* tmp = new ExplodingBlock(*this);
     
     tmp->setUniqueID(getUniqueID());

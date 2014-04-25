@@ -11,6 +11,7 @@
 #define GHOSTBLOCK_H_
 
 #include "Block.h"
+#include "util.h"
 
 /*
  * GhostBlock:
@@ -21,6 +22,7 @@
  *   end up. GhostBlock IS NOT intended to be inherited from.
  */
 class GhostBlock: public Block {
+_registerForLeakcheckWithID(GhostBlock)
     public:
 
         /*
@@ -82,15 +84,17 @@ class GhostBlock: public Block {
          *     effect on
          *   int x: The x-coordinate of this GhostBlock within the blockField
          *   int y: The y-coordinate of this GhostBlock within the blockField
+         *   
+         * Returns: The number of points the special effect accumulated
          */
-        void doEffect(vector<vector<Block*> >&, int x, int y);
+        int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this GhostBlock, including it's uniqueID.
          *   
          * Returns: The address of the newly instantiated clone of this GhostBlock
          */
-        GhostBlock* makeNewClone();
+        GhostBlock* makeNewClone() const;
 
 
         /*

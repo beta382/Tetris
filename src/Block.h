@@ -11,6 +11,8 @@
 #define BLOCK_H_
 
 #include "Drawable.h"
+#include "util.h"
+
 #include <vector>
 
 /*
@@ -22,6 +24,7 @@
  *   Block IS intended to be inherited from.
  */
 class Block: public Drawable {
+_registerForLeakcheckWithID(Block)
     public:
 
         /*
@@ -43,7 +46,7 @@ class Block: public Drawable {
          *     defaults to Color::BLACK
          */
         Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
+                unsigned int background = Color::BLACK);
 
         /*
          * Instantiates a Block object that is a copy of the passed Block object, except for bool
@@ -119,8 +122,10 @@ class Block: public Drawable {
          *     effect on
          *   int x: The x-coordinate of this Block within the blockField
          *   int y: The y-coordinate of this Block within the blockField
+         *   
+         * Returns: The number of points the special effect accumulated
          */
-        virtual void doEffect(vector<vector<Block*> >&, int x, int y);
+        virtual int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this Block, including it's uniqueID. Should be overridden by Block
@@ -129,7 +134,7 @@ class Block: public Drawable {
          *   
          * Returns: The address of the newly instantiated clone of this Block
          */
-        virtual Block* makeNewClone();
+        virtual Block* makeNewClone() const;
         
         /* ---------- Implemented from Drawable ---------- */
 
