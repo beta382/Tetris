@@ -97,7 +97,7 @@ class GhostBlock: public Block {
          *   
          * Returns: The address of the newly instantiated clone of this GhostBlock
          */
-        GhostBlock* makeNewClone();
+        GhostBlock* makeNewClone() const;
 
 
         /*

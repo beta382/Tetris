@@ -150,7 +150,7 @@ int Block::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
  *   
  * Returns: The address of the newly instantiated clone of this Block
  */
-Block* Block::makeNewClone() {
+Block* Block::makeNewClone() const {
     Block* tmp = new Block(*this);
     
     tmp->setUniqueID(getUniqueID());

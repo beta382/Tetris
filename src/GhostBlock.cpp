@@ -101,7 +101,7 @@ int GhostBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
  *   
  * Returns: The address of the newly instantiated clone of this GhostBlock
  */
-GhostBlock* GhostBlock::makeNewClone() {
+GhostBlock* GhostBlock::makeNewClone() const {
     GhostBlock* tmp = new GhostBlock(*this);
     
     tmp->setUniqueID(getUniqueID());

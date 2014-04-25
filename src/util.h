@@ -88,7 +88,7 @@ namespace util {
         extern unsigned int n_delete;
         extern map<void*, pair<string, size_t> > allocated;
         
-        ostream& print(ostream& out);
+        void report(ostream& out);
         size_t bytes();
     }
 #endif

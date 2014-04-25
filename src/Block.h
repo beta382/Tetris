@@ -137,7 +137,7 @@ class Block: public Drawable {
          *   
          * Returns: The address of the newly instantiated clone of this Block
          */
-        virtual Block* makeNewClone();
+        virtual Block* makeNewClone() const;
         
         /* ---------- Implemented from Drawable ---------- */
 

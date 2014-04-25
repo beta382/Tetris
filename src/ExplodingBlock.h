@@ -99,7 +99,7 @@ class ExplodingBlock: public Block {
          *   
          * Returns: The address of the newly instantiated clone of this ExplodingBlock
          */
-        ExplodingBlock* makeNewClone();
+        ExplodingBlock* makeNewClone() const;
 
 
         /*

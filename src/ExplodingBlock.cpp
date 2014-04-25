@@ -149,7 +149,7 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
  *   
  * Returns: The address of the newly instantiated clone of this ExplodingBlock
  */
-ExplodingBlock* ExplodingBlock::makeNewClone() {
+ExplodingBlock* ExplodingBlock::makeNewClone() const {
     ExplodingBlock* tmp = new ExplodingBlock(*this);
     
     tmp->setUniqueID(getUniqueID());

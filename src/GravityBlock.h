@@ -99,7 +99,7 @@ class GravityBlock: public Block {
          *   
          * Returns: The address of the newly instantiated clone of this GravityBlock
          */
-        GravityBlock* makeNewClone();
+        GravityBlock* makeNewClone() const;
 
 
         /*

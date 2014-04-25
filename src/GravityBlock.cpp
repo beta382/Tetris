@@ -132,7 +132,7 @@ int GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
  *   
  * Returns: The address of the newly instantiated clone of this GravityBlock
  */
-GravityBlock* GravityBlock::makeNewClone() {
+GravityBlock* GravityBlock::makeNewClone() const {
     GravityBlock* tmp = new GravityBlock(*this);
     
     tmp->setUniqueID(getUniqueID());

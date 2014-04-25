@@ -26,7 +26,16 @@ void util::wait(clock_t ms) {
     unsigned int leakcheck::n_delete = 0;
     map<void*, pair<string, size_t> > leakcheck::allocated;
     
-    ostream& leakcheck::print(ostream& out) {
+    void leakcheck::report(ostream& out) {
+        out << setfill('-') << setw(79) << "" << endl;
+        out << endl;
+        out << "n_new:    " << n_new << endl;
+        out << "n_delete: " << n_delete << endl;
+        out << endl;
+        out << "Currently have " << bytes() << " bytes allocated from " << 
+                allocated.size() << " objects." << endl;
+        out << setfill(' ');
+        
         for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin();
                 it != allocated.end(); it++)
         {
@@ -34,7 +43,8 @@ void util::wait(clock_t ms) {
                     it->second.second << endl;
         }
         
-        return out;
+        out << endl;
+        out << setfill('-') << setw(79) << "" << endl << endl;
     }
     
     size_t leakcheck::bytes() {
