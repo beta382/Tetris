@@ -90,8 +90,12 @@ GravityBlock& GravityBlock::operator =(const GravityBlock& rhs) {
  *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this GravityBlock within the blockField
  *   int y: The y-coordinate of this GravityBlock within the blockField
+ *   
+ * Returns: The number of points the special effect accumulated
  */
-void GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+int GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+    int points = 100;
+    
     bool didFall = true;
     while (didFall) {
         didFall = false;
@@ -119,6 +123,8 @@ void GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
             util::wait(100);
         }
     }
+    
+    return points;
 }
 
 /*

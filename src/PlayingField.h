@@ -109,8 +109,10 @@ class PlayingField: public Drawable {
          *   
          * Parameters:
          *   Shape* shape: A pointer to the Shape object to merge and delete
+         *   
+         * Returns: The number of points the merge accumulated
          */
-        void mergeAndDelete(Shape*);
+        int mergeAndDelete(Shape*);
         
         
         /*
@@ -264,8 +266,10 @@ class PlayingField: public Drawable {
          * 
          * Parameters:
          *   vector<int> clearableLines: The lines to clear
+         *   
+         * Returns: The number of points the line clear accumulated
          */
-        void doLineClear(vector<int>);
+        int doLineClear(vector<int>);
 
         /*
          * Checks the blockField for lines that are able to be cleared.
@@ -294,8 +298,10 @@ class PlayingField: public Drawable {
          *   vector<Shape*>& fallingShapes: A reference to the vector<Shape*> containing pointers
          *     to the  Shape objects currently falling; since these are separate from the
          *     blockField, they must be passed separately
+         *     
+         * Returns: The number of points the special effects accumulated
          */
-        void doClearedBlockEffects(Shape&, vector<Shape*>&);
+        int doClearedBlockEffects(Shape&, vector<Shape*>&);
 
         /*
          * Performs a falling animation for each of the Shapes pointed to by the pointers in the
@@ -306,8 +312,10 @@ class PlayingField: public Drawable {
          * Parameters:
          *   vector<Shape*>& fallingShapes: A vector of pointers to Shape objects that need to
          *     have a falling animation performed on them, may contain NULL pointers
+         *     
+         * Returns: The number of points the fall accumulated
          */
-        void doFall(vector<Shape*>&);
+        int doFall(vector<Shape*>&);
 
         
         /*

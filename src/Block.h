@@ -119,8 +119,10 @@ class Block: public Drawable {
          *     effect on
          *   int x: The x-coordinate of this Block within the blockField
          *   int y: The y-coordinate of this Block within the blockField
+         *   
+         * Returns: The number of points the special effect accumulated
          */
-        virtual void doEffect(vector<vector<Block*> >&, int x, int y);
+        virtual int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this Block, including it's uniqueID. Should be overridden by Block
