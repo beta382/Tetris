@@ -14,6 +14,7 @@
 #include "PlayingField.h"
 #include "TetrominoBase.h"
 #include "blocks.h"
+#include "util.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -27,15 +28,11 @@
  *   screen contains. Game IS NOT intended to be inherited from.
  */
 class Game: public Screen {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Game)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "Game");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
         
         /*
          * Instantiates a Game object using the passed foreground color or default values.

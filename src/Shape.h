@@ -12,6 +12,7 @@
 
 #include "Drawable.h"
 #include "Block.h"
+#include "util.h"
 
 #include <vector>
 
@@ -24,15 +25,11 @@
  *   for interfacing with and manipulating the Blocks. Shape IS intended to be inherited from.
  */
 class Shape: public Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Shape)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "Shape");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
 
         /*
          * Instantiates a Shape object using default values.

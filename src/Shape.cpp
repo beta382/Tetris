@@ -218,13 +218,12 @@ int Shape::getWidth() const {
     
     if (width != 0) {
         val = width*(blockSize+padding) - padding;
-    } else {
-        int min;
-        int max;
+    } else if (numBlocks() > 0) {
+        int min = -1, max = -1; // Coords can't be negative, this is safe
         
         for (int i = 0; i < numBlocks(); i++) {
             if (blocks[i]) {
-                if (i == 0) {
+                if (max == -1) {
                     min = blocks[i]->getLocationX();
                     max = min;
                 } else if (blocks[i]->getLocationX() < min) {
@@ -235,7 +234,9 @@ int Shape::getWidth() const {
             }
         }
         
-        val = max-min + blockSize;
+        if (max != -1) {
+            val = max-min + blockSize;
+        }
     }
     
     return val;
@@ -249,15 +250,14 @@ int Shape::getWidth() const {
 int Shape::getHeight() const {
     int val = 0;
     
-    if (height != 0) {
+    if (width != 0) {
         val = height*(blockSize+padding) - padding;
-    } else {
-        int min;
-        int max;
+    } else if (numBlocks() > 0) {
+        int min = -1, max = -1; // Coords can't be negative, this is safe
         
         for (int i = 0; i < numBlocks(); i++) {
             if (blocks[i]) {
-                if (i == 0) {
+                if (max == -1) {
                     min = blocks[i]->getLocationY();
                     max = min;
                 } else if (blocks[i]->getLocationY() < min) {
@@ -268,7 +268,9 @@ int Shape::getHeight() const {
             }
         }
         
-        val = max-min + blockSize;
+        if (max != -1) {
+            val = max-min + blockSize;
+        }
     }
     
     return val;

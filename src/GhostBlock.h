@@ -11,6 +11,7 @@
 #define GHOSTBLOCK_H_
 
 #include "Block.h"
+#include "util.h"
 
 /*
  * GhostBlock:
@@ -21,15 +22,11 @@
  *   end up. GhostBlock IS NOT intended to be inherited from.
  */
 class GhostBlock: public Block {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(GhostBlock)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "GhostBlock");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
 
         /*
          * Instantiates a GhostBlock object using default values.

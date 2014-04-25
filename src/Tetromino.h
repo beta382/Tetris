@@ -11,6 +11,7 @@
 #define TETROMINO_H_
 
 #include "TetrominoBase.h"
+#include "util.h"
 
 /*
  * Tetromino<BlockType>:
@@ -23,15 +24,11 @@
 
 template <typename BlockType>
 class Tetromino: public TetrominoBase {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Tetromino)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "Tetromino");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
         
         /*
          * Instantiates a Tetromino<BlockType> object using default values.

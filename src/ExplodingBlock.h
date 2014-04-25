@@ -12,6 +12,7 @@
 
 #include "Block.h"
 #include "Rectangle.h"
+#include "util.h"
 
 /*
  * ExplodingBlock:
@@ -22,15 +23,11 @@
  *   IS NOT intended to be inherited from.
  */
 class ExplodingBlock: public Block {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(ExplodingBlock)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "ExplodingBlock");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
 
         /*
          * Instantiates a ExplodingBlock object using default values.

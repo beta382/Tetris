@@ -14,7 +14,6 @@
 #include "util.h"
 
 #include <ctime>
-#include <iomanip>
 
 /*
  * Drawable:
@@ -24,15 +23,11 @@
  *   the constructors protected.
  */
 class Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Drawable)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "Drawable");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
     
         /*
          * Draws this Drawable object to the screen. Must be implimented by children of Drawable.

@@ -10,14 +10,15 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
-#include <cstdlib>
 #include <ctime>
-#include <map>
-#include <string>
-#include <ostream>
-#include <iomanip>
 
-using namespace std;
+#ifdef DO_LEAKCHECK
+    #include <cstdlib>
+    #include <map>
+    #include <string>
+    #include <ostream>
+    #include <iomanip>
+#endif
 
 /* ---------- Color codes ---------- */
 
@@ -63,42 +64,34 @@ namespace util {
     
 }
 
-struct leakcheck {
-    static unsigned int n_new;
-    static unsigned int n_delete;
-    static map<void*, pair<string, size_t> > allocated;
-    
-    static ostream& print(ostream& out) {
-        for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin(); it != allocated.end(); it++) {
-            out << left << setw(12) << it->first << setw(20) << it->second.first << it->second.second << endl;
-        }
-        
-        return out;
-    }
-    
-    static size_t bytes() {
-        size_t sum = 0;
-        
-        for(map<void*, pair<string, size_t> >::const_iterator it = allocated.begin(); it != allocated.end(); it++) {
-            sum += it->second.second;
-        }
-        
-        return sum;
-    }
-    
-    static void* alloc(size_t bytes, string id) {
-        void* mem = malloc(bytes);
-        n_new++;
-        allocated.insert(pair<void*, pair<string, size_t> >(mem, pair<string, size_t>(id, bytes)));
-        return mem;
-    }
+#ifdef DO_LEAKCHECK
 
-    static void dealloc(void* mem) throw () {
-        leakcheck::n_delete++;
-        leakcheck::allocated.erase(mem);
-        free(mem);
-    }
-};
+    #define _registerForLeakcheckWithID(id) \
+        public: \
+        void* operator new(size_t bytes) { \
+            void* mem = malloc(bytes); \
+            leakcheck::n_new++; \
+            leakcheck::allocated.insert(std::pair<void*, std::pair<std::string, size_t> > \
+                    (mem, std::pair<std::string, size_t>(#id, bytes))); \
+            return mem; \
+        } \
+        void operator delete(void* mem) { \
+            leakcheck::n_delete++; \
+            leakcheck::allocated.erase(mem); \
+            free(mem); \
+        }
+
+    using namespace std;
+    
+    struct leakcheck {
+        static unsigned int n_new;
+        static unsigned int n_delete;
+        static map<void*, pair<string, size_t> > allocated;
+        
+        static ostream& print(ostream& out);
+        static size_t bytes();
+    };
+#endif
 
 // More stuff later, maybe
 

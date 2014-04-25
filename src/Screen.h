@@ -12,6 +12,7 @@
 
 #include "Drawable.h"
 #include "Rectangle.h"
+#include "util.h"
 
 /*
  * Screen:
@@ -23,15 +24,11 @@
  *   enforced by making the constructors protected.
  */
 class Screen: public Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Screen)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "Screen");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
         
         /*
          * Performs an action based on the passed key. Must be implimented by children of Screen.

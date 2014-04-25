@@ -11,6 +11,7 @@
 #define GRAVITYBLOCK_H_
 
 #include "Block.h"
+#include "util.h"
 
 #include <ctime>
 
@@ -23,15 +24,11 @@
  *   it is cleared. GravityBlock IS NOT intended to be inherited from.
  */
 class GravityBlock: public Block {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(GravityBlock)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "GravityBlock");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
 
         /*
          * Instantiates a GravityBlock object using default values.

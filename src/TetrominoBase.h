@@ -11,6 +11,7 @@
 #define TETROMINOBASE_H_
 
 #include "Shape.h"
+#include "util.h"
 
 /*
  * TetrominoShape:
@@ -29,15 +30,11 @@ enum TetrominoShape  {I, O, T, J, L, S, Z};
  *   making the constructors protected.
  */
 class TetrominoBase: public Shape {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(TetrominoBase)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "TetrominoBase");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
 
         /*
          * Rotates this TetrominoBase clockwise, setting the locations of it's Blocks accordingly

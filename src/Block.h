@@ -11,6 +11,8 @@
 #define BLOCK_H_
 
 #include "Drawable.h"
+#include "util.h"
+
 #include <vector>
 
 /*
@@ -22,15 +24,11 @@
  *   Block IS intended to be inherited from.
  */
 class Block: public Drawable {
+#ifdef DO_LEAKCHECK
+    _registerForLeakcheckWithID(Block)
+#endif
+    
     public:
-        
-        void* operator new(size_t bytes) {
-            return leakcheck::alloc(bytes, "Block");
-        }
-        
-        void operator delete(void* mem) {
-            leakcheck::dealloc(mem);
-        }
 
         /*
          * Instantiates a Block object using default values.
