@@ -83,14 +83,14 @@ namespace util {
 
     using namespace std;
     
-    struct leakcheck {
-        static unsigned int n_new;
-        static unsigned int n_delete;
-        static map<void*, pair<string, size_t> > allocated;
+    namespace leakcheck {
+        extern unsigned int n_new;
+        extern unsigned int n_delete;
+        extern map<void*, pair<string, size_t> > allocated;
         
-        static ostream& print(ostream& out);
-        static size_t bytes();
-    };
+        ostream& print(ostream& out);
+        size_t bytes();
+    }
 #endif
 
 // More stuff later, maybe
