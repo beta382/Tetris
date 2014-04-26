@@ -168,6 +168,15 @@ _registerForLeakcheckWithID(Game)
          * Background rectangle border for next block
          */
         MyRectangle bgRectNext2;
+        
+        
+        /* ---------- Implimented from Screen ---------- */
+        
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter.
+         */
+        void applyLayout();
 };
 
 

@@ -820,8 +820,8 @@ void PlayingField::setLocation(int x, int y) {
         }
     }
     
-    bgRect.setLocation(bgRect.getLocationX()+dX, getLocationY()+dY);
-    bgRect2.setLocation(bgRect2.getLocationX()+dX, getLocationY()+dY);
+    bgRect.setLocation(bgRect.getLocationX()+dX, bgRect.getLocationY()+dY);
+    bgRect2.setLocation(bgRect2.getLocationX()+dX, bgRect2.getLocationY()+dY);
     
     draw();
     

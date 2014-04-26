@@ -77,6 +77,13 @@ _registerForLeakcheckWithID(Screen)
         Screen& operator =(const Screen& other);
         
         /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        virtual void applyLayout() = 0;
+        
+        /*
          * Represents the background fill for this Screen object.
          */
         MyRectangle bgRect;

@@ -21,13 +21,14 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
-        field(10+x, 10+y, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
-        bgRectNext(field.getLocationX()+field.getWidth() + 20, 250, 
-                field.getTotalBlockSize()*5+field.getPadding(), 
+        field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
+        bgRectNext(0, 0, field.getTotalBlockSize()*5+field.getPadding(), 
                 field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
-        bgRectNext2(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2,
-                bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, foreground)
+        bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
+                foreground)
 {
+    // We initialize member data with 0s for coordinates, we actually apply the layout here
+    applyLayout();
     init();
 }
 
@@ -150,7 +151,7 @@ Screen* Game::respondToClick(Click click) {
  * Performs actions that should happen continuously in the background on this Screen.
  */
 void Game::doBackground() {
-    // Just redraw for now
+    applyLayout();
     draw();
 }
 
@@ -184,6 +185,24 @@ void Game::erase() {
         
         isVisible = false;
     }
+}
+
+
+/*
+ * Sets Drawable member data width's, height's, and/or locations according to the size of
+ *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+ *   the screen size changes.
+ */
+void Game::applyLayout() {
+    bgRect.setWidth(g->getWidth());
+    bgRect.setHeight(g->getHeight());
+    
+    field.setLocation(10, 10);
+    
+    bgRectNext.setLocation(field.getLocationX()+field.getWidth()+20, 
+            field.getLocationY()+field.getHeight()-bgRectNext.getHeight()-50);
+    
+    bgRectNext2.setLocation(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2);
 }
 
 
