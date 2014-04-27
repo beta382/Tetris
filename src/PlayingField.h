@@ -430,7 +430,8 @@ Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) cons
         getBlockSize(), getPadding(), type, getForeground()
     );
     
-    // Move us to the top of the screen since we spawned at a general location above it
+    // Move us to the top of the screen and center since we spawned at a general location above it
+    // and to the right
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
@@ -447,6 +448,8 @@ Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) cons
         }
     }
     
+    // Try new locations until we find one that works, or can't find one, in which case we return
+    // NULL
     while(!canSpawn) {
         canSpawn = true;
         for (int i = 0; tetromino && i < tetromino->numBlocks() && canSpawn; i++) {
