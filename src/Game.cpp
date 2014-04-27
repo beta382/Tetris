@@ -408,7 +408,6 @@ void Game::doRotateCCWWithKick() {
 void Game::doSoftFall() {
     while(field.canShiftDown(currentTetromino)) {
         doShiftDown();
-        g->Draw(); // Force redraw
         util::wait(25, g);
     }
 }

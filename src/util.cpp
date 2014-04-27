@@ -19,6 +19,8 @@
 void util::wait(clock_t ms, GLUT_Plotter* g) {
     clock_t start = clock();
     
+    g->Draw(); // Force redraw before we wait
+    
     while (clock() < start+ms);
     
     // Referenced http://freeglut.sourceforge.net/docs/api.php
