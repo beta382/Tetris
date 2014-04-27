@@ -88,9 +88,6 @@ Screen* Game::respondToKey(int key) {
                 nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
             }
             break;
-        case 'g': // Spawn special tetromino for testing
-            doResetTetromino<ExplodingBlock>();
-            break;
         default:
             cout << key << endl;
             break;
@@ -428,9 +425,9 @@ bool Game::doJoinAndRespawn() {
         
     // Spawn a new tetromino and create a shadow in the same place
     
-    if (blockType < (1 << 15)/20) {
+    if (blockType < (1 << 15)/20) { // 1/20
         currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape);
-    } else if (blockType < (2*(1 << 15))/20) {
+    } else if (blockType < ((1 << 15)/20)+((1 << 15))/30) { // 1/30
         currentTetromino = field.spawnNewTetromino<GravityBlock>(shape);
     } else {
         currentTetromino = field.spawnNewTetromino<Block>(shape);
