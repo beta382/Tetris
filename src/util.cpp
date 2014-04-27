@@ -38,6 +38,15 @@ void util::wait(clock_t ms, GLUT_Plotter* g) {
 map<void*, pair<string, size_t> > leakcheck::allocated;
 
 #ifdef DO_LEAKCHECK
+
+    /*
+     * Reports data on all objects on the heap being tracked by leakcheck, as well as a concise
+     *   summary of the number of tracked objects on the heap and the number of bytes they are
+     *   collectively using.
+     * 
+     * Parameters:
+     *   ostream& out: The output stream to send the report
+     */
     void leakcheck::report(ostream& out) {
         out << setfill('-') << setw(79) << "" << endl;
         out << setfill(' ') << endl;
@@ -61,6 +70,9 @@ map<void*, pair<string, size_t> > leakcheck::allocated;
         out << setfill('-') << setw(79) << "" << endl;
     }
     
+    /*
+     * Returns the collective number of bytes of all objects on the heap being tracked by leakcheck
+     */
     size_t leakcheck::bytes() {
         size_t sum = 0;
         

@@ -68,6 +68,18 @@ namespace util {
 }
 
 #ifdef DO_LEAKCHECK
+
+    /*
+     * This is a macro for leakcheck which you are supposed to add somewhere in your object
+     *   declaration if you want dynamically allocated instances of that object to be tracked.
+     *  
+     * Overrides 'operator new' and 'operator delete' for the class in question with an
+     *   implementation that logs dynamic allocations of tracked objects to a map structure, which
+     *   can be displayed at any time by calling leakcheck::report().
+     *   
+     * id should be the string representation of the name of the object you are tracking, WITHOUT
+     *   string-literal double quotes.
+     */
     #define _registerForLeakcheckWithID(id) \
         public: \
         void* operator new(size_t bytes) { \
@@ -85,9 +97,25 @@ namespace util {
 #endif
 
 namespace leakcheck {
+    /*
+     * Holds the address, identifier, and number of bytes of each currently allocated object
+     *   being tracked by leakcheck on the heap.
+     */
     extern map<void*, pair<string, size_t> > allocated;
     
+    /*
+     * Reports data on all objects on the heap being tracked by leakcheck, as well as a concise
+     *   summary of the number of tracked objects on the heap and the number of bytes they are
+     *   collectively using.
+     * 
+     * Parameters:
+     *   ostream& out: The output stream to send the report
+     */
     void report(ostream& out);
+    
+    /*
+     * Returns the collective number of bytes of all objects on the heap being tracked by leakcheck
+     */
     size_t bytes();
 }
 
