@@ -23,6 +23,7 @@ Game::Game(unsigned int color):
 Screen(color),
         prevTime(0), tick(500),
         field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
+        currentTetromino(NULL), shadow(NULL),
         bgRectNext(0, 0, field.getTotalBlockSize()*5+field.getPadding(), 
                 field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
@@ -200,11 +201,25 @@ void Game::erase() {
  *   the screen size changes.
  */
 void Game::applyLayout() {
-    bgRect.setWidth(g->getWidth());
-    bgRect.setHeight(g->getHeight());
+    setWidth(g->getWidth());
+    setHeight(g->getHeight());
+
+    bgRect.setWidth(getWidth());
+    bgRect.setHeight(getHeight());
     
-    field.setLocation(10, 10);
+    int fieldDx = 10-field.getLocationX();
+    int fieldDy = 10-field.getLocationY();
+    field.setLocation(field.getLocationX()+fieldDx, field.getLocationY()+fieldDy);
     
+    if (currentTetromino) {
+        currentTetromino->setLocation(currentTetromino->getLocationX()+fieldDx,
+            currentTetromino->getLocationY()+fieldDy);
+    }
+    
+    if (shadow) {
+        shadow->setLocation(shadow->getLocationX()+fieldDx,  shadow->getLocationY()+fieldDy);
+    }
+
     bgRectNext.setLocation(field.getLocationX()+field.getWidth()+20, 
             field.getLocationY()+field.getHeight()-bgRectNext.getHeight()-50);
     
