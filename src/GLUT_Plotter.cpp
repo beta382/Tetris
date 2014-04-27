@@ -13,7 +13,7 @@ GLUT_Plotter::GLUT_Plotter(int w, int h) {
     g = this;
 
     init();
-    callBacks();
+    callBacks(true);
     Draw();
 
 }
@@ -137,11 +137,18 @@ void GLUT_Plotter::plot(int x, int y) {
     setpixel(buffer, x, y, r, g, b, width);
 }
 
-void GLUT_Plotter::callBacks() {
+void GLUT_Plotter::callBacks(bool _register) {
     RegisterDisplayFunc(&drawFunction);
-    RegisterKeyboardFunc(keyboardFunction);
-    RegisterSpecialKeyboardFunc(SpecialKeyboardFunction);
-    RegisterMouseFunc(mouseFunction);
+    
+    if (_register) {
+        RegisterKeyboardFunc(keyboardFunction);
+        RegisterSpecialKeyboardFunc(SpecialKeyboardFunction);
+        RegisterMouseFunc(mouseFunction);
+    } else {
+        RegisterKeyboardFunc(NULL);
+        RegisterSpecialKeyboardFunc(NULL);
+        RegisterMouseFunc(NULL);
+    }
 }
 
 unsigned char GLUT_Plotter::getKey() {

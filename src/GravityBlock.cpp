@@ -120,7 +120,7 @@ int GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
         g->Draw(); // Force screen redraw
         
         if (didFall) {
-            util::wait(100);
+            util::wait(100, g);
         }
     }
     

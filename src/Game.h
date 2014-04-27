@@ -105,22 +105,22 @@ _registerForLeakcheckWithID(Game)
         void init();
 
         /*
-         * Properly performs a shift up on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift up on currentTetromino, performing checks.
          */
         void doShiftUp();
         
         /*
-         * Properly performs a shift down on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift down on currentTetromino, performing checks.
          */
         void doShiftDown();
         
         /*
-         * Properly performs a shift left on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift left on currentTetromino, performing checks.
          */
         void doShiftLeft();
         
         /*
-         * Properly performs a shift right on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift right on currentTetromino, performing checks.
          */
         void doShiftRight();
         
@@ -134,6 +134,24 @@ _registerForLeakcheckWithID(Game)
          *   checks.
          */
         void doRotateCCW();
+        
+        /*
+         * Properly performs a clockwise rotation on currentTetromino, performing checks and wall
+         *   kicks.
+         */
+        void doRotateCWWithKick();
+        
+        /*
+         * Properly performs a counter-clockwise rotation on currentTetromino, performing checks
+         *   and wall kicks.
+         */
+        void doRotateCCWWithKick();
+        
+        /*
+         * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the
+         *   screen without merging
+         */
+        void doSoftFall();
         
         /*
          * Resets the currentTetromino and spawns a new one. Exists for testing purposes.

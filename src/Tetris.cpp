@@ -46,7 +46,7 @@ void Tetris::Play (void) {
         }
     }
 
-    checkNewScreen();
+    _checkNewScreen();
     
     //Check for mouse click
     while (g->click()) {
@@ -55,11 +55,11 @@ void Tetris::Play (void) {
         newScreen = screen->respondToClick(c);
     }
     
-    checkNewScreen();
+    _checkNewScreen();
     
     //Do the screen's background function
     newScreen = screen->doBackground();
-    checkNewScreen();
+    _checkNewScreen();
     
     // Update screen - draw game
     g->Draw();

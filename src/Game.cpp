@@ -60,7 +60,7 @@ Screen* Game::respondToKey(int key) {
     switch (key) {
         case 'w':
         case Key::UP: // UP
-            doShiftUp();
+            doSoftFall();
             break;
         case 'a':
         case Key::LEFT: // LEFT
@@ -75,50 +75,10 @@ Screen* Game::respondToKey(int key) {
             doShiftRight();
             break;
         case 'q': // Rotate CCW
-            // If we can rotate the current tetromino CCW within the block field, do so
-            if (field.canRotateCCW(currentTetromino)) {
-                doRotateCCW();
-            } else { // If we can't, try doing a wall kick
-                currentTetromino->erase();
-                currentTetromino->shiftLeft();
-                if (field.canRotateCCW(currentTetromino)) {
-                    doRotateCCW();
-                } else { // Reset, try other direction
-                    currentTetromino->shiftRight();
-                    currentTetromino->shiftRight();
-                    
-                    if (field.canRotateCCW(currentTetromino)) {
-                        doRotateCCW();
-                    } else { // Reset
-                        currentTetromino->shiftLeft();
-                        currentTetromino->draw();
-                    }
-                }
-            }
-            
+            doRotateCCWWithKick();
             break;
         case 'e': // Rotate CW
-            // If we can rotate the current tetromino CW within the block field, do so
-            if (field.canRotateCW(currentTetromino)) {
-                doRotateCW();
-            } else { // If we can't, try doing a wall kick
-                currentTetromino->erase();
-                currentTetromino->shiftRight();
-                if (field.canRotateCW(currentTetromino)) {
-                    doRotateCW();
-                } else { // Reset, try other direction
-                    currentTetromino->shiftLeft();
-                    currentTetromino->shiftLeft();
-                    
-                    if (field.canRotateCW(currentTetromino)) {
-                        doRotateCW();
-                    } else { // Reset
-                        currentTetromino->shiftRight();
-                        currentTetromino->draw();
-                    }
-                }
-            }
-            
+            doRotateCWWithKick();
             break;
         case 'n': // New tetromino. This is solely for testing, it spawns a new tetromino without merging.
             doResetTetromino<Block>();
@@ -273,7 +233,7 @@ void Game::init() {
 }
 
 /*
- * Properly performs a shift up on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift up on currentTetromino, performing checks.
  */
 void Game::doShiftUp() {
     if (field.canShiftUp(currentTetromino)) {
@@ -284,7 +244,7 @@ void Game::doShiftUp() {
 }
 
 /*
- * Properly performs a shift down on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift down on currentTetromino, performing checks.
  */
 void Game::doShiftDown() {
     if (field.canShiftDown(currentTetromino)) {
@@ -297,7 +257,7 @@ void Game::doShiftDown() {
 }
 
 /*
- * Properly performs a shift left on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift left on currentTetromino, performing checks.
  */
 void Game::doShiftLeft() {
     if (field.canShiftLeft(currentTetromino)) {
@@ -319,7 +279,7 @@ void Game::doShiftLeft() {
 }
 
 /*
- * Properly performs a shift right on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift right on currentTetromino, performing checks.
  */
 void Game::doShiftRight() {
     if (field.canShiftRight(currentTetromino)) {
@@ -386,6 +346,71 @@ void Game::doRotateCCW() {
     // shadow
     shadow->draw();
     currentTetromino->draw();
+}
+
+/*
+ * Properly performs a clockwise rotation on currentTetromino, performing checks and wall kicks.
+ */
+void Game::doRotateCWWithKick() {
+    // If we can rotate the current tetromino CW within the block field, do so
+    if (field.canRotateCW(currentTetromino)) {
+        doRotateCW();
+    } else { // If we can't, try doing a wall kick
+        currentTetromino->erase();
+        currentTetromino->shiftRight();
+        if (field.canRotateCW(currentTetromino)) {
+            doRotateCW();
+        } else { // Reset, try other direction
+            currentTetromino->shiftLeft();
+            currentTetromino->shiftLeft();
+            
+            if (field.canRotateCW(currentTetromino)) {
+                doRotateCW();
+            } else { // Reset
+                currentTetromino->shiftRight();
+                currentTetromino->draw();
+            }
+        }
+    }
+}
+
+/*
+ * Properly performs a counter-clockwise rotation on currentTetromino, performing checks and wall
+ *   kicks.
+ */
+void Game::doRotateCCWWithKick() {
+    // If we can rotate the current tetromino CCW within the block field, do so
+    if (field.canRotateCCW(currentTetromino)) {
+        doRotateCCW();
+    } else { // If we can't, try doing a wall kick
+        currentTetromino->erase();
+        currentTetromino->shiftLeft();
+        if (field.canRotateCCW(currentTetromino)) {
+            doRotateCCW();
+        } else { // Reset, try other direction
+            currentTetromino->shiftRight();
+            currentTetromino->shiftRight();
+            
+            if (field.canRotateCCW(currentTetromino)) {
+                doRotateCCW();
+            } else { // Reset
+                currentTetromino->shiftLeft();
+                currentTetromino->draw();
+            }
+        }
+    }
+}
+
+/*
+ * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the screen
+ *   without merging
+ */
+void Game::doSoftFall() {
+    while(field.canShiftDown(currentTetromino)) {
+        doShiftDown();
+        g->Draw(); // Force redraw
+        util::wait(25, g);
+    }
 }
 
 /*

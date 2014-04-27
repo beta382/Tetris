@@ -195,12 +195,12 @@ void Drawable::blink(int times, clock_t interval) {
         draw();
         g->Draw(); // Force screen redraw
         
-        util::wait(interval);
+        util::wait(interval, g);
         
         erase();
         g->Draw(); // Force screen redraw
         
-        util::wait(interval);
+        util::wait(interval, g);
     }
 }
 

@@ -14,11 +14,23 @@
  * 
  * Parameters:
  *   unsigned int ms: The number of milliseconds to wait
+ *   GLUT_Plotter* g: A pointer to a GLUT_Plotter object we should prevent from registering events
  */
-void util::wait(clock_t ms) {
+void util::wait(clock_t ms, GLUT_Plotter* g) {
     clock_t start = clock();
     
     while (clock() < start+ms);
+    
+    // Referenced http://freeglut.sourceforge.net/docs/api.php
+    
+    // We might have gotten key-presses during this time, so remove all our glut callbacks
+    g->callBacks(false);
+    
+    // Do a single callback loop to eat events
+    glutMainLoopEvent();
+    
+    // Reinstate callbacks
+    g->callBacks(true);
 }
 
 map<void*, pair<string, size_t> > leakcheck::allocated;

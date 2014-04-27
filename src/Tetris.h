@@ -13,7 +13,7 @@
  * A handy macro for code consolidation within Play, since the code in question can't go in a
  *   function. Checks if we have a new screen to go to, and goes to it if we do.
  */
-#define checkNewScreen() \
+#define _checkNewScreen() \
     if (newScreen) { \
         delete screen; \
         screen = newScreen; \

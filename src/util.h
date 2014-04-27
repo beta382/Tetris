@@ -10,6 +10,8 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include "GLUT_Plotter.h"
+
 #include <ctime>
 
 #include <cstdlib>
@@ -59,9 +61,10 @@ namespace util {
      * 
      * Parameters:
      *   clock_t ms: The number of milliseconds to wait
+     *   GLUT_Plotter* g: A pointer to a GLUT_Plotter object we should prevent from registering
+     *     events
      */
-    void wait(clock_t ms);
-    
+    void wait(clock_t ms, GLUT_Plotter* g);
 }
 
 #ifdef DO_LEAKCHECK
