@@ -2,7 +2,7 @@
  * Author:                 Austin Hash
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Apr  3, 2014
  * Date last modified:     Apr 27, 2014
  */
@@ -80,7 +80,7 @@ Screen* Game::respondToKey(int key) {
             doRotateCWWithKick();
             break;
         case 'n': // New tetromino. This is solely for testing, it spawns a new tetromino without merging.
-            doResetTetromino<Block>();
+            doResetTetromino<RightMagnetBlock>();
             break;
         case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
             if (!doJoinAndRespawn()) {

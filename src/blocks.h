@@ -14,6 +14,8 @@
 #include "GhostBlock.h"
 #include "ExplodingBlock.h"
 #include "GravityBlock.h"
+#include "LeftMagnetBlock.h"
+#include "RightMagnetBlock.h"
 
 // Include more Block subclasses here, then just include this file instead of all the subclasses
 
