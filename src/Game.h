@@ -167,9 +167,11 @@ _registerForLeakcheckWithID(Game)
         bool doJoinAndRespawn();
         
         /*
-         * Used as a game "tick" marker for automatic tetromino falling
+         * Used as a game "tick" marker for automatic tetromino falling, and the duration of the
+         *   tick itself
          */
         clock_t prevTime;
+        clock_t tick;
         
         /*
          * PlayingField object that represents the area of main gameplay.

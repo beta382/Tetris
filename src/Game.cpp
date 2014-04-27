@@ -21,7 +21,7 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
-        prevTime(0),
+        prevTime(0), tick(500),
         field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
         bgRectNext(0, 0, field.getTotalBlockSize()*5+field.getPadding(), 
                 field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
@@ -119,7 +119,10 @@ Screen* Game::respondToClick(Click click) {
 Screen* Game::doBackground() {
     Screen* nextScreen = NULL;
     
-    // If we aren't initialized, initialize
+    /* 
+     * If we aren't initialized, initialize. We didn't initialize earlier because we don't want the 
+     *   clock to start before we need it to.
+     */
     if (prevTime == 0) {
         prevTime = clock();
     }
@@ -129,7 +132,7 @@ Screen* Game::doBackground() {
     applyLayout();
     draw();
     
-    if (curTime > prevTime+500) {
+    if (curTime > prevTime+tick) {
         if (field.canShiftDown(currentTetromino)) {
             doShiftDown();
         } else if (!doJoinAndRespawn()) {
@@ -406,6 +409,13 @@ void Game::doSoftFall() {
     while(field.canShiftDown(currentTetromino)) {
         doShiftDown();
         util::wait(25, g);
+    }
+    
+    // If we can't do any "after-fall" movements, mark for locking
+    if(!(field.canShiftLeft(currentTetromino) || field.canShiftRight(currentTetromino) ||
+         field.canRotateCCW(currentTetromino) || field.canRotateCW(currentTetromino)))
+    {
+        prevTime = clock()-tick;
     }
 }
 
