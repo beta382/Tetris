@@ -89,6 +89,11 @@ Screen* Game::respondToKey(int key) {
             break;
         case 'p':
             retain = true;
+            
+            // Set out previous time back so that when we return, we have a proper offset until the
+            // next tick
+            prevTime -= clock();
+            
             nextScreen = new PauseScreen(this);
             break;
         default:
@@ -124,18 +129,18 @@ Screen* Game::respondToClick(Click click) {
 Screen* Game::doBackground() {
     Screen* nextScreen = NULL;
     
+    applyLayout();
+    draw();
+
+    clock_t curTime = clock();
+    
     /* 
      * If we aren't initialized, initialize. We didn't initialize earlier because we don't want the 
      *   clock to start before we need it to.
      */
-    if (prevTime == 0) {
-        prevTime = clock();
+    if (prevTime <= 0) {
+        prevTime += curTime;
     }
-    
-    clock_t curTime = clock();
-    
-    applyLayout();
-    draw();
     
     if (curTime > prevTime+tick) {
         if (field.canShiftDown(currentTetromino)) {

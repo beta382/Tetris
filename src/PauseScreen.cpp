@@ -75,6 +75,8 @@ Screen* PauseScreen::respondToClick(Click click) {
 Screen* PauseScreen::doBackground() {
     Screen* nextScreen = NULL;
     
+    draw();
+    
     return nextScreen;
 }
 
