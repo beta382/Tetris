@@ -118,30 +118,11 @@ void PauseScreen::erase() {
  */
 void PauseScreen::init() {
     applyLayout();
-    
-    /*
-     * reinterpret_cast necessary since glut is stupid and doesn't take unsigned chars. I need to
-     *   do math on them as if they were unsigned, and I can't static_cast since all I have is a
-     *   pointer.
-     */
-    unsigned char* sharedPixelBuffer = reinterpret_cast<unsigned char*>(g->getBuffer());
+
+    char* sharedPixelBuffer = g->getBuffer();
     
     // Darkens the screen
     for (int i = 0; i < g->getBufferLen(); i++) {
-        sharedPixelBuffer[i] /= 2;
+        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/2;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

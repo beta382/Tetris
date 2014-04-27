@@ -14,6 +14,14 @@
 #include "Game.h"
 #include "util.h"
 
+/*
+ * PauseScreen:
+ *
+ * Inherits from Screen.
+ *
+ * PauseScreen is intended to represent a paused screen, and be a wrapper for everything that the
+ *   pause screen contains. PauseScreen IS NOT intended to be inherited from.
+ */
 class PauseScreen: public Screen {
 _registerForLeakcheckWithID(PauseScreen)
     public:
