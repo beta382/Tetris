@@ -54,6 +54,8 @@ Game::~Game() {
  *   NULL if control should not shift to another Screen object
  */
 Screen* Game::respondToKey(int key) {
+    Screen* nextScreen = NULL;
+    
     switch (key) {
         case 'w':
         case Key::UP: // UP
@@ -121,16 +123,19 @@ Screen* Game::respondToKey(int key) {
             doResetTetromino<Block>();
             break;
         case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
-            doJoinAndRespawn();
+            if (!doJoinAndRespawn()) {
+                nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
+            }
             break;
         case 'g': // Spawn special tetromino for testing
             doResetTetromino<ExplodingBlock>();
             break;
         default:
             cout << key << endl;
+            break;
     }
     
-    return NULL;
+    return nextScreen;
 }
 
 /*
@@ -164,8 +169,14 @@ void Game::doBackground() {
 void Game::draw() {
     bgRect.draw();
     field.draw();
-    shadow->draw();
-    currentTetromino->draw();
+    
+    if (shadow) {
+        shadow->draw();
+    }
+    
+    if (currentTetromino) {
+        currentTetromino->draw();
+    }
     
     bgRectNext2.draw();
     bgRectNext.draw();
@@ -178,8 +189,14 @@ void Game::draw() {
  */
 void Game::erase() {
     if (isVisible) {
-        currentTetromino->erase();
-        shadow->erase();
+        if (currentTetromino) {
+            currentTetromino->erase();
+        }
+        
+        if (shadow) {   
+            shadow->erase();
+        }
+        
         field.erase();
         bgRect.erase();
         
@@ -346,35 +363,46 @@ void Game::doRotateCCW() {
 
 /*
  * Joins the currentTetromino with the field and spawns a new one.
+ * 
+ * Returns: True if a Tetromino could be successfully spawned, false otherwise
  */
-void Game::doJoinAndRespawn() {
-    delete shadow;
+bool Game::doJoinAndRespawn() {
+    bool couldSpawn;
+    
     field.mergeAndDelete(currentTetromino);
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
-    int blockType = (rand()*rand())%(1 << 16); // 16-bit number, but rand maxes at 0x7FFF
+    int blockType = rand()%(1 << 15); // Rand maxes at 0x7FFF, 15-bit number
         
     // Spawn a new tetromino and create a shadow in the same place
     
-    if (blockType < (1 << 16)/20) {
+    if (blockType < (1 << 15)/20) {
         currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape);
-    } else if (blockType < (2*(1 << 16))/20) {
+    } else if (blockType < (2*(1 << 15))/20) {
         currentTetromino = field.spawnNewTetromino<GravityBlock>(shape);
     } else {
         currentTetromino = field.spawnNewTetromino<Block>(shape);
     }
     
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
-            field.getForeground());
+    couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
     
-    // Have the shadow fall
-    while (field.canShiftDown(shadow)) {
-        shadow->shiftDown();
+    if (couldSpawn) {
+        delete shadow;
+        
+        shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
+                currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+                field.getForeground());
+        
+        // Have the shadow fall
+        while (field.canShiftDown(shadow)) {
+            shadow->shiftDown();
+        }
+        
+        // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
+        shadow->draw();
+        currentTetromino->draw();
     }
     
-    // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
-    shadow->draw();
-    currentTetromino->draw();
+    return couldSpawn;
 }

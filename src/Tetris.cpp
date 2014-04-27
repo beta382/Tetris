@@ -40,9 +40,9 @@ void Tetris::Play (void) {
             case 'p':
                 leakcheck::report(cout);
                 break;
-            
             default:
                 newScreen = screen->respondToKey(k);
+                break;
         }
     }
     

@@ -430,14 +430,36 @@ Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) cons
         getBlockSize(), getPadding(), type, getForeground()
     );
     
+    // Move us to the top of the screen since we spawned at a general location above it
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
         tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
     
-    // TODO: Later on, change the spawn point based on if it can actually spawn there.
-    // Probably return NULL if we can't spawn period, which would special-case a "game over"
+    // Check to see if this is a valid location
+    bool canSpawn = true;
+    for (int i = 0; i < tetromino->numBlocks() && canSpawn; i++) {
+        if(!couldAdd(tetromino->getBlock(i))) {
+            canSpawn = false;
+            tetromino->setLocation(getLocationX()+borderWidth+getPadding(),
+                    tetromino->getLocationY()); // Move us all the way to the left
+        }
+    }
+    
+    while(!canSpawn) {
+        canSpawn = true;
+        for (int i = 0; tetromino && i < tetromino->numBlocks() && canSpawn; i++) {
+            if(xIndexFromLocation(tetromino->getBlock(i)) > width) {
+                delete tetromino;
+                tetromino = NULL;
+            } else if(!couldAdd(tetromino->getBlock(i))) {
+                canSpawn = false;
+                tetromino->setLocation(tetromino->getLocationX()+getTotalBlockSize(), 
+                        tetromino->getLocationY());
+            }
+        }
+    }
     
     return tetromino;
 }
