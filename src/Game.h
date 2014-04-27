@@ -72,8 +72,11 @@ _registerForLeakcheckWithID(Game)
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
+         * 
+         * Returns: A pointer to the Screen object control should shift to after this function
+         *   exits, or NULL if control should not shift to another Screen object
          */
-        void doBackground();
+        Screen* doBackground();
         
         
         /* ---------- Implemented from Drawable ---------- */
@@ -144,6 +147,11 @@ _registerForLeakcheckWithID(Game)
          * Returns: True if a Tetromino could be successfully spawned, false otherwise
          */
         bool doJoinAndRespawn();
+        
+        /*
+         * Used as a game "tick" marker for automatic tetromino falling
+         */
+        clock_t prevTime;
         
         /*
          * PlayingField object that represents the area of main gameplay.

@@ -52,9 +52,12 @@ _registerForLeakcheckWithID(Screen)
         
         /*
          * Performs actions that should happen continuously in the background on this Screen. Must
-         *   be implimented by children of Drawable.
+         *   be implimented by children of Screen.
+         * 
+         * Returns: A pointer to the Screen object control should shift to after this function
+         *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual void doBackground() = 0;
+        virtual Screen* doBackground() = 0;
     protected:
         
         /*

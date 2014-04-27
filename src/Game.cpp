@@ -21,6 +21,7 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
+        prevTime(0),
         field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
         bgRectNext(0, 0, field.getTotalBlockSize()*5+field.getPadding(), 
                 field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
@@ -154,10 +155,34 @@ Screen* Game::respondToClick(Click click) {
 
 /*
  * Performs actions that should happen continuously in the background on this Screen.
+ * 
+ * Returns: A pointer to the Screen object control should shift to after this function exits, or
+ *   NULL if control should not shift to another Screen object
  */
-void Game::doBackground() {
+Screen* Game::doBackground() {
+    Screen* nextScreen = NULL;
+    
+    // If we aren't initialized, initialize
+    if (prevTime == 0) {
+        prevTime = clock();
+    }
+    
+    clock_t curTime = clock();
+    
     applyLayout();
     draw();
+    
+    if (curTime > prevTime+500) {
+        if (field.canShiftDown(currentTetromino)) {
+            doShiftDown();
+        } else if (!doJoinAndRespawn()) {
+            nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
+        }
+        
+        prevTime = curTime;
+    }
+
+    return nextScreen;
 }
 
 
@@ -266,6 +291,8 @@ void Game::doShiftDown() {
         currentTetromino->erase();
         currentTetromino->shiftDown();
         currentTetromino->draw();
+        
+        prevTime = clock();
     }
 }
 
@@ -400,8 +427,7 @@ bool Game::doJoinAndRespawn() {
         }
         
         // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
-        shadow->draw();
-        currentTetromino->draw();
+        draw();
     }
     
     return couldSpawn;

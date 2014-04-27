@@ -45,14 +45,8 @@ void Tetris::Play (void) {
                 break;
         }
     }
-    
-    // If we don't get NULL back from respondToKey, it means we went to a new screen, so delete the old screen and 
-    // set it to the new screen, and then exit this function
-    if (newScreen) {
-        delete screen;
-        screen = newScreen;
-        return;
-    }
+
+    checkNewScreen();
     
     //Check for mouse click
     while (g->click()) {
@@ -61,16 +55,11 @@ void Tetris::Play (void) {
         newScreen = screen->respondToClick(c);
     }
     
-    // If we don't get NULL back from respondToClick, it means we went to a new screen, so delete the old screen and 
-    // set it to the new screen, and then exit this function
-    if (newScreen) {
-        delete screen;
-        screen = newScreen;
-        return;
-    }
+    checkNewScreen();
     
     //Do the screen's background function
-    screen->doBackground();
+    newScreen = screen->doBackground();
+    checkNewScreen();
     
     // Update screen - draw game
     g->Draw();
