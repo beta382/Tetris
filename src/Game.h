@@ -4,13 +4,14 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 27, 2014
  */
 
 #ifndef GAMESCREEN_H_
 #define GAMESCREEN_H_
 
 #include "Screen.h"
+#include "PauseScreen.h"
 #include "PlayingField.h"
 #include "TetrominoBase.h"
 #include "blocks.h"
@@ -149,7 +150,7 @@ _registerForLeakcheckWithID(Game)
         
         /*
          * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the
-         *   screen without merging
+         *   screen without merging.
          */
         void doSoftFall();
         
@@ -204,7 +205,8 @@ _registerForLeakcheckWithID(Game)
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
-         *   the screen as reported by GLUT_Plotter.
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
          */
         void applyLayout();
 };

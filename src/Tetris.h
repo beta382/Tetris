@@ -15,7 +15,9 @@
  */
 #define _checkNewScreen() \
     if (newScreen) { \
-        delete screen; \
+        if (!screen->shouldRetain()) { \
+            delete screen; \
+        } \
         screen = newScreen; \
         return; \
     }

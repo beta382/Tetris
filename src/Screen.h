@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr 10, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 26, 2014
  */
 
 #ifndef SCREEN_H_
@@ -58,6 +58,11 @@ _registerForLeakcheckWithID(Screen)
          *   exits, or NULL if control should not shift to another Screen object
          */
         virtual Screen* doBackground() = 0;
+        
+        bool shouldRetain() {
+            return retain;
+        }
+        
     protected:
         
         /*
@@ -69,7 +74,7 @@ _registerForLeakcheckWithID(Screen)
          */
         Screen(unsigned int color = Color::BLACK):
         Drawable(0, 0, g->getWidth(), g->getHeight(), color), 
-                bgRect(0, 0, width, height, color)
+                retain(false), bgRect(0, 0, width, height, color)
         {
         };
         
@@ -85,6 +90,8 @@ _registerForLeakcheckWithID(Screen)
          *   the screen size changes.
          */
         virtual void applyLayout() = 0;
+        
+        bool retain;
         
         /*
          * Represents the background fill for this Screen object.

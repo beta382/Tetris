@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 31, 2014
- * Date last modified:     Apr 11, 2014
+ * Date last modified:     Apr 27, 2014
  */
 
 #include "Tetris.h"
@@ -37,7 +37,7 @@ void Tetris::Play (void) {
                 leakcheck::report(cout);
                 exit(0);
                 break;
-            case 'p':
+            case '`':
                 leakcheck::report(cout);
                 break;
             default:

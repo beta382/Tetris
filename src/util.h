@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Mar 27, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 26, 2014
  */
 
 #ifndef UTIL_H_
@@ -97,6 +97,7 @@ namespace util {
 #endif
 
 namespace leakcheck {
+    
     /*
      * Holds the address, identifier, and number of bytes of each currently allocated object
      *   being tracked by leakcheck on the heap.

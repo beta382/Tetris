@@ -52,6 +52,7 @@ class GLUT_Plotter {
         int getWidth();
         int getHeight();
         char* getBuffer();
+        int getBufferLen();
         void setColor(unsigned int);
         unsigned int getColor();
         void plot(int x, int y);

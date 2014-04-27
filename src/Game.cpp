@@ -4,7 +4,7 @@
  * Assignment description: Write an awesome Tetris clone
  * Due date:               May  2, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 27, 2014
  */
 
 #include "Game.h"
@@ -28,8 +28,6 @@ Screen(color),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground)
 {
-    // We initialize member data with 0s for coordinates, we actually apply the layout here
-    applyLayout();
     init();
 }
 
@@ -88,6 +86,10 @@ Screen* Game::respondToKey(int key) {
                 nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
             }
             break;
+        case 'p':
+            retain = true;
+            nextScreen = new PauseScreen(this);
+            break;
         default:
             cout << key << endl;
             break;
@@ -107,7 +109,9 @@ Screen* Game::respondToKey(int key) {
  */
 Screen* Game::respondToClick(Click click) {
     // Do nothing for now
-    return NULL;
+    Screen* nextScreen = NULL;
+    
+    return nextScreen;
 }
 
 /*
@@ -214,6 +218,9 @@ void Game::applyLayout() {
  * Instantiates this Game object's dynamically allocated member data and starts the RNG.
  */
 void Game::init() {
+    // We initialize member data with 0s for coordinates, we actually apply the layout here
+    applyLayout();
+    
     srand(time(0));
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
@@ -403,7 +410,7 @@ void Game::doRotateCCWWithKick() {
 
 /*
  * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the screen
- *   without merging
+ *   without merging.
  */
 void Game::doSoftFall() {
     while(field.canShiftDown(currentTetromino)) {

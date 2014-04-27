@@ -119,7 +119,9 @@ char* GLUT_Plotter::getBuffer() {
     return buffer;
 }
 
-
+int GLUT_Plotter::getBufferLen() {
+    return width*height*3;
+}
 
 void GLUT_Plotter::setColor(unsigned int c) {
     color = c;
