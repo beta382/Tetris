@@ -46,7 +46,6 @@ void GLUT_Plotter::init() {
 
 void GLUT_Plotter::init(int *argc, char **argv) {
 
-    glutInitWindowSize(width, height);
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutCreateWindow("Tetris");
@@ -99,6 +98,11 @@ void GLUT_Plotter::Clear() {
 
 
 void GLUT_Plotter::Draw(void) {
+    // Added because prof assumed a width divisible by 4, and glDrawPixels by default uses
+    // WORD-alignment. This specifies to use byte-alignment. See:
+    // https://www.opengl.org/sdk/docs/man2/xhtml/glDrawPixels.xml
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
     glutSwapBuffers();
       // instruct event system to call 'drawfunc' again
