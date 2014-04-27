@@ -13,6 +13,7 @@ For complete documentation, check out the source code.
     - [***Drawable***](https://github.com/beta382/Tetris#drawable)
       - [***Screen***](https://github.com/beta382/Tetris#screen)
         - [Game](https://github.com/beta382/Tetris#game)
+        - [PauseScreen](https://github/beta382/Tetris#pausescreen)
       - [PlayingField](https://github.com/beta382/Tetris#playingfield)
       - [Shape](https://github.com/beta382/Tetris#shape)
         - [***TetrominoBase***](https://github.com/beta382/Tetris#tetrominobase)
@@ -38,7 +39,7 @@ For complete documentation, check out the source code.
 
 #### ***Drawable***
 
-```c++ 
+```cpp
 virtual void setWidth(int);
 virtual int getWidth() const;
 virtual void setHeight(int);
@@ -61,7 +62,9 @@ virtual void erase();
     
 #### ***Screen***
 
-```c++
+```cpp
+bool shouldRetain();
+
 /* --- Pure virtual --- */
 virtual Screen* respondToKey(int);
 vitrual Screen* respondToClick(Click);
@@ -70,7 +73,7 @@ virtual void doBackground();
 
 #### Game
 
-```c++
+```cpp
 Game(unsigned int color = Color::BLACK);
 
 /* --- Implemented from Screen --- */
@@ -81,12 +84,26 @@ void doBackground();
 /* --- Implemented from Drawable --- */
 void draw();
 void erase();
+```
 
+#### PauseScreen
+
+```cpp
+PauseScreen(Screen*);
+
+/* --- Implemented from Screen --- */
+Screen* respondToKey(int);
+Screen* respondToClick(Click);
+void doBackground();
+
+/* --- Implemented from Drawable --- */
+void draw();
+void erase();
 ```
 
 #### PlayingField
 
-```c++
+```cpp
 PlayingField();
 PlayingField(int x, int y, int width, int height, int blockSize, int padding,
     unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK, 
@@ -122,7 +139,7 @@ void erase();
 
 #### Shape
 
-```c++
+```cpp
 Shape();
 Shape(int x, int y, int blockSize, int padding, unsigned int background = Color::BLACK);
 Shape(const Shape&);
@@ -158,7 +175,7 @@ void erase();
 
 #### ***TetrominoBase***
 
-```c++
+```cpp
 void rotateCW();
 void rotateCCW();
 
@@ -168,7 +185,7 @@ virtual TetrominoBase* makeNewClone() const;
 
 #### Tetromino\<BlockType\>
 
-```c++
+```cpp
 Tetromino();
 Tetromino(int x, int y, int blockSize, int padding, TetrominoShape shape,
                 unsigned int background = Color::BLACK);
@@ -182,7 +199,7 @@ Tetromino<BlockType>* makeNewClone() const;
 
 #### Block
 
-```c++
+```cpp
 Block();
 Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
         		unsigned int background = Color::BLACK);
@@ -204,7 +221,7 @@ void erase();
 
 #### GhostBlock
 
-```c++
+```cpp
 GhostBlock();
 GhostBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
                 unsigned int background = Color::BLACK);
@@ -219,7 +236,7 @@ void draw();
 
 #### ExplodingBlock
 
-```c++
+```cpp
 ExplodingBlock();
 ExplodingBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
                 unsigned int background = Color::BLACK);
@@ -234,7 +251,7 @@ void draw();
 
 #### GravityBlock
 
-```c++
+```cpp
 GravityBlock();
 GravityBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
                 unsigned int background = Color::BLACK);
@@ -251,7 +268,7 @@ void draw();
 
 #### TetrominoShape
 
-```c++
+```cpp
 enum TetrominoShape {I, O, T, J, L, S, Z};
 ```
 
@@ -259,7 +276,7 @@ enum TetrominoShape {I, O, T, J, L, S, Z};
 
 #### Color
 
-```c++
+```cpp
 const unsigned int WHITE;
 const unsigned int BLACK;
 const unsigned int BLUE;
@@ -277,7 +294,7 @@ const unsigned int CYAN;
 
 #### Key
 
-```c++
+```cpp
 const int UP;
 const int DOWN;
 const int LEFT;
@@ -287,13 +304,13 @@ const int ESC;
 
 #### util
 
-```c++
+```cpp
 void wait(clock_t);
 ```
 
 #### leakcheck
 
-```c++
+```cpp
 map<void*, pair<string, size_t> > allocated;
 
 void report(ostream& out);
@@ -309,14 +326,14 @@ don't define DO_LEAKCHECK, or build from a configuration that doesn't define DO_
 below, and it will safely have no effect). Then in the header(s) of the object(s) you want to track, include "util.h"
 and add the following code inside your object declaration:
 
-```c++
+```cpp
 _registerForLeakcheckWithID(ID)
 ```
 
 where `ID` is the name of your object. You can put whatever you want; allocations will get logged using a string
 representation of what you put as the ID. Note that you do not include string-literal quotes around ID. For example:
 
-```c++
+```cpp
 class Foo {
 _registerForLeakcheckWithID(Bar)
 
@@ -329,7 +346,7 @@ ID, this example just shows that you aren't forced to use the same name.
 
 To output a report of the tracked objects currently on the heap to the console, insert:
 
-```c++
+```cpp
 leakcheck::report(cout);
 ```
 
@@ -342,7 +359,7 @@ will reach a call to `exit(int)` from within the object.
 
 Example code:
 
-```c++
+```cpp
 switch (foo) {
     case 0: // ShouldDoCode
         // Code goes here
