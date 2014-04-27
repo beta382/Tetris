@@ -59,6 +59,10 @@ _registerForLeakcheckWithID(Screen)
          */
         virtual Screen* doBackground() = 0;
         
+        /*
+         * Returns whether or not this Screen object should be retained or deleted when control
+         *   shifts to a different screen
+         */
         bool shouldRetain() {
             return retain;
         }
