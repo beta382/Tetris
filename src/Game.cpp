@@ -79,7 +79,16 @@ Screen* Game::respondToKey(int key) {
         case 'e': // Rotate CW
             doRotateCWWithKick();
             break;
-        case 'n': // New tetromino. This is solely for testing, it spawns a new tetromino without merging.
+        case '1': // New tetromino. This is solely for testing, it spawns a new tetromino without merging.
+            doResetTetromino<ExplodingBlock>();
+            break;
+        case '2':
+            doResetTetromino<GravityBlock>();
+            break;
+        case '3':
+            doResetTetromino<LeftMagnetBlock>();
+            break;
+        case '4':
             doResetTetromino<RightMagnetBlock>();
             break;
         case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
