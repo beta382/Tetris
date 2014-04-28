@@ -13,6 +13,7 @@
 #include "Drawable.h"
 
 class MyRectangle: public Drawable {
+_registerForLeakcheckWithID(MyRectangle)
     public:
         MyRectangle();
         MyRectangle(int x, int y);
