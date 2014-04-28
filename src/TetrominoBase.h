@@ -49,6 +49,10 @@ _registerForLeakcheckWithID(TetrominoBase)
          * Returns: The address of the newly instantiated clone of this TetrominoBase
          */
         virtual TetrominoBase* makeNewClone() const = 0;
+        
+        
+        // Returns this shape
+        virtual TetrominoShape getShape() const = 0;
     protected:
 
         /*

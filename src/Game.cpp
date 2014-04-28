@@ -169,6 +169,8 @@ void Game::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
     
+    tetrominoNext->draw();
+    
     isVisible = true;
 }
 
@@ -198,7 +200,7 @@ void Game::init() {
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
     
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<Block>(shape);
+    currentTetromino = field.spawnNewTetromino<Block>(shape, tetrominoNext);
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
             currentTetromino->getPadding(), shape, field.getForeground());
@@ -339,15 +341,15 @@ void Game::doJoinAndRespawn() {
     // Spawn a new tetromino and create a shadow in the same place
     
     if (blockType < (1 << 16)/20) {
-        currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape);
+        currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape, tetrominoNext);
     } else if (blockType < (2*(1 << 16))/20) {
-        currentTetromino = field.spawnNewTetromino<GravityBlock>(shape);
+        currentTetromino = field.spawnNewTetromino<GravityBlock>(shape, tetrominoNext);
     } else {
-        currentTetromino = field.spawnNewTetromino<Block>(shape);
+        currentTetromino = field.spawnNewTetromino<Block>(shape, tetrominoNext);
     }
     
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
             field.getForeground());
     
     // Have the shadow fall

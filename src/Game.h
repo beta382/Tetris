@@ -154,6 +154,11 @@ _registerForLeakcheckWithID(Game)
         TetrominoBase* currentTetromino;
         
         /*
+         * Pointer to a TetrominoBase object representing the currently falling tetromino.
+         */
+        TetrominoBase* tetrominoNext;
+        
+        /*
          * Pointer to a Tetromino<GhostBlock> object representing the currently falling tetromino's
          *   shadow.
          */
@@ -184,9 +189,9 @@ void Game::doResetTetromino() {
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
         
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<BlockType>(shape);
+    currentTetromino = field.spawnNewTetromino<BlockType>(shape, tetrominoNext);
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
             field.getForeground());
     
     // Have the shadow fall

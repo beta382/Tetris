@@ -102,7 +102,7 @@ _registerForLeakcheckWithID(PlayingField)
          *   tetromino cannot be spawned
          */
         template <typename BlockType>
-        Tetromino<BlockType>* spawnNewTetromino(TetrominoShape type) const;
+        TetrominoBase* spawnNewTetromino(TetrominoShape type, TetrominoBase*& tetrominoNextSave) const;
 
         /*
          * Merges a clone of the Shape pointed to by the passed pointer into the blockField,
@@ -410,6 +410,10 @@ _registerForLeakcheckWithID(PlayingField)
 };
 
 
+static bool nextTetrominoInitialized = false;
+static TetrominoBase* tetrominoNext = NULL;
+
+
 /* ---------- Method template implementation ---------- */
 
 /*
@@ -423,18 +427,48 @@ _registerForLeakcheckWithID(PlayingField)
  *   cannot be spawned
  */
 template <typename BlockType>
-Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
-    Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
+TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type, TetrominoBase*& tetrominoNextSave) const {
+    // Create tetromino next if not created for first time
+    if(!nextTetrominoInitialized)
+    {
+        tetrominoNext = new Tetromino<BlockType>(
+            getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+            getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
+            getBlockSize(), getPadding(), type, getForeground()
+        );
+        
+        nextTetrominoInitialized = true;
+    }
+      
+      
+    // Create tetromino as copy of next
+    TetrominoBase* tetromino;
+    tetromino = tetrominoNext;
+    
+    
+    // Set next to a brand new tetromino
+    tetrominoNext = new Tetromino<BlockType>(
         getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
         getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
         getBlockSize(), getPadding(), type, getForeground()
     );
     
+    
+    // Set location of next tetromino
+    //tetrominoNext->setLocation(200, 250);
+    
+    
+    // Set location of new tetromino
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
         tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
+    
+    
+    // Save tetromino to reference variable
+    tetrominoNextSave = tetrominoNext;
+    
     
     // TODO: Later on, change the spawn point based on if it can actually spawn there.
     // Probably return NULL if we can't spawn period, which would special-case a "game over"
