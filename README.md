@@ -22,6 +22,9 @@ For complete documentation, check out the source code.
         - [GhostBlock](https://github.com/beta382/Tetris#ghostblock)
         - [ExplodingBlock](https://github.com/beta382/Tetris#explodingblock)
         - [GravityBlock](https://github.com/beta382/Tetris#gravityblock)
+        - [LeftMagnetBlock](https://github.com/beta382/Tetris#leftmagnetblock)
+        - [RightMagnetBlock](https://github.com/beta382/Tetris#rightmagnetblock)
+        - [LaserBlock](https://github.com/beta382/Tetris#laserblock)
     - Tetris (Provided by instructor, no docs)
     - GLUT_Plotter (Provided by instructor, no docs)
   - [Enumerations](https://github.com/beta382/Tetris#enumerations)
@@ -178,6 +181,9 @@ void erase();
 ```cpp
 void rotateCW();
 void rotateCCW();
+int getRealWidth() const;
+int getRealHeight() const;
+TetrominoShape getShape() const;
 
 /* --- Pure virtual --- */
 virtual TetrominoBase* makeNewClone() const;
@@ -264,6 +270,51 @@ GravityBlock* makeNewClone() const;
 void draw();
 ```
 
+#### LeftMagnetBlock
+
+```cpp
+LeftMagnetBlock();
+LeftMagnetBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
+                unsigned int background = Color::BLACK);
+LeftMagnetBlock(const LeftMagnetBlock&);
+LeftMagnetBlock& operator =(const LeftMagnetBlock&);
+
+/* --- Overriding from Block --- */
+int doEffect(vector<vector<Block*> >&, int x, int y);
+LeftMagnetBlock* makeNewClone() const;
+void draw();
+```
+
+#### RightMagnetBlock
+
+```cpp
+LeftMagnetBlock();
+RightMagnetBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
+                unsigned int background = Color::BLACK);
+RightMagnetBlock(const RightMagnetBlock&);
+RightMagnetBlock& operator =(const RightMagnetBlock&);
+
+/* --- Overriding from Block --- */
+int doEffect(vector<vector<Block*> >&, int x, int y);
+RightMagnetBlock* makeNewClone() const;
+void draw();
+```
+
+#### LaserBlock
+
+```cpp
+LaserBlock();
+LaserBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
+                unsigned int background = Color::BLACK);
+LaserBlock(const LaserBlock&);
+LaserBlock& operator =(const LaserBlock&);
+
+/* --- Overriding from Block --- */
+int doEffect(vector<vector<Block*> >&, int x, int y);
+LaserBlock* makeNewClone() const;
+void draw();
+```
+
 ### Enumerations
 
 #### TetrominoShape
@@ -305,7 +356,7 @@ const int ESC;
 #### util
 
 ```cpp
-void wait(clock_t);
+void wait(clock_t, GLUT_Plotter*);
 ```
 
 #### leakcheck
