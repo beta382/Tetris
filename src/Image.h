@@ -2,20 +2,15 @@
 #define IMAGE_H_INCLUDED
 
 #include "Drawable.h"
-#include "../EasyBMP/EasyBMP.h"
-#include <string>
+#include "EasyBMP.h"
 
-class Image:public Drawable{
-    private:
-        BMP image;
-
-    public:
-        Image();
-
-        void setFileName(string fileName);
-        void setXandY(int x, int y);
-        void draw();
-        void erase();
+class Image{
+    Image();
+    
+    void setFileName(string fileName);
+    void setXandY(int x, int y);
+    void draw();
+    void erase();
 };
 
 #endif // IMAGE_H_INCLUDED
