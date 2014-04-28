@@ -27,7 +27,8 @@ Screen(color),
         bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
-                foreground)
+                foreground),
+        logo("img/logo_medium.bmp")
 {
     init();
 }
@@ -196,10 +197,6 @@ void Game::draw() {
         tetrominoNext->draw();
     }
     
-    //Draws tetris logo
-    Image logo;
-    logo.setFileName("img/logo_medium.bmp");
-    logo.setLocation(215, 370);
     logo.draw();
     
     drawScore();
@@ -214,16 +211,21 @@ void Game::draw() {
  */
 void Game::erase() {
     if (isVisible) {
+        logo.erase();
+        
+        if (tetrominoNext) {
+            tetrominoNext->erase();
+        }
+        
+        bgRectNext.erase();
+        bgRectNext2.erase();
+        
         if (currentTetromino) {
             currentTetromino->erase();
         }
         
         if (shadow) {   
             shadow->erase();
-        }
-        
-        if (tetrominoNext) {
-            tetrominoNext->erase();
         }
         
         field.erase();
@@ -258,11 +260,14 @@ void Game::applyLayout() {
     if (shadow) {
         shadow->setLocation(shadow->getLocationX()+fieldDx,  shadow->getLocationY()+fieldDy);
     }
-
-    bgRectNext.setLocation(field.getLocationX()+field.getWidth()+20, 
-            field.getLocationY()+field.getHeight()-bgRectNext.getHeight()-50);
     
-    bgRectNext2.setLocation(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2);
+    logo.setLocation(field.getLocationX()+field.getWidth()+field.getTotalBlockSize(),
+            field.getLocationY()+field.getHeight()-logo.getHeight());
+    
+    bgRectNext2.setLocation(logo.getLocationX()+logo.getWidth()/2-bgRectNext2.getWidth()/2, 
+            logo.getLocationY()-bgRectNext2.getHeight()-field.getTotalBlockSize());
+    
+    bgRectNext.setLocation(bgRectNext2.getLocationX()+2, bgRectNext2.getLocationY()+2);
     
     if (tetrominoNext) {
         tetrominoNext->setLocation(

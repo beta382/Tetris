@@ -213,6 +213,11 @@ _registerForLeakcheckWithID(Game)
         MyRectangle bgRectNext2;
         
         /*
+         * Game logo
+         */
+        Image logo;
+        
+        /*
         * Draws level. Duh.
         */
         void drawLevel();

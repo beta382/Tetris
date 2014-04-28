@@ -12,9 +12,15 @@ _registerForLeakcheckWithID(Image)
         BMP image;
 
     public:
-        Image();
+        Image(string filename = "");
 
         void setFileName(string fileName);
+        
+        /* ---------- Overriding from Drawable ---------- */
+        int getWidth() const;
+        int getHeight() const;
+        
+        /* ---------- Implemented from Drawable ---------- */
 
         void draw();
         void erase();
