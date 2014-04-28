@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -75,6 +75,10 @@ _registerForLeakcheckWithID(Tetromino)
          * Returns: The address of the newly instantiated clone of this Tetromino<BlockType>
          */
         Tetromino<BlockType>* makeNewClone() const;
+        
+        
+        // Get the shape
+        TetrominoShape getShape() const;
     private:
         
         /* ---------- Implemented from TetrominoBase ---------- */
@@ -86,6 +90,10 @@ _registerForLeakcheckWithID(Tetromino)
          *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType> after
          */
         void initTetromino(TetrominoShape shape);
+        
+        
+        // Private variable to store the shape
+        TetrominoShape shape;
 };
 
 
@@ -168,6 +176,12 @@ Tetromino<BlockType>* Tetromino<BlockType>::makeNewClone() const {
 }
 
 
+template <typename BlockType>
+TetrominoShape Tetromino<BlockType>::getShape() const{
+    return shape;
+}
+
+
 /* ---------- Privately Implemented from TetrominoBase ---------- */
 
 /*
@@ -179,6 +193,8 @@ Tetromino<BlockType>* Tetromino<BlockType>::makeNewClone() const {
 template <typename BlockType>
 void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
     Block* block1, * block2, * block3, * block4;
+    
+    this->shape = shape;
     
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired
     // rotations.

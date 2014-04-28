@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -164,6 +164,7 @@ _registerForLeakcheckWithID(Game)
          * Joins the currentTetromino with the field and spawns a new one.
          * 
          * Returns: True if a Tetromino could be successfully spawned, false otherwise
+
          */
         bool doJoinAndRespawn();
         
@@ -183,6 +184,11 @@ _registerForLeakcheckWithID(Game)
          * Pointer to a TetrominoBase object representing the currently falling tetromino.
          */
         TetrominoBase* currentTetromino;
+        
+        /*
+         * Pointer to a TetrominoBase object representing the currently falling tetromino.
+         */
+        TetrominoBase* tetrominoNext;
         
         /*
          * Pointer to a Tetromino<GhostBlock> object representing the currently falling tetromino's
@@ -225,9 +231,9 @@ void Game::doResetTetromino() {
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
         
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<BlockType>(shape);
+    currentTetromino = field.spawnNewTetromino<BlockType>(shape, tetrominoNext);
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
             field.getForeground());
     
     // Have the shadow fall

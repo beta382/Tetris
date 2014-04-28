@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -53,6 +53,7 @@ namespace Key {
     const int ESC = 27;
     
 }
+
 
 namespace util {
     

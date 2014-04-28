@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -102,7 +102,7 @@ _registerForLeakcheckWithID(PlayingField)
          *   tetromino cannot be spawned
          */
         template <typename BlockType>
-        Tetromino<BlockType>* spawnNewTetromino(TetrominoShape type) const;
+        TetrominoBase* spawnNewTetromino(TetrominoShape type, TetrominoBase*& tetrominoNextSave) const;
 
         /*
          * Merges a clone of the Shape pointed to by the passed pointer into the blockField,
@@ -410,6 +410,10 @@ _registerForLeakcheckWithID(PlayingField)
 };
 
 
+static bool nextTetrominoInitialized = false;
+static TetrominoBase* tetrominoNext = NULL;
+
+
 /* ---------- Method template implementation ---------- */
 
 /*
@@ -423,21 +427,86 @@ _registerForLeakcheckWithID(PlayingField)
  *   cannot be spawned
  */
 template <typename BlockType>
-Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) const {
-    Tetromino<BlockType>* tetromino = new Tetromino<BlockType>(
+TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type, TetrominoBase*& tetrominoNextSave) const {
+    // Create tetromino next if not created for first time
+    if(!nextTetrominoInitialized)
+    {
+        tetrominoNext = new Tetromino<BlockType>(
+            getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+            getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
+            getBlockSize(), getPadding(), type, getForeground()
+        );
+        
+        nextTetrominoInitialized = true;
+    }
+      
+      
+    // Create tetromino as copy of next
+    TetrominoBase* tetromino;
+    tetromino = tetrominoNext;
+    
+    
+    // Set next to a brand new tetromino
+    tetrominoNext = new Tetromino<BlockType>(
         getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
         getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
         getBlockSize(), getPadding(), type, getForeground()
     );
     
+    
+    // Set location of next tetromino
+    if(tetrominoNext->getShape() == I)
+    {
+        tetrominoNext->setLocation(228, 218);
+    }
+    else if(tetrominoNext->getShape() == O)
+    {
+        tetrominoNext->setLocation(245, 278);
+    }
+    else if(tetrominoNext->getShape() == T)
+    {
+        tetrominoNext->setLocation(237, 259);
+    }
+    else if(tetrominoNext->getShape() == J)
+    {
+        tetrominoNext->setLocation(237, 259);
+    }
+    else if(tetrominoNext->getShape() == L)
+    {
+        tetrominoNext->setLocation(237, 259);
+    }
+    else if(tetrominoNext->getShape() == S)
+    {
+        tetrominoNext->setLocation(237, 278);
+    }
+    else if(tetrominoNext->getShape() == Z)
+    {
+        tetrominoNext->setLocation(237, 278);
+    }
+    else
+    {
+        tetrominoNext->setLocation(240, 268);
+    }
+    
+
     // Move us to the top of the screen and center since we spawned at a general location above it
     // and to the right
+    tetromino->setLocation(
+        getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+        getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height
+    );
+    
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
         tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
     
+
+    // Save tetromino to reference variable
+    tetrominoNextSave = tetrominoNext;
+    
+
     // Check to see if this is a valid location
     bool canSpawn = true;
     for (int i = 0; i < tetromino->numBlocks() && canSpawn; i++) {

@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -29,7 +29,7 @@ void util::wait(clock_t ms, GLUT_Plotter* g) {
     g->callBacks(false);
     
     // Do a single callback loop to eat events
-    glutMainLoopEvent();
+    //glutMainLoopEvent();
     
     // Reinstate callbacks
     g->callBacks(true);
