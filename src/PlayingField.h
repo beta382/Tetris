@@ -455,10 +455,47 @@ TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type, TetrominoBa
     
     
     // Set location of next tetromino
-    //tetrominoNext->setLocation(200, 250);
+    if(tetrominoNext->getShape() == I)
+    {
+        tetrominoNext->setLocation(228, 200);
+    }
+    else if(tetrominoNext->getShape() == O)
+    {
+        tetrominoNext->setLocation(245, 260);
+    }
+    else if(tetrominoNext->getShape() == T)
+    {
+        tetrominoNext->setLocation(237, 241);
+    }
+    else if(tetrominoNext->getShape() == J)
+    {
+        tetrominoNext->setLocation(237, 241);
+    }
+    else if(tetrominoNext->getShape() == L)
+    {
+        tetrominoNext->setLocation(237, 241);
+    }
+    else if(tetrominoNext->getShape() == S)
+    {
+        tetrominoNext->setLocation(237, 260);
+    }
+    else if(tetrominoNext->getShape() == Z)
+    {
+        tetrominoNext->setLocation(237, 260);
+    }
+    else
+    {
+        tetrominoNext->setLocation(240, 250);
+    }
+    
     
     
     // Set location of new tetromino
+    tetromino->setLocation(
+        getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+        getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height
+    );
+    
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
