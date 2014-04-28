@@ -2,9 +2,9 @@
  * Author:                 Austin Hash
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 26, 2014
  */
 
 #ifndef PLAYINGFIELD_H_
@@ -430,14 +430,39 @@ Tetromino<BlockType>* PlayingField::spawnNewTetromino (TetrominoShape type) cons
         getBlockSize(), getPadding(), type, getForeground()
     );
     
+    // Move us to the top of the screen and center since we spawned at a general location above it
+    // and to the right
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
         tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
     
-    // TODO: Later on, change the spawn point based on if it can actually spawn there.
-    // Probably return NULL if we can't spawn period, which would special-case a "game over"
+    // Check to see if this is a valid location
+    bool canSpawn = true;
+    for (int i = 0; i < tetromino->numBlocks() && canSpawn; i++) {
+        if(!couldAdd(tetromino->getBlock(i))) {
+            canSpawn = false;
+            tetromino->setLocation(getLocationX()+borderWidth+getPadding(),
+                    tetromino->getLocationY()); // Move us all the way to the left
+        }
+    }
+    
+    // Try new locations until we find one that works, or can't find one, in which case we return
+    // NULL
+    while(!canSpawn) {
+        canSpawn = true;
+        for (int i = 0; tetromino && i < tetromino->numBlocks() && canSpawn; i++) {
+            if(xIndexFromLocation(tetromino->getBlock(i)) > width) {
+                delete tetromino;
+                tetromino = NULL;
+            } else if(!couldAdd(tetromino->getBlock(i))) {
+                canSpawn = false;
+                tetromino->setLocation(tetromino->getLocationX()+getTotalBlockSize(), 
+                        tetromino->getLocationY());
+            }
+        }
+    }
     
     return tetromino;
 }

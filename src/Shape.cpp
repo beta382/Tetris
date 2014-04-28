@@ -2,9 +2,9 @@
  * Author:                 Austin Hash
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Mar 30, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 26, 2014
  */
 
 #include "Shape.h"
@@ -219,23 +219,28 @@ int Shape::getWidth() const {
     if (width != 0) {
         val = width*(blockSize+padding) - padding;
     } else if (numBlocks() > 0) {
-        int min = -1, max = -1; // Coords can't be negative, this is safe
+        Block* min = NULL, * max = NULL;
+        bool found = false;
         
         for (int i = 0; i < numBlocks(); i++) {
             if (blocks[i]) {
-                if (max == -1) {
-                    min = blocks[i]->getLocationX();
+                if (!found) {
+                    min = blocks[i];
                     max = min;
-                } else if (blocks[i]->getLocationX() < min) {
-                    min = blocks[i]->getLocationX();
-                } else if (blocks[i]->getLocationX() > max) {
-                    min = blocks[i]->getLocationX();
+                    found = true;
+                } else if (blocks[i]->getLocationX() < min->getLocationX()) {
+                    min = blocks[i];
+                } else if (blocks[i]->getLocationX() > max->getLocationX() || 
+                        (blocks[i]->getLocationX() == max->getLocationX() && 
+                         blocks[i]->getSize() > max->getLocationX()))
+                {
+                    max = blocks[i];
                 }
             }
         }
         
-        if (max != -1) {
-            val = max-min + blockSize;
+        if (found) {
+            val = max->getLocationX()-min->getLocationX() + max->getSize();
         }
     }
     
@@ -253,23 +258,28 @@ int Shape::getHeight() const {
     if (width != 0) {
         val = height*(blockSize+padding) - padding;
     } else if (numBlocks() > 0) {
-        int min = -1, max = -1; // Coords can't be negative, this is safe
+        Block* min = NULL, * max = NULL;
+        bool found = false;
         
         for (int i = 0; i < numBlocks(); i++) {
             if (blocks[i]) {
-                if (max == -1) {
-                    min = blocks[i]->getLocationY();
+                if (!found) {
+                    min = blocks[i];
                     max = min;
-                } else if (blocks[i]->getLocationY() < min) {
-                    min = blocks[i]->getLocationY();
-                } else if (blocks[i]->getLocationY() > max) {
-                    min = blocks[i]->getLocationY();
+                    found = true;
+                } else if (blocks[i]->getLocationY() < min->getLocationY()) {
+                    min = blocks[i];
+                } else if (blocks[i]->getLocationY() > max->getLocationY() || 
+                        (blocks[i]->getLocationY() == max->getLocationY() && 
+                         blocks[i]->getSize() > max->getLocationY()))
+                {
+                    max = blocks[i];
                 }
             }
         }
         
-        if (max != -1) {
-            val = max-min + blockSize;
+        if (found) {
+            val = max->getLocationY()-min->getLocationY() + max->getSize();
         }
     }
     

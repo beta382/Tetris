@@ -2,9 +2,9 @@
  * Author:                 Austin Hash
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 27, 2014
  */
 
 #include "Game.h"
@@ -21,12 +21,13 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
-        field(10+x, 10+y, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
-        bgRectNext(field.getLocationX()+field.getWidth() + 20, 250, 
-                field.getTotalBlockSize()*5+field.getPadding(), 
+        prevTime(0), tick(500),
+        field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
+        currentTetromino(NULL), shadow(NULL),
+        bgRectNext(0, 0, field.getTotalBlockSize()*5+field.getPadding(), 
                 field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
-        bgRectNext2(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2,
-                bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, foreground)
+        bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
+                foreground)
 {
     init();
 }
@@ -53,10 +54,12 @@ Game::~Game() {
  *   NULL if control should not shift to another Screen object
  */
 Screen* Game::respondToKey(int key) {
+    Screen* nextScreen = NULL;
+    
     switch (key) {
         case 'w':
         case Key::UP: // UP
-            doShiftUp();
+            doSoftFall();
             break;
         case 'a':
         case Key::LEFT: // LEFT
@@ -71,65 +74,34 @@ Screen* Game::respondToKey(int key) {
             doShiftRight();
             break;
         case 'q': // Rotate CCW
-            // If we can rotate the current tetromino CCW within the block field, do so
-            if (field.canRotateCCW(currentTetromino)) {
-                doRotateCCW();
-            } else { // If we can't, try doing a wall kick
-                currentTetromino->erase();
-                currentTetromino->shiftLeft();
-                if (field.canRotateCCW(currentTetromino)) {
-                    doRotateCCW();
-                } else { // Reset, try other direction
-                    currentTetromino->shiftRight();
-                    currentTetromino->shiftRight();
-                    
-                    if (field.canRotateCCW(currentTetromino)) {
-                        doRotateCCW();
-                    } else { // Reset
-                        currentTetromino->shiftLeft();
-                        currentTetromino->draw();
-                    }
-                }
-            }
-            
+            doRotateCCWWithKick();
             break;
         case 'e': // Rotate CW
-            // If we can rotate the current tetromino CW within the block field, do so
-            if (field.canRotateCW(currentTetromino)) {
-                doRotateCW();
-            } else { // If we can't, try doing a wall kick
-                currentTetromino->erase();
-                currentTetromino->shiftRight();
-                if (field.canRotateCW(currentTetromino)) {
-                    doRotateCW();
-                } else { // Reset, try other direction
-                    currentTetromino->shiftLeft();
-                    currentTetromino->shiftLeft();
-                    
-                    if (field.canRotateCW(currentTetromino)) {
-                        doRotateCW();
-                    } else { // Reset
-                        currentTetromino->shiftRight();
-                        currentTetromino->draw();
-                    }
-                }
-            }
-            
+            doRotateCWWithKick();
             break;
         case 'n': // New tetromino. This is solely for testing, it spawns a new tetromino without merging.
-            doResetTetromino<Block>();
+            doResetTetromino<RightMagnetBlock>();
             break;
         case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
-            doJoinAndRespawn();
+            if (!doJoinAndRespawn()) {
+                nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
+            }
             break;
-        case 'g': // Spawn special tetromino for testing
-            doResetTetromino<ExplodingBlock>();
+        case 'p':
+            retain = true;
+            
+            // Set out previous time back so that when we return, we have a proper offset until the
+            // next tick
+            prevTime -= clock();
+            
+            nextScreen = new PauseScreen(this);
             break;
         default:
             cout << key << endl;
+            break;
     }
     
-    return NULL;
+    return nextScreen;
 }
 
 /*
@@ -143,15 +115,44 @@ Screen* Game::respondToKey(int key) {
  */
 Screen* Game::respondToClick(Click click) {
     // Do nothing for now
-    return NULL;
+    Screen* nextScreen = NULL;
+    
+    return nextScreen;
 }
 
 /*
  * Performs actions that should happen continuously in the background on this Screen.
+ * 
+ * Returns: A pointer to the Screen object control should shift to after this function exits, or
+ *   NULL if control should not shift to another Screen object
  */
-void Game::doBackground() {
-    // Just redraw for now
+Screen* Game::doBackground() {
+    Screen* nextScreen = NULL;
+    
+    applyLayout();
     draw();
+
+    clock_t curTime = clock();
+    
+    /* 
+     * If we aren't initialized, initialize. We didn't initialize earlier because we don't want the 
+     *   clock to start before we need it to.
+     */
+    if (prevTime <= 0) {
+        prevTime += curTime;
+    }
+    
+    if (curTime > prevTime+tick) {
+        if (field.canShiftDown(currentTetromino)) {
+            doShiftDown();
+        } else if (!doJoinAndRespawn()) {
+            nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
+        }
+        
+        prevTime = curTime;
+    }
+
+    return nextScreen;
 }
 
 
@@ -163,8 +164,14 @@ void Game::doBackground() {
 void Game::draw() {
     bgRect.draw();
     field.draw();
-    shadow->draw();
-    currentTetromino->draw();
+    
+    if (shadow) {
+        shadow->draw();
+    }
+    
+    if (currentTetromino) {
+        currentTetromino->draw();
+    }
     
     bgRectNext2.draw();
     bgRectNext.draw();
@@ -177,13 +184,51 @@ void Game::draw() {
  */
 void Game::erase() {
     if (isVisible) {
-        currentTetromino->erase();
-        shadow->erase();
+        if (currentTetromino) {
+            currentTetromino->erase();
+        }
+        
+        if (shadow) {   
+            shadow->erase();
+        }
+        
         field.erase();
         bgRect.erase();
         
         isVisible = false;
     }
+}
+
+
+/*
+ * Sets Drawable member data width's, height's, and/or locations according to the size of
+ *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+ *   the screen size changes.
+ */
+void Game::applyLayout() {
+    setWidth(g->getWidth());
+    setHeight(g->getHeight());
+
+    bgRect.setWidth(getWidth());
+    bgRect.setHeight(getHeight());
+    
+    int fieldDx = 10-field.getLocationX();
+    int fieldDy = 10-field.getLocationY();
+    field.setLocation(field.getLocationX()+fieldDx, field.getLocationY()+fieldDy);
+    
+    if (currentTetromino) {
+        currentTetromino->setLocation(currentTetromino->getLocationX()+fieldDx,
+            currentTetromino->getLocationY()+fieldDy);
+    }
+    
+    if (shadow) {
+        shadow->setLocation(shadow->getLocationX()+fieldDx,  shadow->getLocationY()+fieldDy);
+    }
+
+    bgRectNext.setLocation(field.getLocationX()+field.getWidth()+20, 
+            field.getLocationY()+field.getHeight()-bgRectNext.getHeight()-50);
+    
+    bgRectNext2.setLocation(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2);
 }
 
 
@@ -193,6 +238,9 @@ void Game::erase() {
  * Instantiates this Game object's dynamically allocated member data and starts the RNG.
  */
 void Game::init() {
+    // We initialize member data with 0s for coordinates, we actually apply the layout here
+    applyLayout();
+    
     srand(time(0));
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
@@ -212,7 +260,7 @@ void Game::init() {
 }
 
 /*
- * Properly performs a shift up on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift up on currentTetromino, performing checks.
  */
 void Game::doShiftUp() {
     if (field.canShiftUp(currentTetromino)) {
@@ -223,18 +271,20 @@ void Game::doShiftUp() {
 }
 
 /*
- * Properly performs a shift down on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift down on currentTetromino, performing checks.
  */
 void Game::doShiftDown() {
     if (field.canShiftDown(currentTetromino)) {
         currentTetromino->erase();
         currentTetromino->shiftDown();
         currentTetromino->draw();
+        
+        prevTime = clock();
     }
 }
 
 /*
- * Properly performs a shift left on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift left on currentTetromino, performing checks.
  */
 void Game::doShiftLeft() {
     if (field.canShiftLeft(currentTetromino)) {
@@ -256,7 +306,7 @@ void Game::doShiftLeft() {
 }
 
 /*
- * Properly performs a shift right on currentTetromino WITHOUT performing checks.
+ * Properly performs a shift right on currentTetromino, performing checks.
  */
 void Game::doShiftRight() {
     if (field.canShiftRight(currentTetromino)) {
@@ -326,36 +376,117 @@ void Game::doRotateCCW() {
 }
 
 /*
- * Joins the currentTetromino with the field and spawns a new one.
+ * Properly performs a clockwise rotation on currentTetromino, performing checks and wall kicks.
  */
-void Game::doJoinAndRespawn() {
-    delete shadow;
+void Game::doRotateCWWithKick() {
+    // If we can rotate the current tetromino CW within the block field, do so
+    if (field.canRotateCW(currentTetromino)) {
+        doRotateCW();
+    } else { // If we can't, try doing a wall kick
+        currentTetromino->erase();
+        currentTetromino->shiftRight();
+        if (field.canRotateCW(currentTetromino)) {
+            doRotateCW();
+        } else { // Reset, try other direction
+            currentTetromino->shiftLeft();
+            currentTetromino->shiftLeft();
+            
+            if (field.canRotateCW(currentTetromino)) {
+                doRotateCW();
+            } else { // Reset
+                currentTetromino->shiftRight();
+                currentTetromino->draw();
+            }
+        }
+    }
+}
+
+/*
+ * Properly performs a counter-clockwise rotation on currentTetromino, performing checks and wall
+ *   kicks.
+ */
+void Game::doRotateCCWWithKick() {
+    // If we can rotate the current tetromino CCW within the block field, do so
+    if (field.canRotateCCW(currentTetromino)) {
+        doRotateCCW();
+    } else { // If we can't, try doing a wall kick
+        currentTetromino->erase();
+        currentTetromino->shiftLeft();
+        if (field.canRotateCCW(currentTetromino)) {
+            doRotateCCW();
+        } else { // Reset, try other direction
+            currentTetromino->shiftRight();
+            currentTetromino->shiftRight();
+            
+            if (field.canRotateCCW(currentTetromino)) {
+                doRotateCCW();
+            } else { // Reset
+                currentTetromino->shiftLeft();
+                currentTetromino->draw();
+            }
+        }
+    }
+}
+
+/*
+ * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the screen
+ *   without merging.
+ */
+void Game::doSoftFall() {
+    while(field.canShiftDown(currentTetromino)) {
+        doShiftDown();
+        util::wait(25, g);
+    }
+    
+    // If we can't do any "after-fall" movements, mark for locking
+    if(!(field.canShiftLeft(currentTetromino) || field.canShiftRight(currentTetromino) ||
+         field.canRotateCCW(currentTetromino) || field.canRotateCW(currentTetromino)))
+    {
+        prevTime = clock()-tick;
+    }
+}
+
+/*
+ * Joins the currentTetromino with the field and spawns a new one.
+ * 
+ * Returns: True if a Tetromino could be successfully spawned, false otherwise
+ */
+bool Game::doJoinAndRespawn() {
+    bool couldSpawn;
+    
     field.mergeAndDelete(currentTetromino);
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
-    int blockType = (rand()*rand())%(1 << 16); // 16-bit number, but rand maxes at 0x7FFF
+    int blockType = rand()%(1 << 15); // Rand maxes at 0x7FFF, 15-bit number
         
     // Spawn a new tetromino and create a shadow in the same place
     
-    if (blockType < (1 << 16)/20) {
+    if (blockType < (1 << 15)/20) { // 1/20
         currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape);
-    } else if (blockType < (2*(1 << 16))/20) {
+    } else if (blockType < ((1 << 15)/20)+((1 << 15))/30) { // 1/30
         currentTetromino = field.spawnNewTetromino<GravityBlock>(shape);
     } else {
         currentTetromino = field.spawnNewTetromino<Block>(shape);
     }
     
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
-            field.getForeground());
+    couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
     
-    // Have the shadow fall
-    while (field.canShiftDown(shadow)) {
-        shadow->shiftDown();
+    if (couldSpawn) {
+        delete shadow;
+        
+        shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
+                currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+                field.getForeground());
+        
+        // Have the shadow fall
+        while (field.canShiftDown(shadow)) {
+            shadow->shiftDown();
+        }
+        
+        // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
+        draw();
     }
     
-    // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
-    shadow->draw();
-    currentTetromino->draw();
+    return couldSpawn;
 }

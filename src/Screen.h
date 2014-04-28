@@ -2,9 +2,9 @@
  * Author:                 Austin Hash
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Apr 10, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 26, 2014
  */
 
 #ifndef SCREEN_H_
@@ -52,9 +52,21 @@ _registerForLeakcheckWithID(Screen)
         
         /*
          * Performs actions that should happen continuously in the background on this Screen. Must
-         *   be implimented by children of Drawable.
+         *   be implimented by children of Screen.
+         * 
+         * Returns: A pointer to the Screen object control should shift to after this function
+         *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual void doBackground() = 0;
+        virtual Screen* doBackground() = 0;
+        
+        /*
+         * Returns whether or not this Screen object should be retained or deleted when control
+         *   shifts to a different screen
+         */
+        bool shouldRetain() {
+            return retain;
+        }
+        
     protected:
         
         /*
@@ -66,7 +78,7 @@ _registerForLeakcheckWithID(Screen)
          */
         Screen(unsigned int color = Color::BLACK):
         Drawable(0, 0, g->getWidth(), g->getHeight(), color), 
-                bgRect(0, 0, width, height, color)
+                retain(false), bgRect(0, 0, width, height, color)
         {
         };
         
@@ -75,6 +87,15 @@ _registerForLeakcheckWithID(Screen)
          */
         Screen(const Screen& other);
         Screen& operator =(const Screen& other);
+        
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        virtual void applyLayout() = 0;
+        
+        bool retain;
         
         /*
          * Represents the background fill for this Screen object.

@@ -52,6 +52,7 @@ class GLUT_Plotter {
         int getWidth();
         int getHeight();
         char* getBuffer();
+        int getBufferLen();
         void setColor(unsigned int);
         unsigned int getColor();
         void plot(int x, int y);
@@ -67,7 +68,7 @@ class GLUT_Plotter {
             return mouseQueue.size() > 0;
         }
         void addClick(Click c);
-        void callBacks();
+        void callBacks(bool);
         void RegisterDisplayFunc(void (*func)(void));
         void RegisterKeyboardFunc(void (*func)(unsigned char key, int x, int y));
         void RegisterSpecialKeyboardFunc(void (*func)(int key, int x, int y));
