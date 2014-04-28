@@ -9,22 +9,25 @@
 
 #include "Rectangle.h"
 
-MyRectangle::MyRectangle (): Drawable(0, 0, 10, 10) {
-    
+MyRectangle::MyRectangle ():
+Drawable(0, 0, 10, 10)
+{ 
 }
 
-MyRectangle::MyRectangle (int x, int y): Drawable(x, y, 10, 10) {
-    
-}
-
-MyRectangle::MyRectangle (int x, int y, int width, int height, unsigned int foreground, unsigned int background):
-        Drawable(x, y, width, height, foreground, background)
+MyRectangle::MyRectangle (int x, int y):
+Drawable(x, y, 10, 10)
 {
-    
 }
 
-MyRectangle::MyRectangle (const MyRectangle& other): Drawable(other) {
-    
+MyRectangle::MyRectangle (int x, int y, int width, int height, unsigned int foreground, 
+        unsigned int background):
+Drawable(x, y, width, height, foreground, background)
+{
+}
+
+MyRectangle::MyRectangle (const MyRectangle& other):
+Drawable(other)
+{
 }
 
 MyRectangle& MyRectangle::operator =(const MyRectangle& rhs) {

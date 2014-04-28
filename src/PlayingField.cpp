@@ -523,7 +523,7 @@ bool PlayingField::couldAdd(const Block* block) const {
  *   
  * Returns: The number of points the line clear accumulated
  */
-int PlayingField::doLineClear(vector<int> clearableLines) { // TODO: Proper scoring
+int PlayingField::doLineClear(vector<int> clearableLines) {
     // Static because this recurses with doFall, maintains the remaining shapes across calls, is
     // always cleared/reset before exiting the top-level of a single call.
     static vector<Shape*> fallingShapes;
@@ -647,7 +647,7 @@ void PlayingField::normalizeBlocks(Shape& shape) {
  *     
  * Returns: The number of points the special effects accumulated
  */
-int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) { // TODO: Proper scoring
+int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) {
     vector<vector<Block*> > remainingBlockField(width,
             vector<Block*>(height, static_cast<Block*>(NULL)));
     

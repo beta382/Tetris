@@ -206,17 +206,17 @@ _registerForLeakcheckWithID(Drawable)
         int y;
         
         /*
-         * These variables are intended to represent the width and height in pixels of this Drawable
-         *   object's bounding rectangle, however, they may be interpreted by sub-classes of
-         *   Drawable in whatever manner best suits the nature of that object. Their respective
+         * These variables are intended to represent the width and height in pixels of this
+         *   Drawable object's bounding rectangle, however, they may be interpreted by sub-classes
+         *   of Drawable in whatever manner best suits the nature of that object. Their respective
          *   getters should always return the width and height in pixels.
          */
         int width;
         int height;
         
         /*
-         * These variables are intended to represent the color of this Drawable object and the color
-         *   of whatever lies behind this Drawable object, respectively.
+         * These variables are intended to represent the color of this Drawable object and the
+         *   color of whatever lies behind this Drawable object, respectively.
          */
         unsigned int foreground;
         unsigned int background;

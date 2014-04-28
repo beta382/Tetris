@@ -494,20 +494,20 @@ bool Game::doJoinAndRespawn() {
     currentTetromino = field.spawnNewTetromino(tetrominoNext);
 
     if (blockType < RAND_MAX/30) { // 1/30
-        tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(), field.getPadding(),
-                shape, bgRectNext.getForeground());
+        tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/30)) { // 1/30
-        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(), field.getPadding(),
-                shape, bgRectNext.getForeground());
+        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 3*(RAND_MAX/30)) { // 1/30
-        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(), field.getPadding(),
-                shape, bgRectNext.getForeground());
+        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 4*(RAND_MAX/30)) { // 1/30
-        tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(), field.getPadding(),
-                shape, bgRectNext.getForeground());
+        tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 5*(RAND_MAX/30)) { // 1/30
-        tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(), field.getPadding(),
-                shape, bgRectNext.getForeground());
+        tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
     } else { // 5/6
         tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
@@ -518,8 +518,9 @@ bool Game::doJoinAndRespawn() {
     if (couldSpawn) {
         delete shadow;
         
-        shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-                currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
+        shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(),
+                currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
+                currentTetromino->getPadding(), currentTetromino->getShape(), 
                 field.getForeground());
         
         // Have the shadow fall
@@ -529,7 +530,6 @@ bool Game::doJoinAndRespawn() {
         
         applyLayout();
         
-        // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
         draw();
         
         // We may have waited while merging, reset the tick

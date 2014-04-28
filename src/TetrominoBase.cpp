@@ -47,8 +47,8 @@ Shape(x, y, blockSize, padding, background),
 }
 
 /*
- * Instantiates a TetrominoBase object that is a copy of the passed TetrominoBase object, except for
- *   bool isVisible, which is initialized with false.
+ * Instantiates a TetrominoBase object that is a copy of the passed TetrominoBase object, except
+ *   for bool isVisible, which is initialized with false.
  * 
  * Parameters:
  *   const TetrominoBase& other: A reference to the TetrominoBase object to copy from
@@ -68,10 +68,12 @@ Shape(other),
  */
 void TetrominoBase::rotateCW() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY-
-                  offsetX)*blocks[i]->getTotalSize()+getLocationX(),
-                (width-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX)-1+
-                  offsetY)*blocks[i]->getTotalSize()+getLocationY());
+        blocks[i]->setLocation(
+            ((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY-offsetX)
+                *blocks[i]->getTotalSize()+getLocationX(),
+            (width-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX)-1
+                +offsetY)*blocks[i]->getTotalSize()+getLocationY()
+        );
     }
     
     swap(width, height);
@@ -83,10 +85,12 @@ void TetrominoBase::rotateCW() {
  */
 void TetrominoBase::rotateCCW() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->setLocation((height-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-
-                  offsetY)-1-offsetX)*blocks[i]->getTotalSize()+getLocationX(),
-                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX+offsetY)*
-                  blocks[i]->getTotalSize()+getLocationY());
+        blocks[i]->setLocation(
+            (height-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY)
+                -1-offsetX)*blocks[i]->getTotalSize()+getLocationX(),
+            ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX+offsetY)
+                *blocks[i]->getTotalSize()+getLocationY()
+        );
     }
     
     swap(width, height);

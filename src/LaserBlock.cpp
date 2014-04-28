@@ -33,7 +33,8 @@ Block()
  *   unsigned int background: The value to initialize this LaserBlock object's background with,
  *     defaults to Color::BLACK
  */
-LaserBlock::LaserBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+LaserBlock::LaserBlock(int x, int y, int size, int padding, unsigned int foreground,
+        unsigned int background):
 Block(x, y, size, padding, foreground, background)
 {
 }

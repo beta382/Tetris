@@ -38,30 +38,35 @@ _registerForLeakcheckWithID(Tetromino)
          * Parameters:
          *   int x: The value to initialize this Tetromino<BlockType> object's x with
          *   int y: The value to initialize this Tetromino<BlockType> object's y with
-         *   int blockSize: The value to initialize this Tetromino<BlockType> object's blockSize with
+         *   int blockSize: The value to initialize this Tetromino<BlockType> object's blockSize
+         *     with
          *   int padding: The value to initialize this Tetromino<BlockType> object's padding with
-         *   TetrominoShape shape: The TetrominoShape to initialize this Tetromino<BlockType> object with
-         *   unsigned int background: The value to initialize this Tetromino<BlockType> object's background
-         *     with, defaults to Color::BLACK
+         *   TetrominoShape shape: The TetrominoShape to initialize this Tetromino<BlockType>
+         *     object with
+         *   unsigned int background: The value to initialize this Tetromino<BlockType> object's
+         *     background with, defaults to Color::BLACK
          */
         Tetromino(int x, int y, int blockSize, int padding, TetrominoShape shape,
                 unsigned int background = Color::BLACK);
 
         /*
-         * Instantiates a Tetromino<BlockType> object that is a copy of the passed Tetromino<BlockType>
-         *   object, except for bool isVisible, which is initialized with false.
+         * Instantiates a Tetromino<BlockType> object that is a copy of the passed
+         *   Tetromino<BlockType> object, except for bool isVisible, which is initialized with
+         *   false.
          * 
          * Parameters:
-         *   const Tetromino<BlockType>& other: A reference to the Tetromino<BlockType> object to copy from
+         *   const Tetromino<BlockType>& other: A reference to the Tetromino<BlockType> object to
+         *     copy from
          */
         Tetromino(const Tetromino<BlockType>&);
 
         /*
-         * Assigns this Tetromino<BlockType> object the values of the passed Tetromino<BlockType> object,
-         *   except for bool isVisible, which is assigned false.
+         * Assigns this Tetromino<BlockType> object the values of the passed Tetromino<BlockType>
+         *   object, except for bool isVisible, which is assigned false.
          * 
          * Parameters:
-         *   const Tetromino<BlockType>& rhs: A reference to the Tetromino<BlockType> object to assign from
+         *   const Tetromino<BlockType>& rhs: A reference to the Tetromino<BlockType> object to
+         *     assign from
          * 
          * Returns: A reference to this Tetromino<BlockType> object
          */
@@ -86,7 +91,8 @@ _registerForLeakcheckWithID(Tetromino)
          * Initializes this Tetromino<BlockType> object with the passed TetrominoShape.
          * 
          * Parameters:
-         *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType> after
+         *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType>
+         *   after
          */
         void initTetromino(TetrominoShape shape);
         

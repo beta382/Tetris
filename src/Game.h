@@ -235,9 +235,9 @@ void Game::doResetTetromino() {
         
     // Spawn a new tetromino and create a shadow in the same place
     currentTetromino = field.spawnNewTetromino(tetrominoNext);
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
-            field.getForeground());
+    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
+            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), 
+            currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
     
     // Have the shadow fall
     while (field.canShiftDown(shadow)) {
