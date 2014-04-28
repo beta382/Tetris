@@ -207,6 +207,25 @@ _registerForLeakcheckWithID(Game)
          */
         MyRectangle bgRectNext2;
         
+        /*
+        * Holds score. Duh.
+        */
+        int score;
+        
+        /*
+        * Holds level. Duh.
+        */
+        int level;
+        
+        /*
+        * Draws level. Duh.
+        */
+        void drawLevel();
+        
+        /*
+        * Draws score. Duh.
+        */
+        void drawScore();
         
         /* ---------- Implimented from Screen ---------- */
         
