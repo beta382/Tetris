@@ -29,7 +29,7 @@ void util::wait(clock_t ms, GLUT_Plotter* g) {
     g->callBacks(false);
     
     // Do a single callback loop to eat events
-    glutMainLoopEvent();
+    //glutMainLoopEvent();
     
     // Reinstate callbacks
     g->callBacks(true);

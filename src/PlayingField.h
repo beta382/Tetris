@@ -457,40 +457,45 @@ TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type, TetrominoBa
     // Set location of next tetromino
     if(tetrominoNext->getShape() == I)
     {
-        tetrominoNext->setLocation(228, 200);
+        tetrominoNext->setLocation(228, 218);
     }
     else if(tetrominoNext->getShape() == O)
     {
-        tetrominoNext->setLocation(245, 260);
+        tetrominoNext->setLocation(245, 278);
     }
     else if(tetrominoNext->getShape() == T)
     {
-        tetrominoNext->setLocation(237, 241);
+        tetrominoNext->setLocation(237, 259);
     }
     else if(tetrominoNext->getShape() == J)
     {
-        tetrominoNext->setLocation(237, 241);
+        tetrominoNext->setLocation(237, 259);
     }
     else if(tetrominoNext->getShape() == L)
     {
-        tetrominoNext->setLocation(237, 241);
+        tetrominoNext->setLocation(237, 259);
     }
     else if(tetrominoNext->getShape() == S)
     {
-        tetrominoNext->setLocation(237, 260);
+        tetrominoNext->setLocation(237, 278);
     }
     else if(tetrominoNext->getShape() == Z)
     {
-        tetrominoNext->setLocation(237, 260);
+        tetrominoNext->setLocation(237, 278);
     }
     else
     {
-        tetrominoNext->setLocation(240, 250);
+        tetrominoNext->setLocation(240, 268);
     }
     
 
     // Move us to the top of the screen and center since we spawned at a general location above it
     // and to the right
+    tetromino->setLocation(
+        getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+        getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height
+    );
+    
     tetromino->setLocation(
         tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
                 tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
