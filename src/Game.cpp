@@ -176,11 +176,6 @@ void Game::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
     
-    Image logo;
-    logo.setFileName("../img/logo_medium.bmp");
-    logo.setXandY(215, 370);
-    logo.draw();
-    
     isVisible = true;
 }
 

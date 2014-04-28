@@ -16,7 +16,6 @@
 #include "TetrominoBase.h"
 #include "blocks.h"
 #include "util.h"
-#include "Image.h"
 
 #include <cstdlib>
 #include <ctime>
