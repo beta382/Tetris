@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -176,6 +176,8 @@ void Game::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
     
+    tetrominoNext->draw();
+    
     isVisible = true;
 }
 
@@ -246,7 +248,7 @@ void Game::init() {
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
     
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<Block>(shape);
+    currentTetromino = field.spawnNewTetromino<Block>(shape, tetrominoNext);
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
             currentTetromino->getPadding(), shape, field.getForeground());
@@ -461,14 +463,14 @@ bool Game::doJoinAndRespawn() {
     int blockType = rand()%(1 << 15); // Rand maxes at 0x7FFF, 15-bit number
         
     // Spawn a new tetromino and create a shadow in the same place
-    
     if (blockType < (1 << 15)/20) { // 1/20
-        currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape);
+        currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape, tetrominoNext);
     } else if (blockType < ((1 << 15)/20)+((1 << 15))/30) { // 1/30
-        currentTetromino = field.spawnNewTetromino<GravityBlock>(shape);
+        currentTetromino = field.spawnNewTetromino<GravityBlock>(shape, tetrominoNext);
     } else {
-        currentTetromino = field.spawnNewTetromino<Block>(shape);
+        currentTetromino = field.spawnNewTetromino<Block>(shape, tetrominoNext);
     }
+    
     
     couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
     
@@ -476,7 +478,7 @@ bool Game::doJoinAndRespawn() {
         delete shadow;
         
         shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-                currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+                currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
                 field.getForeground());
         
         // Have the shadow fall

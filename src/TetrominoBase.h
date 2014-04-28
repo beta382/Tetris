@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -49,6 +49,10 @@ _registerForLeakcheckWithID(TetrominoBase)
          * Returns: The address of the newly instantiated clone of this TetrominoBase
          */
         virtual TetrominoBase* makeNewClone() const = 0;
+        
+        
+        // Returns this shape
+        virtual TetrominoShape getShape() const = 0;
     protected:
 
         /*
