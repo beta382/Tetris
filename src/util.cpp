@@ -24,15 +24,16 @@ void util::wait(clock_t ms, GLUT_Plotter* g) {
     while (clock() < start+ms);
     
     // Referenced http://freeglut.sourceforge.net/docs/api.php
-    
-    // We might have gotten key-presses during this time, so remove all our glut callbacks
-    g->callBacks(false);
-    
-    // Do a single callback loop to eat events
-    //glutMainLoopEvent();
-    
-    // Reinstate callbacks
-    g->callBacks(true);
+#    ifdef FREEGLUT
+        // We might have gotten key-presses during this time, so remove all our glut callbacks
+        g->callBacks(false);
+        
+        // Do a single callback loop to eat events
+        glutMainLoopEvent();
+        
+        // Reinstate callbacks
+        g->callBacks(true);
+#    endif
 }
 
 map<void*, pair<string, size_t> > leakcheck::allocated;

@@ -81,7 +81,8 @@ namespace util {
      * id should be the string representation of the name of the object you are tracking, WITHOUT
      *   string-literal double quotes.
      */
-    #define _registerForLeakcheckWithID(id) \
+
+#    define _registerForLeakcheckWithID(id) \
         public: \
         void* operator new(size_t bytes) { \
             void* mem = malloc(bytes); \
@@ -93,8 +94,10 @@ namespace util {
             leakcheck::allocated.erase(mem); \
             free(mem); \
         }
+    /* end define */
+
 #else // Define empty macro if we aren't checking for leaks
-    #define _registerForLeakcheckWithID(id)
+#    define _registerForLeakcheckWithID(id)
 #endif
 
 namespace leakcheck {
