@@ -488,7 +488,7 @@ TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type, TetrominoBa
         tetrominoNext->setLocation(240, 250);
     }
     
-    
+
     // Move us to the top of the screen and center since we spawned at a general location above it
     // and to the right
     tetromino->setLocation(
@@ -497,10 +497,11 @@ TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type, TetrominoBa
         tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
     );
     
+
     // Save tetromino to reference variable
     tetrominoNextSave = tetrominoNext;
     
-    
+
     // Check to see if this is a valid location
     bool canSpawn = true;
     for (int i = 0; i < tetromino->numBlocks() && canSpawn; i++) {

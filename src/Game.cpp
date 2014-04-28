@@ -471,10 +471,7 @@ bool Game::doJoinAndRespawn() {
         currentTetromino = field.spawnNewTetromino<Block>(shape, tetrominoNext);
     }
     
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
-            field.getForeground());
-
+    
     couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
     
     if (couldSpawn) {

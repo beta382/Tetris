@@ -164,6 +164,7 @@ _registerForLeakcheckWithID(Game)
          * Joins the currentTetromino with the field and spawns a new one.
          * 
          * Returns: True if a Tetromino could be successfully spawned, false otherwise
+
          */
         bool doJoinAndRespawn();
         
