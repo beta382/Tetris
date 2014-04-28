@@ -16,9 +16,15 @@
 *                                                *
 * description: Actual source file                *
 *                                                *
+<<<<<<< HEAD
 *************************************************/
 
 #include "EasyBMP.h"
+=======
+*************************************************/
+
+#include "EasyBMP.h"
+>>>>>>> master
 
 /* These functions are defined in EasyBMP.h */
 
@@ -31,8 +37,13 @@ void SetEasyBMPwarningsOn( void )
 bool GetEasyBMPwarningState( void )
 { return EasyBMPwarnings; }
 
+<<<<<<< HEAD
 /* These functions are defined in EasyBMP_DataStructures.h */
 
+=======
+/* These functions are defined in EasyBMP_DataStructures.h */
+
+>>>>>>> master
 int IntPow( int base, int exponent )
 {
  int i;
@@ -40,15 +51,25 @@ int IntPow( int base, int exponent )
  for( i=0 ; i < exponent ; i++ )
  { output *= base; }
  return output;
+<<<<<<< HEAD
 }
 
+=======
+}
+
+>>>>>>> master
 BMFH::BMFH()
 {
  bfType = 19778;
  bfReserved1 = 0;
  bfReserved2 = 0;
+<<<<<<< HEAD
 }
 
+=======
+}
+
+>>>>>>> master
 void BMFH::SwitchEndianess( void )
 {
  bfType = FlipWORD( bfType );
@@ -58,9 +79,15 @@ void BMFH::SwitchEndianess( void )
  bfOffBits = FlipDWORD( bfOffBits );
  return;
 }
+<<<<<<< HEAD
 
 BMIH::BMIH()
 {
+=======
+
+BMIH::BMIH()
+{
+>>>>>>> master
  biPlanes = 1;
  biCompression = 0;
  biXPelsPerMeter = DefaultXPelsPerMeter;  
@@ -110,13 +137,18 @@ void BMFH::display( void )
       << "bfReserved2: " << (int) bfReserved2 << endl
       << "bfOffBits: " << (int) bfOffBits << endl << endl;
 }
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> master
 /* These functions are defined in EasyBMP_BMP.h */
 
 RGBApixel BMP::GetPixel( int i, int j ) const
 {
  using namespace std;
  bool Warn = false;
+<<<<<<< HEAD
  if( i >= Width )
  { i = Width-1; Warn = true; }
  if( i < 0 )
@@ -124,6 +156,15 @@ RGBApixel BMP::GetPixel( int i, int j ) const
  if( j >= Height )
  { j = Height-1; Warn = true; }
  if( j < 0 )
+=======
+ if( i >= Width )
+ { i = Width-1; Warn = true; }
+ if( i < 0 )
+ { i = 0; Warn = true; }
+ if( j >= Height )
+ { j = Height-1; Warn = true; }
+ if( j < 0 )
+>>>>>>> master
  { j = 0; Warn = true; }
  if( Warn && EasyBMPwarnings )
  {
@@ -139,8 +180,13 @@ bool BMP::SetPixel( int i, int j, RGBApixel NewPixel )
  Pixels[i][j] = NewPixel;
  return true;
 }
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> master
 bool BMP::SetColor( int ColorNumber , RGBApixel NewColor )
 {
  using namespace std;
@@ -227,9 +273,15 @@ BMP::BMP()
  BitDepth = 24;
  Pixels = new RGBApixel* [Width];
  Pixels[0] = new RGBApixel [Height];
+<<<<<<< HEAD
  Colors = NULL;
  
  XPelsPerMeter = 0;
+=======
+ Colors = NULL;
+ 
+ XPelsPerMeter = 0;
+>>>>>>> master
  YPelsPerMeter = 0;
  
  MetaData1 = NULL;
@@ -249,7 +301,11 @@ BMP::BMP( BMP& Input )
  Pixels = new RGBApixel* [Width];
  Pixels[0] = new RGBApixel [Height];
  Colors = NULL; 
+<<<<<<< HEAD
  XPelsPerMeter = 0;
+=======
+ XPelsPerMeter = 0;
+>>>>>>> master
  YPelsPerMeter = 0;
  
  MetaData1 = NULL;
@@ -311,6 +367,7 @@ RGBApixel* BMP::operator()(int i, int j)
 {
  using namespace std;
  bool Warn = false;
+<<<<<<< HEAD
  if( i >= Width )
  { i = Width-1; Warn = true; }
  if( i < 0 )
@@ -318,6 +375,15 @@ RGBApixel* BMP::operator()(int i, int j)
  if( j >= Height )
  { j = Height-1; Warn = true; }
  if( j < 0 )
+=======
+ if( i >= Width )
+ { i = Width-1; Warn = true; }
+ if( i < 0 )
+ { i = 0; Warn = true; }
+ if( j >= Height )
+ { j = Height-1; Warn = true; }
+ if( j < 0 )
+>>>>>>> master
  { j = 0; Warn = true; }
  if( Warn && EasyBMPwarnings )
  {
@@ -647,7 +713,11 @@ bool BMP::WriteToFile( const char* FileName )
 	
     fwrite( (char*) &TempWORD , 2, 1, fp);
     WriteNumber += 2;
+<<<<<<< HEAD
 	i++;
+=======
+	i++;
+>>>>>>> master
    }
    // write any necessary row padding
    WriteNumber = 0;
@@ -916,7 +986,11 @@ bool BMP::ReadFromFile( const char* FileName )
   }
   ebmpBYTE* TempSkipBYTE;
   TempSkipBYTE = new ebmpBYTE [BytesToSkip];
+<<<<<<< HEAD
   SafeFread( (char*) TempSkipBYTE , BytesToSkip , 1 , fp);   
+=======
+  SafeFread( (char*) TempSkipBYTE , BytesToSkip , 1 , fp);   
+>>>>>>> master
   delete [] TempSkipBYTE;
  } 
   
@@ -1021,7 +1095,11 @@ bool BMP::ReadFromFile( const char* FileName )
    }
    ebmpBYTE* TempSkipBYTE;
    TempSkipBYTE = new ebmpBYTE [BytesToSkip];
+<<<<<<< HEAD
    SafeFread( (char*) TempSkipBYTE , BytesToSkip , 1 , fp);
+=======
+   SafeFread( (char*) TempSkipBYTE , BytesToSkip , 1 , fp);
+>>>>>>> master
    delete [] TempSkipBYTE;   
   } 
   
@@ -1271,6 +1349,7 @@ void BMP::SetDPI( int HorizontalDPI, int VerticalDPI )
 {
  XPelsPerMeter = (int) ( HorizontalDPI * 39.37007874015748 );
  YPelsPerMeter = (int) (   VerticalDPI * 39.37007874015748 );
+<<<<<<< HEAD
 }
 
 // int BMP::TellVerticalDPI( void ) const
@@ -1291,6 +1370,28 @@ int BMP::TellHorizontalDPI( void )
 
 /* These functions are defined in EasyBMP_VariousBMPutilities.h */
 
+=======
+}
+
+// int BMP::TellVerticalDPI( void ) const
+int BMP::TellVerticalDPI( void )
+{
+ if( !YPelsPerMeter )
+ { YPelsPerMeter = DefaultYPelsPerMeter; }
+ return (int) ( YPelsPerMeter / (double) 39.37007874015748 ); 
+}
+
+// int BMP::TellHorizontalDPI( void ) const
+int BMP::TellHorizontalDPI( void )
+{
+ if( !XPelsPerMeter )
+ { XPelsPerMeter = DefaultXPelsPerMeter; }
+ return (int) ( XPelsPerMeter / (double) 39.37007874015748 );
+}
+
+/* These functions are defined in EasyBMP_VariousBMPutilities.h */
+
+>>>>>>> master
 BMFH GetBMFH( const char* szFileNameIn )
 {
  using namespace std;
