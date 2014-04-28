@@ -3,6 +3,7 @@
 
 #include "Drawable.h"
 #include "../EasyBMP/EasyBMP.h"
+
 #include <string>
 
 class Image: public Drawable{

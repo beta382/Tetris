@@ -11,7 +11,6 @@
 #define TETROMINO_H_
 
 #include "TetrominoBase.h"
-#include "util.h"
 
 /*
  * Tetromino<BlockType>:

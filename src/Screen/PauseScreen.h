@@ -12,7 +12,6 @@
 
 #include "Screen.h"
 #include "Game.h"
-#include "util.h"
 
 /*
  * PauseScreen:

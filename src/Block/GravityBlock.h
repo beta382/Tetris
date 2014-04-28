@@ -11,7 +11,6 @@
 #define GRAVITYBLOCK_H_
 
 #include "Block.h"
-#include "util.h"
 
 /*
  * GravityBlock:

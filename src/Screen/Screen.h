@@ -10,9 +10,8 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "Drawable.h"
-#include "Rectangle.h"
-#include "util.h"
+#include "..\Drawable.h"
+#include "..\Rectangle.h"
 
 /*
  * Screen:
