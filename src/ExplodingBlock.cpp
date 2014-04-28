@@ -126,8 +126,8 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
     // Actually clear the blocks
     for (int i = x-2; i <= x+2; i++) {
         for (int j = y-2; j <= y+2; j++) {
-            if (i >= 0 && i < (int)blockField.size() && j >= 0 && j < (int)blockField[i].size() &&
-                    blockField[i][j])
+            if (i >= 0 && i < static_cast<int>(blockField.size()) &&
+                j >= 0 && j < static_cast<int>(blockField[i].size()) && blockField[i][j])
             {
                 Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;

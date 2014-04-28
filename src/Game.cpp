@@ -91,6 +91,9 @@ Screen* Game::respondToKey(int key) {
         case '4':
             doResetTetromino<RightMagnetBlock>();
             break;
+        case '5':
+            doResetTetromino<LaserBlock>();
+            break;
         case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
             if (!doJoinAndRespawn()) {
                 nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
@@ -496,6 +499,9 @@ bool Game::doJoinAndRespawn() {
         // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
         draw();
     }
+    
+    // We may have waited while merging, reset the tick
+    prevTime = clock();
     
     return couldSpawn;
 }
