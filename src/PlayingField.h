@@ -14,7 +14,6 @@
 #include "Tetromino.h"
 #include "Shape.h"
 #include "Rectangle.h"
-#include "util.h"
 
 #include <vector>
 #include <algorithm>

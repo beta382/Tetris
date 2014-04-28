@@ -12,11 +12,9 @@
 
 #include "Screen.h"
 #include "PauseScreen.h"
-#include "PlayingField.h"
-#include "TetrominoBase.h"
-#include "blocks.h"
-#include "util.h"
-#include "Image.h"
+#include "..\PlayingField.h"
+#include "..\TetrominoBase.h"
+#include "..\Image.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -213,6 +211,11 @@ _registerForLeakcheckWithID(Game)
          * Background rectangle border for next block
          */
         MyRectangle bgRectNext2;
+        
+        /*
+         * Game logo
+         */
+        Image logo;
         
         /*
         * Draws level. Duh.

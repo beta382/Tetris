@@ -11,7 +11,6 @@
 #define LEFTMAGNETBLOCK_H_
 
 #include "Block.h"
-#include "util.h"
 
 /*
  * LeftMagnetBlock:

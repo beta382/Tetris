@@ -3,6 +3,7 @@
 
 #include "Drawable.h"
 #include "../EasyBMP/EasyBMP.h"
+
 #include <string>
 
 class Image: public Drawable{
@@ -11,10 +12,16 @@ _registerForLeakcheckWithID(Image)
         BMP image;
 
     public:
-        Image();
+        Image(string filename = "");
 
         void setFileName(string fileName);
-        void setXandY(int x, int y);
+        
+        /* ---------- Overriding from Drawable ---------- */
+        int getWidth() const;
+        int getHeight() const;
+        
+        /* ---------- Implemented from Drawable ---------- */
+
         void draw();
         void erase();
 };

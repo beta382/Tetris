@@ -11,8 +11,6 @@
 #define TETROMINOBASE_H_
 
 #include "Shape.h"
-#include "util.h"
-
 /*
  * TetrominoShape:
  *

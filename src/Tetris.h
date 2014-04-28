@@ -23,7 +23,7 @@
     }
 
 #include "GLUT_Plotter.h"
-#include "Game.h"
+#include "screens.h"
 #include "util.h"
 
 class Tetris {

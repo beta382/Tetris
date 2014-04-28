@@ -1,8 +1,11 @@
 #include "Image.h"
 
-Image::Image()
+Image::Image(string fileName):
+Drawable()
 {
-
+    if (fileName != "") {
+        setFileName(fileName);
+    }
 }
 
 void Image::setFileName(string fileName)
@@ -10,17 +13,25 @@ void Image::setFileName(string fileName)
     image.ReadFromFile(fileName.c_str());
 }
 
-void Image::setXandY(int x, int y)
-{
-    this->x = x;
-    this->y = y;
+
+/* ---------- Overriding from Drawable ---------- */
+
+int Image::getWidth() const {
+    return image.TellWidth();
 }
+
+int Image::getHeight() const {
+    return image.TellHeight();
+}
+
+
+/* ---------- Implemented from Drawable ---------- */
 
 void Image::draw()
 {
-    for(int i = 0; i < image.TellWidth(); i++)
+    for(int i = 0; i < getWidth(); i++)
     {
-        for(int j = 0; j < image.TellHeight(); j++)
+        for(int j = 0; j < getHeight(); j++)
         {
             int red = image.GetPixel(i, j).Red;
             int green = image.GetPixel(i, j).Green;
@@ -32,7 +43,7 @@ void Image::draw()
 
             g->setColor(rgb);
 
-            g->plot(getLocationX()+i, getLocationY()-j);
+            g->plot(getLocationX()+i, getLocationY()+getHeight()-j);
 
             //cout << getLocationX()+i << " " << getLocationY()-j << endl;
         }
