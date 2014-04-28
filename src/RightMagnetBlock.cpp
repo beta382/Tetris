@@ -1,5 +1,5 @@
 /*
- * Author:                 Austin Hash
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -154,23 +154,16 @@ void RightMagnetBlock::draw() {
                 g->plot(getLocationX()+i, getLocationY()+j);
             }
             
-            // Arrow left half
-            if ((i > getWidth()/8 && i < getWidth()/2) && 
-                    (j >= -i + getHeight()/2 && j < (3*getHeight())/8))
-            {
-                g->plot(getLocationX()+i, getLocationY()+j);
-            }
-            
-            // Arrow right half
-            if ((i >= getWidth()/2 && i < (7*getWidth())/8-1) && 
-                    (j > i - getHeight()/2 && j < (3*getHeight())/8))
+            // Arrow head
+            if ((i >= (5*getWidth())/8) && 
+                    (j > i - getHeight()/2 && j < -i + (3*getHeight())/2-1))
             {
                 g->plot(getLocationX()+i, getLocationY()+j);
             }
             
             // Arrow tail
-            if ((i >= (3*getWidth())/8 && i < (5*getWidth())/8) && 
-                    (j >= (3*getHeight())/8 && j < getHeight()))
+            if ((i < (5*getWidth())/8) && 
+                    (j >= (3*getHeight())/8 && j < (5*getHeight())/8))
             {
                 g->plot(getLocationX()+i, getLocationY()+j);
             }

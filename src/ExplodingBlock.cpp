@@ -1,10 +1,10 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
  * Date created:           Apr 23, 2014
- * Date last modified:     Apr 26, 2014
+ * Date last modified:     Apr 27, 2014
  */
 
 #include "ExplodingBlock.h"
@@ -126,8 +126,8 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
     // Actually clear the blocks
     for (int i = x-2; i <= x+2; i++) {
         for (int j = y-2; j <= y+2; j++) {
-            if (i >= 0 && i < (int)blockField.size() && j >= 0 && j < (int)blockField[i].size() &&
-                    blockField[i][j])
+            if (i >= 0 && i < static_cast<int>(blockField.size()) &&
+                j >= 0 && j < static_cast<int>(blockField[i].size()) && blockField[i][j])
             {
                 Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;
@@ -171,19 +171,9 @@ void ExplodingBlock::draw() {
                 g->plot(getLocationX()+i, getLocationY()+j);
             }
             
-            // Vertical/Horizontal
-            if ((i >= (2*getWidth())/16 && i < (14*getWidth())/16) &&
-                (j >= (2*getHeight())/16 && j < (14*getHeight())/16) &&
-                     ((i >= (7*getWidth())/16 && i < (9*getWidth())/16) ||
-                     (j >= (7*getHeight())/16 && j < (9*getHeight())/16)))
-            {
-                g->plot(getLocationX()+i, getLocationY()+j);
-            }
-            
-            if ((i >= (3*getWidth())/16 && i < (13*getWidth())/16) &&
-                (j >= (3*getHeight())/16 && j < (13*getHeight())/16) &&
-                    ((j >= -i + (14*getHeight())/16 && j < -i + (17*getHeight())/16) ||
-                     (j >= i - (1*getHeight())/16 && j < i + (2*getHeight())/16)))
+            // Inner box #1
+            if ((i >= (2*getWidth())/8 && i < (6*getWidth())/8) &&
+                    (j >= (2*getHeight())/8 && j < (6*getHeight())/8))
             {
                 g->plot(getLocationX()+i, getLocationY()+j);
             }

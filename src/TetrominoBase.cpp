@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -25,7 +25,7 @@ unsigned int TetrominoBase::uniqueID = 1; // Reserve 0 as a "no-ID"
  */
 TetrominoBase::TetrominoBase():
 Shape(),
-        offsetX(0), offsetY(0)
+        offsetX(0), offsetY(0), realWidth(0), realHeight(0), shape(S)
 {
 }
 
@@ -37,25 +37,28 @@ Shape(),
  *   int y: The value to initialize this TetrominoBase object's y with
  *   int blockSize: The value to initialize this TetrominoBase object's blockSize with
  *   int padding: The value to initialize this TetrominoBase object's padding with
+ *   TetrominoShape shape: The TetrominoShape to initialize this TetrominoBase object with
  *   unsigned int background: The value to initialize this TetrominoBase object's background with,
  *     defaults to Color::BLACK
  */
-TetrominoBase::TetrominoBase (int x, int y, int blockSize, int padding, unsigned int background):
+TetrominoBase::TetrominoBase (int x, int y, int blockSize, int padding, TetrominoShape shape,
+        unsigned int background):
 Shape(x, y, blockSize, padding, background),
-        offsetX(0), offsetY(0)
+        offsetX(0), offsetY(0), realWidth(0), realHeight(0), shape(shape)
 {
 }
 
 /*
- * Instantiates a TetrominoBase object that is a copy of the passed TetrominoBase object, except for
- *   bool isVisible, which is initialized with false.
+ * Instantiates a TetrominoBase object that is a copy of the passed TetrominoBase object, except
+ *   for bool isVisible, which is initialized with false.
  * 
  * Parameters:
  *   const TetrominoBase& other: A reference to the TetrominoBase object to copy from
  */
 TetrominoBase::TetrominoBase(const TetrominoBase& other):
 Shape(other),
-        offsetX(other.offsetX), offsetY(other.offsetY)
+        offsetX(other.offsetX), offsetY(other.offsetY), realWidth(other.realWidth),
+        realHeight(other.realHeight), shape(other.shape)
 {
 }
 
@@ -67,13 +70,16 @@ Shape(other),
  */
 void TetrominoBase::rotateCW() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->setLocation(((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY-
-                  offsetX)*blocks[i]->getTotalSize()+getLocationX(),
-                (width-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX)-1+
-                  offsetY)*blocks[i]->getTotalSize()+getLocationY());
+        blocks[i]->setLocation(
+            ((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY-offsetX)
+                *blocks[i]->getTotalSize()+getLocationX(),
+            (width-((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX)-1
+                +offsetY)*blocks[i]->getTotalSize()+getLocationY()
+        );
     }
     
     swap(width, height);
+    swap(realWidth, realHeight);
 }
 
 /*
@@ -81,15 +87,38 @@ void TetrominoBase::rotateCW() {
  */
 void TetrominoBase::rotateCCW() {
     for (unsigned int i = 0; i < blocks.size(); i++) {
-        blocks[i]->setLocation((height-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-
-                  offsetY)-1-offsetX)*blocks[i]->getTotalSize()+getLocationX(),
-                ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX+offsetY)*
-                  blocks[i]->getTotalSize()+getLocationY());
+        blocks[i]->setLocation(
+            (height-((blocks[i]->getLocationY()-getLocationY())/blocks[i]->getTotalSize()-offsetY)
+                -1-offsetX)*blocks[i]->getTotalSize()+getLocationX(),
+            ((blocks[i]->getLocationX()-getLocationX())/blocks[i]->getTotalSize()+offsetX+offsetY)
+                *blocks[i]->getTotalSize()+getLocationY()
+        );
     }
     
     swap(width, height);
+    swap(realWidth, realHeight);
 }
 
+/*
+ * Returns the realWidth of this TetrominoBase.
+ */
+int TetrominoBase::getRealWidth() const {
+    return realWidth*getTotalBlockSize()-getPadding();
+}
+
+/*
+ * Returns the realHeight of this TetrominoBase.
+ */
+int TetrominoBase::getRealHeight() const {
+    return realHeight*getTotalBlockSize()-getPadding();
+}
+
+/*
+ * Returns the shape of this TetrominoBase.
+ */
+TetrominoShape TetrominoBase::getShape() const {
+    return shape;
+}
 
 /* ---------- Protected ---------- */
 
@@ -107,6 +136,9 @@ TetrominoBase& TetrominoBase::operator =(const TetrominoBase& rhs) {
         Shape::operator =(rhs);
         offsetX = rhs.offsetX;
         offsetY = rhs.offsetY;
+        realWidth = rhs.realWidth;
+        realHeight = rhs.realHeight;
+        shape = rhs.shape;
     }
     
     return *this;

@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -81,7 +81,8 @@ namespace util {
      * id should be the string representation of the name of the object you are tracking, WITHOUT
      *   string-literal double quotes.
      */
-    #define _registerForLeakcheckWithID(id) \
+
+#    define _registerForLeakcheckWithID(id) \
         public: \
         void* operator new(size_t bytes) { \
             void* mem = malloc(bytes); \
@@ -93,8 +94,10 @@ namespace util {
             leakcheck::allocated.erase(mem); \
             free(mem); \
         }
+    /* end define */
+
 #else // Define empty macro if we aren't checking for leaks
-    #define _registerForLeakcheckWithID(id)
+#    define _registerForLeakcheckWithID(id)
 #endif
 
 namespace leakcheck {

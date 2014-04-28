@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -33,7 +33,8 @@ Block()
  *   unsigned int background: The value to initialize this GhostBlock object's background with,
  *     defaults to Color::BLACK
  */
-GhostBlock::GhostBlock(int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+GhostBlock::GhostBlock(int x, int y, int size, int padding, unsigned int foreground,
+        unsigned int background):
 Block(x, y, size, padding, foreground, background)
 {
 }

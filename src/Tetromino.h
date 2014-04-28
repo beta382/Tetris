@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -38,30 +38,35 @@ _registerForLeakcheckWithID(Tetromino)
          * Parameters:
          *   int x: The value to initialize this Tetromino<BlockType> object's x with
          *   int y: The value to initialize this Tetromino<BlockType> object's y with
-         *   int blockSize: The value to initialize this Tetromino<BlockType> object's blockSize with
+         *   int blockSize: The value to initialize this Tetromino<BlockType> object's blockSize
+         *     with
          *   int padding: The value to initialize this Tetromino<BlockType> object's padding with
-         *   TetrominoShape shape: The TetrominoShape to initialize this Tetromino<BlockType> object with
-         *   unsigned int background: The value to initialize this Tetromino<BlockType> object's background
-         *     with, defaults to Color::BLACK
+         *   TetrominoShape shape: The TetrominoShape to initialize this Tetromino<BlockType>
+         *     object with
+         *   unsigned int background: The value to initialize this Tetromino<BlockType> object's
+         *     background with, defaults to Color::BLACK
          */
         Tetromino(int x, int y, int blockSize, int padding, TetrominoShape shape,
                 unsigned int background = Color::BLACK);
 
         /*
-         * Instantiates a Tetromino<BlockType> object that is a copy of the passed Tetromino<BlockType>
-         *   object, except for bool isVisible, which is initialized with false.
+         * Instantiates a Tetromino<BlockType> object that is a copy of the passed
+         *   Tetromino<BlockType> object, except for bool isVisible, which is initialized with
+         *   false.
          * 
          * Parameters:
-         *   const Tetromino<BlockType>& other: A reference to the Tetromino<BlockType> object to copy from
+         *   const Tetromino<BlockType>& other: A reference to the Tetromino<BlockType> object to
+         *     copy from
          */
         Tetromino(const Tetromino<BlockType>&);
 
         /*
-         * Assigns this Tetromino<BlockType> object the values of the passed Tetromino<BlockType> object,
-         *   except for bool isVisible, which is assigned false.
+         * Assigns this Tetromino<BlockType> object the values of the passed Tetromino<BlockType>
+         *   object, except for bool isVisible, which is assigned false.
          * 
          * Parameters:
-         *   const Tetromino<BlockType>& rhs: A reference to the Tetromino<BlockType> object to assign from
+         *   const Tetromino<BlockType>& rhs: A reference to the Tetromino<BlockType> object to
+         *     assign from
          * 
          * Returns: A reference to this Tetromino<BlockType> object
          */
@@ -75,25 +80,14 @@ _registerForLeakcheckWithID(Tetromino)
          * Returns: The address of the newly instantiated clone of this Tetromino<BlockType>
          */
         Tetromino<BlockType>* makeNewClone() const;
-        
-        
-        // Get the shape
-        TetrominoShape getShape() const;
     private:
         
         /* ---------- Implemented from TetrominoBase ---------- */
 
         /*
-         * Initializes this Tetromino<BlockType> object with the passed TetrominoShape.
-         * 
-         * Parameters:
-         *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType> after
+         * Initializes this Tetromino<BlockType>.
          */
-        void initTetromino(TetrominoShape shape);
-        
-        
-        // Private variable to store the shape
-        TetrominoShape shape;
+        void initTetromino();
 };
 
 
@@ -106,7 +100,7 @@ template <typename BlockType>
 Tetromino<BlockType>::Tetromino():
 TetrominoBase()
 {
-    initTetromino(S); // Picked by fair dice roll, guaranteed to be random
+    initTetromino(); // Picked by fair dice roll, guaranteed to be random
 }
 
 /*
@@ -124,9 +118,9 @@ TetrominoBase()
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino (int x, int y, int blockSize, int padding, TetrominoShape shape,
         unsigned int background):
-TetrominoBase(x, y, blockSize, padding, background)
+TetrominoBase(x, y, blockSize, padding, shape, background)
 {
-    initTetromino(shape);
+    initTetromino();
 }
 
 /*
@@ -176,25 +170,14 @@ Tetromino<BlockType>* Tetromino<BlockType>::makeNewClone() const {
 }
 
 
-template <typename BlockType>
-TetrominoShape Tetromino<BlockType>::getShape() const{
-    return shape;
-}
-
-
 /* ---------- Privately Implemented from TetrominoBase ---------- */
 
 /*
  * Initializes this Tetromino<BlockType> object with the passed TetrominoShape.
- * 
- * Parameters:
- *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType> after
  */
 template <typename BlockType>
-void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
+void Tetromino<BlockType>::initTetromino () {
     Block* block1, * block2, * block3, * block4;
-    
-    this->shape = shape;
     
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired
     // rotations.
@@ -215,6 +198,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(4);
             setHeight(5); // Fudged
+            realWidth = 4;
+            realHeight = 1;
             offsetY = 2;
             break;
         case O:
@@ -232,6 +217,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(2);
             setHeight(2);
+            realWidth = 2;
+            realHeight = 2;
             break;
         case T:
             block1 = new BlockType(getLocationX()+getTotalBlockSize(),
@@ -249,6 +236,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
+            realWidth = 3;
+            realHeight = 2;
             offsetY = 1;
             break;
         case J:
@@ -267,6 +256,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
+            realWidth = 3;
+            realHeight = 2;
             offsetY = 1;
             break;
         case L:
@@ -285,6 +276,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
+            realWidth = 3;
+            realHeight = 2;
             offsetY = 1;
             break;
         case S:
@@ -302,6 +295,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(2);
+            realWidth = 3;
+            realHeight = 2;
             break;
         case Z:
             block1 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
@@ -319,6 +314,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(2);
+            realWidth = 3;
+            realHeight = 2;
             break;
     }
     

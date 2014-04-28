@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -34,15 +34,17 @@ Drawable(0, 0, 10, 10),
  *   unsigned int background: The value to initialize this Block object's background with, defaults
  *     to Color::BLACK
  */
-Block::Block (int x, int y, int size, int padding, unsigned int foreground, unsigned int background):
+Block::Block (int x, int y, int size, int padding, unsigned int foreground,
+        unsigned int background):
 Drawable(x, y, size, size, foreground, background),
         padding(padding), uniqueID(0)
 {
 }
 
 /*
- * Instantiates a Block object that is a copy of the passed Block object, except for bool isVisible,
- *   which is initialized with false, and unsigned int uniqueID, which is initialized with 0.
+ * Instantiates a Block object that is a copy of the passed Block object, except for bool
+ *   isVisible, which is initialized with false, and unsigned int uniqueID, which is initialized 
+ *   with 0.
  * 
  * Parameters:
  *   const Block& other: A reference to the Block object to copy from
@@ -64,8 +66,8 @@ Block::~Block() {
 /* ---------- Public ---------- */
 
 /*
- * Assigns this Block object the values of the passed Block object, except for bool isVisible, which
- *   is assigned false, and unsigned int uniqueID, which is assigned 0.
+ * Assigns this Block object the values of the passed Block object, except for bool isVisible,
+ *   which is assigned false, and unsigned int uniqueID, which is assigned 0.
  * 
  * Parameters:
  *   const Block& rhs: A reference to the Block object to assign from

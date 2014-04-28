@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -177,6 +177,13 @@ _registerForLeakcheckWithID(Game)
         clock_t tick;
         
         /*
+         * Represents the current score and level, which will be used to modify the duration of the
+         *   tick and final score
+         */
+        int score;
+        int level;
+        
+        /*
          * PlayingField object that represents the area of main gameplay.
          */
         PlayingField field;
@@ -206,16 +213,6 @@ _registerForLeakcheckWithID(Game)
          * Background rectangle border for next block
          */
         MyRectangle bgRectNext2;
-        
-        /*
-        * Holds score. Duh.
-        */
-        int score;
-        
-        /*
-        * Holds level. Duh.
-        */
-        int level;
         
         /*
         * Draws level. Duh.
@@ -248,18 +245,25 @@ void Game::doResetTetromino() {
     delete currentTetromino;
     delete shadow;
     
-    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
+    delete tetrominoNext;
+    tetrominoNext = new Tetromino<BlockType>(0, 0, field.getBlockSize(), field.getPadding(),
+            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
         
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<BlockType>(shape, tetrominoNext);
-    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
-            field.getForeground());
+    currentTetromino = field.spawnNewTetromino(tetrominoNext);
+    shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
+            currentTetromino->getLocationY(), currentTetromino->getBlockSize(), 
+            currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
     
     // Have the shadow fall
     while (field.canShiftDown(shadow)) {
         shadow->shiftDown();
     }
+    
+    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
+    
+    applyLayout();
     
     // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
     shadow->draw();

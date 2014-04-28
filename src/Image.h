@@ -5,7 +5,8 @@
 #include "../EasyBMP/EasyBMP.h"
 #include <string>
 
-class Image:public Drawable{
+class Image: public Drawable{
+_registerForLeakcheckWithID(Image)
     private:
         BMP image;
 

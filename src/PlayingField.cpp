@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -138,6 +138,125 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     
     return *this;
 }
+
+
+
+/*
+ * Dynamically allocates a TetrominoBase from the passed TetrominoBase pointer centered at the top
+ *   of the block field.
+ * 
+ * Parameters:
+ *   TetrominoBase* initFrom: A pointer to the TetrominoBase to use a base for spawning the new
+ *     tetromino
+ * 
+ * Returns: A pointer to the dynamically allocated TetrominoBase*, or NULL if the tetromino cannot
+ *   be spawned
+ */
+TetrominoBase* PlayingField::spawnNewTetromino (TetrominoBase* initFrom) const {
+    
+    TetrominoBase* tetromino = initFrom;
+    
+    tetromino->setLocation(
+            getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+            getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height
+    );
+    
+    tetromino->setBackground(getForeground());
+    
+    // Move us to the top of the screen and center since we spawned at a general location above it
+    // and to the right
+    tetromino->setLocation(
+        tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
+                tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
+        tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
+    );
+    
+    // Check to see if this is a valid location
+    bool canSpawn = true;
+    for (int i = 0; i < tetromino->numBlocks() && canSpawn; i++) {
+        if(!couldAdd(tetromino->getBlock(i))) {
+            canSpawn = false;
+            tetromino->setLocation(getLocationX()+borderWidth+getPadding(),
+                    tetromino->getLocationY()); // Move us all the way to the left
+        }
+    }
+    
+    // Try new locations until we find one that works, or can't find one, in which case we return
+    // NULL
+    while(!canSpawn) {
+        canSpawn = true;
+        for (int i = 0; tetromino && i < tetromino->numBlocks() && canSpawn; i++) {
+            if(xIndexFromLocation(tetromino->getBlock(i)) > width) {
+                delete tetromino;
+                tetromino = NULL;
+            } else if(!couldAdd(tetromino->getBlock(i))) {
+                canSpawn = false;
+                tetromino->setLocation(tetromino->getLocationX()+getTotalBlockSize(), 
+                        tetromino->getLocationY());
+            }
+        }
+    }
+    
+    return tetromino;
+}
+
+/*
+ * Dynamically allocates a TetrominoBase with the passed TetrominoShape centered at the top of the
+ *   block field.
+ * 
+ * Parameters:
+ *   TetrominoShape shape: The shape of the tetromino to model the TetrominoBase after
+ * 
+ * Returns: A pointer to the dynamically allocated Tetromino<BlockType>, or NULL if the tetromino
+ *   cannot be spawned
+ */
+TetrominoBase* PlayingField::spawnNewTetromino (TetrominoShape type) const {
+    
+    TetrominoBase* tetromino = new Tetromino<Block>(
+            getLocationX()+getPadding()+borderWidth+getTotalBlockSize()*(width/2),
+            getLocationY()+getPadding()+borderWidth+getTotalBlockSize()*height, 
+            getBlockSize(), getPadding(), type, getForeground()
+    );
+    
+    // Move us to the top of the screen and center since we spawned at a general location above it
+    // and to the right
+    tetromino->setLocation(
+        tetromino->getLocationX()-(((tetromino->getWidth()+tetromino->getPadding())/
+                tetromino->getTotalBlockSize()+1)/2)*tetromino->getTotalBlockSize(),
+        tetromino->getLocationY()-tetromino->getHeight()-tetromino->getPadding()
+    );
+    
+    // Check to see if this is a valid location
+    bool canSpawn = true;
+    for (int i = 0; i < tetromino->numBlocks() && canSpawn; i++) {
+        if(!couldAdd(tetromino->getBlock(i))) {
+            canSpawn = false;
+            tetromino->setLocation(getLocationX()+borderWidth+getPadding(),
+                    tetromino->getLocationY()); // Move us all the way to the left
+        }
+    }
+    
+    // Try new locations until we find one that works, or can't find one, in which case we return
+    // NULL
+    while(!canSpawn) {
+        canSpawn = true;
+        for (int i = 0; tetromino && i < tetromino->numBlocks() && canSpawn; i++) {
+            if(xIndexFromLocation(tetromino->getBlock(i)) > width) {
+                delete tetromino;
+                tetromino = NULL;
+            } else if(!couldAdd(tetromino->getBlock(i))) {
+                canSpawn = false;
+                tetromino->setLocation(tetromino->getLocationX()+getTotalBlockSize(), 
+                        tetromino->getLocationY());
+            }
+        }
+    }
+    
+    return tetromino;
+}
+
+
+
 
 /*
  * Merges a clone of the Shape pointed to by the passed pointer into the blockField, de-allocates
@@ -404,7 +523,7 @@ bool PlayingField::couldAdd(const Block* block) const {
  *   
  * Returns: The number of points the line clear accumulated
  */
-int PlayingField::doLineClear(vector<int> clearableLines) { // TODO: Proper scoring
+int PlayingField::doLineClear(vector<int> clearableLines) {
     // Static because this recurses with doFall, maintains the remaining shapes across calls, is
     // always cleared/reset before exiting the top-level of a single call.
     static vector<Shape*> fallingShapes;
@@ -528,7 +647,7 @@ void PlayingField::normalizeBlocks(Shape& shape) {
  *     
  * Returns: The number of points the special effects accumulated
  */
-int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) { // TODO: Proper scoring
+int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) {
     vector<vector<Block*> > remainingBlockField(width,
             vector<Block*>(height, static_cast<Block*>(NULL)));
     

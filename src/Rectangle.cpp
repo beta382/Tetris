@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -9,22 +9,25 @@
 
 #include "Rectangle.h"
 
-MyRectangle::MyRectangle (): Drawable(0, 0, 10, 10) {
-    
+MyRectangle::MyRectangle ():
+Drawable(0, 0, 10, 10)
+{ 
 }
 
-MyRectangle::MyRectangle (int x, int y): Drawable(x, y, 10, 10) {
-    
-}
-
-MyRectangle::MyRectangle (int x, int y, int width, int height, unsigned int foreground, unsigned int background):
-        Drawable(x, y, width, height, foreground, background)
+MyRectangle::MyRectangle (int x, int y):
+Drawable(x, y, 10, 10)
 {
-    
 }
 
-MyRectangle::MyRectangle (const MyRectangle& other): Drawable(other) {
-    
+MyRectangle::MyRectangle (int x, int y, int width, int height, unsigned int foreground, 
+        unsigned int background):
+Drawable(x, y, width, height, foreground, background)
+{
+}
+
+MyRectangle::MyRectangle (const MyRectangle& other):
+Drawable(other)
+{
 }
 
 MyRectangle& MyRectangle::operator =(const MyRectangle& rhs) {

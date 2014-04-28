@@ -1,5 +1,5 @@
 /*
- * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
+ * Authors:                Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
@@ -204,8 +204,8 @@ void Drawable::blink(int times, clock_t interval) {
 /* ---------- Protected ---------- */
 
 /*
- * Assigns this Drawable object the values of the passed Drawable object, except for bool isVisible,
- *   which is assigned false.
+ * Assigns this Drawable object the values of the passed Drawable object, except for bool
+ *   isVisible, which is assigned false.
  * 
  * Parameters:
  *   const Drawable& rhs: A reference to the Drawable object to assign from
