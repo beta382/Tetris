@@ -137,7 +137,8 @@ TetrominoBase(x, y, blockSize, padding, background)
  */
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino(const Tetromino<BlockType>& other):
-TetrominoBase(other)
+TetrominoBase(other),
+        shape(other.shape)
 {
 }
 
@@ -156,6 +157,7 @@ template <typename BlockType>
 Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType>& rhs) {
     if (this != &rhs) {
         TetrominoBase::operator =(rhs);
+        shape = rhs.shape;
     }
     
     return *this;
@@ -214,6 +216,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(4);
             setHeight(5); // Fudged
+            realWidth = 4;
+            realHeight = 1;
             offsetY = 2;
             break;
         case O:
@@ -231,6 +235,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(2);
             setHeight(2);
+            realWidth = 2;
+            realHeight = 2;
             break;
         case T:
             block1 = new BlockType(getLocationX()+getTotalBlockSize(),
@@ -248,6 +254,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
+            realWidth = 3;
+            realHeight = 2;
             offsetY = 1;
             break;
         case J:
@@ -266,6 +274,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
+            realWidth = 3;
+            realHeight = 2;
             offsetY = 1;
             break;
         case L:
@@ -284,6 +294,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(3); // Fudged
+            realWidth = 3;
+            realHeight = 2;
             offsetY = 1;
             break;
         case S:
@@ -301,6 +313,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(2);
+            realWidth = 3;
+            realHeight = 2;
             break;
         case Z:
             block1 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
@@ -318,6 +332,8 @@ void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
             setBackground(getBackground());
             setWidth(3);
             setHeight(2);
+            realWidth = 3;
+            realHeight = 2;
             break;
     }
     

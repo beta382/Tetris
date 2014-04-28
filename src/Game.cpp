@@ -253,12 +253,10 @@ void Game::applyLayout() {
     
     if (tetrominoNext) {
         tetrominoNext->setLocation(
-            bgRectNext.getLocationX()+(bgRectNext.getWidth()/2-(tetrominoNext->getWidth()-
-                    tetrominoNext->getOffsetX()*tetrominoNext->getTotalBlockSize())/2)-
-                    (tetrominoNext->getOffsetX()*tetrominoNext->getTotalBlockSize()),
-            bgRectNext.getLocationY()+(bgRectNext.getHeight()/2-(tetrominoNext->getHeight()-
-                    tetrominoNext->getOffsetY()*tetrominoNext->getTotalBlockSize())/2)-
-                    (tetrominoNext->getOffsetY()*tetrominoNext->getTotalBlockSize())
+            bgRectNext.getLocationX()+bgRectNext.getWidth()-tetrominoNext->getWidth()-
+                (bgRectNext.getWidth()/2-tetrominoNext->getRealWidth()/2),
+            bgRectNext.getLocationY()+bgRectNext.getHeight()-tetrominoNext->getHeight()-
+                (bgRectNext.getHeight()/2-tetrominoNext->getRealHeight()/2)
         );
     }
 }

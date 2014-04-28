@@ -50,9 +50,9 @@ _registerForLeakcheckWithID(TetrominoBase)
          */
         virtual TetrominoBase* makeNewClone() const = 0;
         
-        int getOffsetX() const;
+        int getRealWidth() const;
         
-        int getOffsetY() const;
+        int getRealHeight() const;
         
         
         // Returns this shape
@@ -114,6 +114,12 @@ _registerForLeakcheckWithID(TetrominoBase)
          */
         int offsetX;
         int offsetY;
+        
+        /*
+         * These denote the real width and height of the TetrominoBase, in pixels
+         */
+        int realWidth;
+        int realHeight;
         
         /*
          * A shared unsigned int for all instances of objects that descend from TetrominoBase.

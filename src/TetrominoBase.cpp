@@ -25,7 +25,7 @@ unsigned int TetrominoBase::uniqueID = 1; // Reserve 0 as a "no-ID"
  */
 TetrominoBase::TetrominoBase():
 Shape(),
-        offsetX(0), offsetY(0)
+        offsetX(0), offsetY(0), realWidth(0), realHeight(0)
 {
 }
 
@@ -42,7 +42,7 @@ Shape(),
  */
 TetrominoBase::TetrominoBase (int x, int y, int blockSize, int padding, unsigned int background):
 Shape(x, y, blockSize, padding, background),
-        offsetX(0), offsetY(0)
+        offsetX(0), offsetY(0), realWidth(0), realHeight(0)
 {
 }
 
@@ -55,7 +55,8 @@ Shape(x, y, blockSize, padding, background),
  */
 TetrominoBase::TetrominoBase(const TetrominoBase& other):
 Shape(other),
-        offsetX(other.offsetX), offsetY(other.offsetY)
+        offsetX(other.offsetX), offsetY(other.offsetY), realWidth(other.realWidth),
+        realHeight(other.realHeight)
 {
 }
 
@@ -74,6 +75,7 @@ void TetrominoBase::rotateCW() {
     }
     
     swap(width, height);
+    swap(realWidth, realHeight);
 }
 
 /*
@@ -88,14 +90,15 @@ void TetrominoBase::rotateCCW() {
     }
     
     swap(width, height);
+    swap(realWidth, realHeight);
 }
 
-int TetrominoBase::getOffsetX() const {
-    return offsetX;
+int TetrominoBase::getRealWidth() const {
+    return realWidth*getTotalBlockSize()-getPadding();
 }
 
-int TetrominoBase::getOffsetY() const {
-    return offsetY;
+int TetrominoBase::getRealHeight() const {
+    return realHeight*getTotalBlockSize()-getPadding();
 }
 
 /* ---------- Protected ---------- */
