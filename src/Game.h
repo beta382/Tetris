@@ -2,15 +2,16 @@
  * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Apr  3, 2014
- * Date last modified:     Apr 15, 2014
+ * Date last modified:     Apr 27, 2014
  */
 
 #ifndef GAMESCREEN_H_
 #define GAMESCREEN_H_
 
 #include "Screen.h"
+#include "PauseScreen.h"
 #include "PlayingField.h"
 #include "TetrominoBase.h"
 #include "blocks.h"
@@ -72,8 +73,11 @@ _registerForLeakcheckWithID(Game)
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
+         * 
+         * Returns: A pointer to the Screen object control should shift to after this function
+         *   exits, or NULL if control should not shift to another Screen object
          */
-        void doBackground();
+        Screen* doBackground();
         
         
         /* ---------- Implemented from Drawable ---------- */
@@ -102,22 +106,22 @@ _registerForLeakcheckWithID(Game)
         void init();
 
         /*
-         * Properly performs a shift up on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift up on currentTetromino, performing checks.
          */
         void doShiftUp();
         
         /*
-         * Properly performs a shift down on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift down on currentTetromino, performing checks.
          */
         void doShiftDown();
         
         /*
-         * Properly performs a shift left on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift left on currentTetromino, performing checks.
          */
         void doShiftLeft();
         
         /*
-         * Properly performs a shift right on currentTetromino WITHOUT performing checks.
+         * Properly performs a shift right on currentTetromino, performing checks.
          */
         void doShiftRight();
         
@@ -133,6 +137,24 @@ _registerForLeakcheckWithID(Game)
         void doRotateCCW();
         
         /*
+         * Properly performs a clockwise rotation on currentTetromino, performing checks and wall
+         *   kicks.
+         */
+        void doRotateCWWithKick();
+        
+        /*
+         * Properly performs a counter-clockwise rotation on currentTetromino, performing checks
+         *   and wall kicks.
+         */
+        void doRotateCCWWithKick();
+        
+        /*
+         * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the
+         *   screen without merging.
+         */
+        void doSoftFall();
+        
+        /*
          * Resets the currentTetromino and spawns a new one. Exists for testing purposes.
          */
         template <typename BlockType>
@@ -140,8 +162,17 @@ _registerForLeakcheckWithID(Game)
         
         /*
          * Joins the currentTetromino with the field and spawns a new one.
+         * 
+         * Returns: True if a Tetromino could be successfully spawned, false otherwise
          */
-        void doJoinAndRespawn();
+        bool doJoinAndRespawn();
+        
+        /*
+         * Used as a game "tick" marker for automatic tetromino falling, and the duration of the
+         *   tick itself
+         */
+        clock_t prevTime;
+        clock_t tick;
         
         /*
          * PlayingField object that represents the area of main gameplay.
@@ -173,6 +204,16 @@ _registerForLeakcheckWithID(Game)
          * Background rectangle border for next block
          */
         MyRectangle bgRectNext2;
+        
+        
+        /* ---------- Implimented from Screen ---------- */
+        
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        void applyLayout();
 };
 
 

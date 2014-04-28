@@ -9,13 +9,11 @@
 GLUT_Plotter* g;
 
 GLUT_Plotter::GLUT_Plotter(int w, int h) {
-
-    width  = w;
-    height = h;
-    buffer = new char[width*height*3];
+    glutInitWindowSize(w, h);
     g = this;
+
     init();
-    callBacks();
+    callBacks(true);
     Draw();
 
 }
@@ -26,9 +24,12 @@ void GLUT_Plotter::init() {
     argv[0] = new char[10];
     argv[0][0] = '\0';
 
-    glutInitWindowSize(width, height);
-
     glutInit(argc, argv);
+    
+    width  = glutGet(GLUT_SCREEN_WIDTH);
+    height = glutGet(GLUT_SCREEN_HEIGHT);
+    buffer = new char[width*height*3];
+    
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutCreateWindow("Tetris");
     //glutFullScreen();
@@ -45,7 +46,6 @@ void GLUT_Plotter::init() {
 
 void GLUT_Plotter::init(int *argc, char **argv) {
 
-    glutInitWindowSize(width, height);
     glutInit(argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutCreateWindow("Tetris");
@@ -98,6 +98,11 @@ void GLUT_Plotter::Clear() {
 
 
 void GLUT_Plotter::Draw(void) {
+    // Added because prof assumed a width divisible by 4, and glDrawPixels by default uses
+    // WORD-alignment. This specifies to use byte-alignment. See:
+    // https://www.opengl.org/sdk/docs/man2/xhtml/glDrawPixels.xml
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, buffer);
     glutSwapBuffers();
       // instruct event system to call 'drawfunc' again
@@ -106,11 +111,11 @@ void GLUT_Plotter::Draw(void) {
 }
 
 int GLUT_Plotter::getWidth() {
-  return width;
+  return glutGet(GLUT_WINDOW_WIDTH);
 }
 
 int GLUT_Plotter::getHeight() {
-  return height;
+  return glutGet(GLUT_WINDOW_HEIGHT);
 }
 
 
@@ -118,7 +123,9 @@ char* GLUT_Plotter::getBuffer() {
     return buffer;
 }
 
-
+int GLUT_Plotter::getBufferLen() {
+    return width*height*3;
+}
 
 void GLUT_Plotter::setColor(unsigned int c) {
     color = c;
@@ -136,11 +143,18 @@ void GLUT_Plotter::plot(int x, int y) {
     setpixel(buffer, x, y, r, g, b, width);
 }
 
-void GLUT_Plotter::callBacks() {
+void GLUT_Plotter::callBacks(bool _register) {
     RegisterDisplayFunc(&drawFunction);
-    RegisterKeyboardFunc(keyboardFunction);
-    RegisterSpecialKeyboardFunc(SpecialKeyboardFunction);
-    RegisterMouseFunc(mouseFunction);
+    
+    if (_register) {
+        RegisterKeyboardFunc(keyboardFunction);
+        RegisterSpecialKeyboardFunc(SpecialKeyboardFunction);
+        RegisterMouseFunc(mouseFunction);
+    } else {
+        RegisterKeyboardFunc(NULL);
+        RegisterSpecialKeyboardFunc(NULL);
+        RegisterMouseFunc(NULL);
+    }
 }
 
 unsigned char GLUT_Plotter::getKey() {

@@ -2,9 +2,9 @@
  * Author:                 Wes Cossick, Evan Green, Austin Hash, Taylor Jones
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
- * Due date:               May  2, 2014
+ * Due date:               Apr 30, 2014
  * Date created:           Mar 29, 2014
- * Date last modified:     Apr 16, 2014
+ * Date last modified:     Apr 26, 2014
  */
 
 #include "PlayingField.h"
@@ -659,10 +659,8 @@ int PlayingField::doFall(vector<Shape*>& fallingShapes) {
             }
         }
 
-        g->Draw(); // Force redraw
-
         if (didFall) {
-            util::wait(100);
+            util::wait(100, g);
         }
     }
     
@@ -820,8 +818,8 @@ void PlayingField::setLocation(int x, int y) {
         }
     }
     
-    bgRect.setLocation(bgRect.getLocationX()+dX, getLocationY()+dY);
-    bgRect2.setLocation(bgRect2.getLocationX()+dX, getLocationY()+dY);
+    bgRect.setLocation(bgRect.getLocationX()+dX, bgRect.getLocationY()+dY);
+    bgRect2.setLocation(bgRect2.getLocationX()+dX, bgRect2.getLocationY()+dY);
     
     draw();
     
