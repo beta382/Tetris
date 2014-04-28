@@ -90,6 +90,13 @@ void TetrominoBase::rotateCCW() {
     swap(width, height);
 }
 
+int TetrominoBase::getOffsetX() const {
+    return offsetX;
+}
+
+int TetrominoBase::getOffsetY() const {
+    return offsetY;
+}
 
 /* ---------- Protected ---------- */
 

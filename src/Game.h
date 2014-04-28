@@ -185,6 +185,11 @@ _registerForLeakcheckWithID(Game)
         TetrominoBase* currentTetromino;
         
         /*
+         * Pointer to a TetrominoBase object representing the currently falling tetromino.
+         */
+        TetrominoBase* tetrominoNext;
+        
+        /*
          * Pointer to a Tetromino<GhostBlock> object representing the currently falling tetromino's
          *   shadow.
          */
@@ -222,18 +227,25 @@ void Game::doResetTetromino() {
     delete currentTetromino;
     delete shadow;
     
-    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
+    delete tetrominoNext;
+    tetrominoNext = new Tetromino<BlockType>(0, 0, field.getBlockSize(), field.getPadding(),
+            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
         
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<BlockType>(shape);
+    currentTetromino = field.spawnNewTetromino(tetrominoNext);
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-            currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+            currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
             field.getForeground());
     
     // Have the shadow fall
     while (field.canShiftDown(shadow)) {
         shadow->shiftDown();
     }
+    
+    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
+    
+    applyLayout();
     
     // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
     shadow->draw();

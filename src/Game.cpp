@@ -23,9 +23,9 @@ Game::Game(unsigned int color):
 Screen(color),
         prevTime(0), tick(500),
         field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
-        currentTetromino(NULL), shadow(NULL),
-        bgRectNext(0, 0, field.getTotalBlockSize()*5+field.getPadding(), 
-                field.getTotalBlockSize()*3+field.getPadding(), Color::LIGHT_TAN, foreground),
+        currentTetromino(NULL), tetrominoNext(NULL), shadow(NULL),
+        bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
+                field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground)
 {
@@ -39,6 +39,7 @@ Game::~Game() {
     erase();
     delete currentTetromino;
     delete shadow;
+    delete tetrominoNext;
 }
 
 
@@ -188,6 +189,10 @@ void Game::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
     
+    if (tetrominoNext) {
+        tetrominoNext->draw();
+    }
+    
     isVisible = true;
 }
 
@@ -202,6 +207,10 @@ void Game::erase() {
         
         if (shadow) {   
             shadow->erase();
+        }
+        
+        if (tetrominoNext) {
+            tetrominoNext->erase();
         }
         
         field.erase();
@@ -241,6 +250,17 @@ void Game::applyLayout() {
             field.getLocationY()+field.getHeight()-bgRectNext.getHeight()-50);
     
     bgRectNext2.setLocation(bgRectNext.getLocationX()-2, bgRectNext.getLocationY()-2);
+    
+    if (tetrominoNext) {
+        tetrominoNext->setLocation(
+            bgRectNext.getLocationX()+(bgRectNext.getWidth()/2-(tetrominoNext->getWidth()-
+                    tetrominoNext->getOffsetX()*tetrominoNext->getTotalBlockSize())/2)-
+                    (tetrominoNext->getOffsetX()*tetrominoNext->getTotalBlockSize()),
+            bgRectNext.getLocationY()+(bgRectNext.getHeight()/2-(tetrominoNext->getHeight()-
+                    tetrominoNext->getOffsetY()*tetrominoNext->getTotalBlockSize())/2)-
+                    (tetrominoNext->getOffsetY()*tetrominoNext->getTotalBlockSize())
+        );
+    }
 }
 
 
@@ -255,18 +275,22 @@ void Game::init() {
     
     srand(time(0));
     
-    TetrominoShape shape = static_cast<TetrominoShape>(rand()%7); // Random TetrominoShape
-    
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino<Block>(shape);
+    currentTetromino = field.spawnNewTetromino(static_cast<TetrominoShape>(rand()%7));
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
-            currentTetromino->getPadding(), shape, field.getForeground());
+            currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
     
     // Have the shadow fall
     while (field.canShiftDown(shadow)) {
         shadow->shiftDown();
     }
+    
+    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
+    
+    // Again, to place tetrominoNext
+    applyLayout();
     
     draw();
 }
@@ -471,24 +495,30 @@ bool Game::doJoinAndRespawn() {
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
     int blockType = rand()%(1 << 15); // Rand maxes at 0x7FFF, 15-bit number
-        
-    // Spawn a new tetromino and create a shadow in the same place
     
+    currentTetromino = field.spawnNewTetromino(tetrominoNext);
+
     if (blockType < (1 << 15)/20) { // 1/20
-        currentTetromino = field.spawnNewTetromino<ExplodingBlock>(shape);
+        tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(), field.getPadding(),
+                shape, bgRectNext.getForeground());
     } else if (blockType < ((1 << 15)/20)+((1 << 15))/30) { // 1/30
-        currentTetromino = field.spawnNewTetromino<GravityBlock>(shape);
+        tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(), field.getPadding(),
+                shape, bgRectNext.getForeground());
     } else {
-        currentTetromino = field.spawnNewTetromino<Block>(shape);
+        tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+                shape, bgRectNext.getForeground());
     }
     
-    couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
+    // For the new tetrominoNext
+    applyLayout();
     
+    couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
+
     if (couldSpawn) {
         delete shadow;
         
         shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), currentTetromino->getLocationY(),
-                currentTetromino->getBlockSize(), currentTetromino->getPadding(), shape,
+                currentTetromino->getBlockSize(), currentTetromino->getPadding(), currentTetromino->getShape(),
                 field.getForeground());
         
         // Have the shadow fall
