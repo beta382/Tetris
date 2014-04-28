@@ -470,8 +470,10 @@ void Game::doSoftFall() {
     }
     
     // If we can't do any "after-fall" movements, mark for locking
-    if(!(field.canShiftLeft(currentTetromino) || field.canShiftRight(currentTetromino) ||
-         field.canRotateCCW(currentTetromino) || field.canRotateCW(currentTetromino)))
+
+     if (!field.canShiftLeft(currentTetromino) && !field.canShiftRight(currentTetromino) &&
+        ((!field.canRotateCCW(currentTetromino) && !field.canRotateCW(currentTetromino)) || 
+                currentTetromino->getShape() == O))
     {
         prevTime = clock()-tick;
     }
