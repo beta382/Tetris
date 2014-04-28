@@ -15,7 +15,7 @@ _registerForLeakcheckWithID(Image)
         Image();
 
         void setFileName(string fileName);
-        void setXandY(int x, int y);
+
         void draw();
         void erase();
 };

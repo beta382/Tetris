@@ -199,7 +199,7 @@ void Game::draw() {
     //Draws tetris logo
     Image logo;
     logo.setFileName("img/logo_medium.bmp");
-    logo.setXandY(215, 370);
+    logo.setLocation(215, 370);
     logo.draw();
     
     drawScore();

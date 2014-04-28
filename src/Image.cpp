@@ -10,12 +10,6 @@ void Image::setFileName(string fileName)
     image.ReadFromFile(fileName.c_str());
 }
 
-void Image::setXandY(int x, int y)
-{
-    this->x = x;
-    this->y = y;
-}
-
 void Image::draw()
 {
     for(int i = 0; i < image.TellWidth(); i++)
