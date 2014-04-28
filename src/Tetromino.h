@@ -80,25 +80,14 @@ _registerForLeakcheckWithID(Tetromino)
          * Returns: The address of the newly instantiated clone of this Tetromino<BlockType>
          */
         Tetromino<BlockType>* makeNewClone() const;
-        
-        // Get the shape
-        TetrominoShape getShape() const;
     private:
         
         /* ---------- Implemented from TetrominoBase ---------- */
 
         /*
-         * Initializes this Tetromino<BlockType> object with the passed TetrominoShape.
-         * 
-         * Parameters:
-         *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType>
-         *   after
+         * Initializes this Tetromino<BlockType>.
          */
-        void initTetromino(TetrominoShape shape);
-        
-        
-        // Private variable to store the shape
-        TetrominoShape shape;
+        void initTetromino();
 };
 
 
@@ -111,7 +100,7 @@ template <typename BlockType>
 Tetromino<BlockType>::Tetromino():
 TetrominoBase()
 {
-    initTetromino(S); // Picked by fair dice roll, guaranteed to be random
+    initTetromino(); // Picked by fair dice roll, guaranteed to be random
 }
 
 /*
@@ -129,9 +118,9 @@ TetrominoBase()
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino (int x, int y, int blockSize, int padding, TetrominoShape shape,
         unsigned int background):
-TetrominoBase(x, y, blockSize, padding, background)
+TetrominoBase(x, y, blockSize, padding, shape, background)
 {
-    initTetromino(shape);
+    initTetromino();
 }
 
 /*
@@ -143,8 +132,7 @@ TetrominoBase(x, y, blockSize, padding, background)
  */
 template <typename BlockType>
 Tetromino<BlockType>::Tetromino(const Tetromino<BlockType>& other):
-TetrominoBase(other),
-        shape(other.shape)
+TetrominoBase(other)
 {
 }
 
@@ -163,7 +151,6 @@ template <typename BlockType>
 Tetromino<BlockType>& Tetromino<BlockType>::operator =(const Tetromino<BlockType>& rhs) {
     if (this != &rhs) {
         TetrominoBase::operator =(rhs);
-        shape = rhs.shape;
     }
     
     return *this;
@@ -183,25 +170,14 @@ Tetromino<BlockType>* Tetromino<BlockType>::makeNewClone() const {
 }
 
 
-template <typename BlockType>
-TetrominoShape Tetromino<BlockType>::getShape() const{
-    return shape;
-}
-
-
 /* ---------- Privately Implemented from TetrominoBase ---------- */
 
 /*
  * Initializes this Tetromino<BlockType> object with the passed TetrominoShape.
- * 
- * Parameters:
- *   TetrominoShape shape: The shape of the tetromino to model this Tetromino<BlockType> after
  */
 template <typename BlockType>
-void Tetromino<BlockType>::initTetromino (TetrominoShape shape) {
+void Tetromino<BlockType>::initTetromino () {
     Block* block1, * block2, * block3, * block4;
-    
-    this->shape = shape;
     
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired
     // rotations.
