@@ -106,8 +106,8 @@ int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
         laserY = getLocationY()+getTotalSize()*(blockField[0].size()-3-y); // Maxes the location
         baseRow = blockField[0].size()-3;
     } else {
-        laserY = getLocationY()+getTotalSize();
-        baseRow = y;
+        laserY = getLocationY()-getTotalSize();
+        baseRow = y-1;
     }
     
     MyRectangle laser(getLocationX()-getTotalSize()*x, laserY, blockField.size()*getTotalSize()-
