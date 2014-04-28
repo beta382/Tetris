@@ -80,7 +80,10 @@ Screen* Game::respondToKey(int key) {
         case 'e': // Rotate CW
             doRotateCWWithKick();
             break;
-        case '1': // New tetromino. This is solely for testing, it spawns a new tetromino without merging.
+        case '0': // Testing
+            doResetTetromino<Block>();
+            break;
+        case '1':
             doResetTetromino<ExplodingBlock>();
             break;
         case '2':
@@ -95,7 +98,7 @@ Screen* Game::respondToKey(int key) {
         case '5':
             doResetTetromino<LaserBlock>();
             break;
-        case 'j': // Join tetromino. Forcefully merges the current tetromino into the playing field.
+        case 'j':
             if (!doJoinAndRespawn()) {
                 nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
             }
@@ -268,9 +271,6 @@ void Game::applyLayout() {
  * Instantiates this Game object's dynamically allocated member data and starts the RNG.
  */
 void Game::init() {
-    // We initialize member data with 0s for coordinates, we actually apply the layout here
-    applyLayout();
-    
     srand(time(0));
     
     // Spawn a new tetromino and create a shadow in the same place
@@ -286,9 +286,6 @@ void Game::init() {
     
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
-    
-    // Again, to place tetrominoNext
-    applyLayout();
     
     draw();
 }
@@ -492,23 +489,29 @@ bool Game::doJoinAndRespawn() {
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
-    int blockType = rand()%(1 << 15); // Rand maxes at 0x7FFF, 15-bit number
+    int blockType = rand();
     
     currentTetromino = field.spawnNewTetromino(tetrominoNext);
 
-    if (blockType < (1 << 15)/20) { // 1/20
+    if (blockType < RAND_MAX/30) { // 1/30
         tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
-    } else if (blockType < ((1 << 15)/20)+((1 << 15))/30) { // 1/30
+    } else if (blockType < 2*(RAND_MAX/30)) { // 1/30
+        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(), field.getPadding(),
+                shape, bgRectNext.getForeground());
+    } else if (blockType < 3*(RAND_MAX/30)) { // 1/30
+        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(), field.getPadding(),
+                shape, bgRectNext.getForeground());
+    } else if (blockType < 4*(RAND_MAX/30)) { // 1/30
+        tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(), field.getPadding(),
+                shape, bgRectNext.getForeground());
+    } else if (blockType < 5*(RAND_MAX/30)) { // 1/30
         tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
-    } else {
+    } else { // 5/6
         tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
     }
-    
-    // For the new tetrominoNext
-    applyLayout();
     
     couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
 
@@ -524,12 +527,14 @@ bool Game::doJoinAndRespawn() {
             shadow->shiftDown();
         }
         
+        applyLayout();
+        
         // Draw the new shadow then the new tetromino, so that the new tetromino may overlap the shadow
         draw();
+        
+        // We may have waited while merging, reset the tick
+        prevTime = clock();
     }
-    
-    // We may have waited while merging, reset the tick
-    prevTime = clock();
     
     return couldSpawn;
 }
