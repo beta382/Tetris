@@ -177,6 +177,13 @@ _registerForLeakcheckWithID(Game)
         clock_t tick;
         
         /*
+         * Represents the current score and level, which will be used to modify the duration of the
+         *   tick and final score
+         */
+        int score;
+        int level;
+        
+        /*
          * PlayingField object that represents the area of main gameplay.
          */
         PlayingField field;
@@ -207,6 +214,15 @@ _registerForLeakcheckWithID(Game)
          */
         MyRectangle bgRectNext2;
         
+        /*
+        * Draws level. Duh.
+        */
+        void drawLevel();
+        
+        /*
+        * Draws score. Duh.
+        */
+        void drawScore();
         
         /* ---------- Implimented from Screen ---------- */
         

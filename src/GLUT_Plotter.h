@@ -39,7 +39,7 @@ class GLUT_Plotter {
         unsigned int color;
 
     public:
-        GLUT_Plotter(int width = 500, int height = 500);
+        GLUT_Plotter(int width = 450, int height = 400);
         ~GLUT_Plotter() {
             ;
         }

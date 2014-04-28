@@ -21,7 +21,7 @@
  */
 Game::Game(unsigned int color): 
 Screen(color),
-        prevTime(0), tick(500),
+        prevTime(0), tick(500), score(0), level(1),
         field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
         currentTetromino(NULL), tetrominoNext(NULL), shadow(NULL),
         bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
@@ -191,10 +191,20 @@ void Game::draw() {
     
     bgRectNext2.draw();
     bgRectNext.draw();
-    
+
     if (tetrominoNext) {
         tetrominoNext->draw();
     }
+    
+    //Draws tetris logo
+    Image logo;
+    logo.setFileName("../img/logo_medium.bmp");
+    logo.setXandY(215, 370);
+    logo.draw();
+    
+    drawScore();
+    
+    drawLevel();
     
     isVisible = true;
 }
@@ -487,7 +497,16 @@ void Game::doSoftFall() {
 bool Game::doJoinAndRespawn() {
     bool couldSpawn;
     
-    field.mergeAndDelete(currentTetromino);
+    score += field.mergeAndDelete(currentTetromino);
+    
+    level = score/250 + 1;
+    
+    //Changes fall speed as levels increase, caps speed at 60
+    tick = (500 - 20*(level-1));
+            
+    if (tick < 60) {
+        tick = 60;
+    }
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
@@ -539,4 +558,21 @@ bool Game::doJoinAndRespawn() {
     }
     
     return couldSpawn;
+}
+
+
+/*
+* Draws score to console, currently.
+*/
+void Game::drawScore()
+{
+    cout << score << endl;
+}
+
+/*
+* Draws level to console, currently.
+*/
+void Game::drawLevel()
+{
+    cout << level << endl;
 }
