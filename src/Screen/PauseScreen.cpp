@@ -236,10 +236,7 @@ void PauseScreen::init() {
     /*T*/.addBlock<Block>(12, 4).addBlock<Block>(13, 0).addBlock<Block>(13, 1)
             .addBlock<Block>(13, 2).addBlock<Block>(13, 3).addBlock<Block>(13, 4)
             .addBlock<Block>(14, 4);
-
     
     resumeText.setForeground(Color::GREEN);
     exitText.setForeground(Color::RED);
-    
-    
 }

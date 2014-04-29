@@ -91,6 +91,15 @@ _registerForLeakcheckWithID(Shape)
          */
         Shape& addBlock(Block*);
         
+        /*
+         * Adds a Block pointer to this Shape at the specified grid location.
+         * 
+         * Parameters:
+         *   int x: The value of the x-coordinate to add a new Block to
+         *   int y: The value of the x-coordinate to add a new Block to
+         *   
+         * Returns: A reference to this Shape object
+         */
         template <typename BlockType>
         Shape& addBlock(int, int);
         
@@ -230,6 +239,15 @@ _registerForLeakcheckWithID(Shape)
 
 /* ---------- Method template implementation ---------- */
 
+/*
+ * Adds a Block pointer to this Shape at the specified grid location.
+ * 
+ * Parameters:
+ *   int x: The value of the x-coordinate to add a new Block to
+ *   int y: The value of the x-coordinate to add a new Block to
+ *   
+ * Returns: A reference to this Shape object
+ */
 template <typename BlockType>
 Shape& Shape::addBlock(int x, int y) {
     blocks.push_back(new BlockType(getLocationX()+getTotalBlockSize()*x, 
