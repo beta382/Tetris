@@ -28,7 +28,7 @@ Screen(color),
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
-        logo("../img/logo_medium.bmp")
+        logo("../img/logo_medium.bmp"), scoreText("../img/score.bmp"), levelText("../img/level.bmp")
 {
     init();
 }
@@ -198,6 +198,8 @@ void Game::draw() {
     }
     
     logo.draw();
+    scoreText.draw();
+    levelText.draw();
     
     drawScore();
     
@@ -302,14 +304,17 @@ void Game::init() {
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
-    score1.setLocation(200, 100);
-    score2.setLocation(230, 100);
-    score3.setLocation(260, 100);
-    score4.setLocation(290, 100);
-    score5.setLocation(320, 100);
+    score1.setLocation(200, 150);
+    score2.setLocation(230, 150);
+    score3.setLocation(260, 150);
+    score4.setLocation(290, 150);
+    score5.setLocation(320, 150);
     
     level1.setLocation(200, 60);
     level2.setLocation(230, 60);
+    
+    scoreText.setLocation(200, 200);
+    levelText.setLocation(200, 100);
     
     draw();
 }
