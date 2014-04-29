@@ -245,13 +245,9 @@ template <typename BlockType>
 void Game::doResetTetromino() {
     delete currentTetromino;
     delete shadow;
-    
-    delete tetrominoNext;
-    tetrominoNext = new Tetromino<BlockType>(0, 0, field.getBlockSize(), field.getPadding(),
-            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
         
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino(tetrominoNext);
+    currentTetromino = field.spawnNewTetromino<BlockType>(currentTetromino->getShape());
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(), 
             currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
@@ -260,9 +256,6 @@ void Game::doResetTetromino() {
     while (field.canShiftDown(shadow)) {
         shadow->shiftDown();
     }
-    
-    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
-            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
     applyLayout();
     

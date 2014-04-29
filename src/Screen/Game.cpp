@@ -294,7 +294,7 @@ void Game::init() {
     srand(time(0));
     
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino(static_cast<TetrominoShape>(rand()%7));
+    currentTetromino = field.spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand()%7));
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
             currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
