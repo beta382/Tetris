@@ -15,9 +15,9 @@
  * Parameters:
  *   Screen* return: A pointer to the screen object to return to
  */
-PauseScreen::PauseScreen(Screen* returnTo):
+PauseScreen::PauseScreen(Screen* background):
 Screen(),
-        returnTo(returnTo), resumeText(0, 0, 16, 2), exitText(0, 0, 16, 2)
+        background(background), resumeText(0, 0, 16, 2), exitText(0, 0, 16, 2)
 {
     init();
 }
@@ -41,12 +41,12 @@ Screen* PauseScreen::respondToKey(int key) {
         case 'r':
         case 'p':
         case ' ':
-            nextScreen = returnTo;
+            nextScreen = background;
             break;
         case 'e':
         case Key::ESC:
             nextScreen = new Game(Color::TAN);
-            delete returnTo;
+            delete background;
             break;
     }
     
@@ -71,7 +71,7 @@ Screen* PauseScreen::respondToClick(Click click) {
         click.y > resumeText.getLocationY() && 
         click.y < resumeText.getLocationY()+resumeText.getHeight())
     {
-        nextScreen = returnTo;
+        nextScreen = background;
     } else if (
         click.x > exitText.getLocationX() && 
             click.x < exitText.getLocationX()+exitText.getWidth() &&
@@ -79,7 +79,7 @@ Screen* PauseScreen::respondToClick(Click click) {
             click.y < exitText.getLocationY()+exitText.getHeight())
     {
         nextScreen = new Game(Color::TAN);
-        delete returnTo;
+        delete background;
     }
     
     return nextScreen;
@@ -140,6 +140,18 @@ void PauseScreen::applyLayout() {
  */
 void PauseScreen::draw() {
     isVisible = true;
+    
+    background->applyLayout();
+    background->draw();
+    
+    char* sharedPixelBuffer = g->getBuffer();
+    
+    // Darkens the screen
+    for (int i = 0; i < g->getBufferLen(); i++) {
+        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/3;
+    }
+    
+    
     resumeText.draw();
     exitText.draw();
 }
@@ -162,13 +174,6 @@ void PauseScreen::erase() {
  * Initializes this PauseScreen
  */
 void PauseScreen::init() {
-    char* sharedPixelBuffer = g->getBuffer();
-    
-    // Darkens the screen
-    for (int i = 0; i < g->getBufferLen(); i++) {
-        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/3;
-    }
-    
     /* Eww */
     // Craft the "resume" text shape
     resumeText.addBlock(

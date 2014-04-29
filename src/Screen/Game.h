@@ -78,6 +78,13 @@ _registerForLeakcheckWithID(Game)
          */
         Screen* doBackground();
         
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        void applyLayout();
+        
         
         /* ---------- Implemented from Drawable ---------- */
         
@@ -226,15 +233,6 @@ _registerForLeakcheckWithID(Game)
         * Draws score. Duh.
         */
         void drawScore();
-        
-        /* ---------- Implimented from Screen ---------- */
-        
-        /*
-         * Sets Drawable member data width's, height's, and/or locations according to the size of
-         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
-         *   the screen size changes.
-         */
-        void applyLayout();
 };
 
 

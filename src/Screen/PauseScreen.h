@@ -30,9 +30,9 @@ _registerForLeakcheckWithID(PauseScreen)
          * Instantiates a PauseScreen object using the passed Screen* to return to.
          * 
          * Parameters:
-         *   Screen* returnTo: A pointer to the screen object to return to
+         *   Screen* background: A pointer to the screen object to return to
          */
-        PauseScreen(Screen*);
+        PauseScreen(Screen* background);
         
 
         /* ---------- Implemented from Screen ---------- */
@@ -67,6 +67,13 @@ _registerForLeakcheckWithID(PauseScreen)
          */
         Screen* doBackground();
         
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        void applyLayout();
+        
         /* ---------- Implemented from Drawable ---------- */
         
         /*
@@ -95,22 +102,13 @@ _registerForLeakcheckWithID(PauseScreen)
         /*
          * The screen to return control to once this screen exits
          */
-        Screen* returnTo;
+        Screen* background;
         
         /*
-         * Represents clickable text elementes
+         * Represents clickable text elements
          */
         Shape resumeText;
         Shape exitText;
-        
-        /* ---------- Implimented from Screen ---------- */
-        
-        /*
-         * Sets Drawable member data width's, height's, and/or locations according to the size of
-         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
-         *   the screen size changes.
-         */
-        void applyLayout();
 };
 
 
