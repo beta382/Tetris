@@ -34,6 +34,11 @@ _registerForLeakcheckWithID(PauseScreen)
          */
         PauseScreen(Screen* background);
         
+        /*
+         * Destructs this PauseScreen object.
+         */
+        ~PauseScreen();
+        
 
         /* ---------- Implemented from Screen ---------- */
         

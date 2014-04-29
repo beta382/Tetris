@@ -9,6 +9,9 @@
 
 #include "PauseScreen.h"
 
+
+/* ---------- Constructors/Destructor ---------- */
+
 /*
  * Instantiates a PauseScreen object using the passed Screen* to return to.
  * 
@@ -20,6 +23,14 @@ Screen(),
         background(background), resumeText(0, 0, 16, 2), exitText(0, 0, 16, 2)
 {
     init();
+}
+
+/*
+ * Destructs this PauseScreen object.
+ */
+PauseScreen::~PauseScreen() {
+    erase();
+    delete background;
 }
 
 
@@ -141,8 +152,10 @@ void PauseScreen::applyLayout() {
 void PauseScreen::draw() {
     isVisible = true;
     
-    background->applyLayout();
-    background->draw();
+    if (background) {
+        background->applyLayout();
+        background->draw();
+    }
     
     char* sharedPixelBuffer = g->getBuffer();
     
@@ -163,6 +176,11 @@ void PauseScreen::erase() {
     if (isVisible) {
         exitText.erase();
         resumeText.erase();
+        
+        if (background) {
+            background->erase();
+        }
+        
         isVisible = false;
     }
 }
