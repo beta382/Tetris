@@ -53,6 +53,7 @@ Screen* PauseScreen::respondToKey(int key) {
         case 'p':
         case ' ':
             nextScreen = background;
+            background = NULL;
             break;
         case 'e':
         case Key::ESC:
@@ -83,6 +84,7 @@ Screen* PauseScreen::respondToClick(Click click) {
         click.y < resumeText.getLocationY()+resumeText.getHeight())
     {
         nextScreen = background;
+        background = NULL;
     } else if (
         click.x > exitText.getLocationX() && 
             click.x < exitText.getLocationX()+exitText.getWidth() &&

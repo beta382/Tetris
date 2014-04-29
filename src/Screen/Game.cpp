@@ -504,7 +504,7 @@ bool Game::doJoinAndRespawn() {
     
     score += field.mergeAndDelete(currentTetromino);
     
-    level = score/250 + 1;
+    level = score/500 + 1;
     
     //Changes fall speed as levels increase, caps speed at 60
     tick = (500 - 20*(level-1));
