@@ -304,17 +304,17 @@ void Game::init() {
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
-    score1.setLocation(200, 150);
-    score2.setLocation(230, 150);
-    score3.setLocation(260, 150);
-    score4.setLocation(290, 150);
-    score5.setLocation(320, 150);
+    score1.setLocation(240, 150);
+    score2.setLocation(270, 150);
+    score3.setLocation(300, 150);
+    score4.setLocation(330, 150);
+    score5.setLocation(360, 150);
     
-    level1.setLocation(200, 60);
-    level2.setLocation(230, 60);
+    level1.setLocation(285, 60);
+    level2.setLocation(315, 60);
     
-    scoreText.setLocation(200, 200);
-    levelText.setLocation(200, 100);
+    scoreText.setLocation(250, 190);
+    levelText.setLocation(260, 100);
     
     draw();
 }
