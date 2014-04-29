@@ -176,22 +176,13 @@ Tetromino<BlockType>* Tetromino<BlockType>::makeNewClone() const {
  */
 template <typename BlockType>
 void Tetromino<BlockType>::initTetromino () {
-    Block* block1, * block2, * block3, * block4;
     
     // Some heights/widths are "fudged", so that this fake bounding rectangle can apply desired
     // rotations.
     switch (shape) {
         case I:
-            block1 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*4,
-                    getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize()*4, getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX()+getTotalBlockSize()*2,
-                    getLocationY()+getTotalBlockSize()*4, getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize()*3,
-                    getLocationY()+getTotalBlockSize()*4, getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(0, 4).addBlock<BlockType>(1, 4).
+                addBlock<BlockType>(2, 4).addBlock<BlockType>(3, 4);
             
             setForeground(Color::BLUE);
             setBackground(getBackground());
@@ -202,15 +193,8 @@ void Tetromino<BlockType>::initTetromino () {
             offsetY = 2;
             break;
         case O:
-            block1 = new BlockType(getLocationX(), getLocationY(), getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
-                    getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize(),
-                    getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize(), getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(0, 0).addBlock<BlockType>(0, 1).
+                addBlock<BlockType>(1, 0).addBlock<BlockType>(1, 1);
             
             setForeground(Color::GREEN);
             setBackground(getBackground());
@@ -220,16 +204,8 @@ void Tetromino<BlockType>::initTetromino () {
             realHeight = 2;
             break;
         case T:
-            block1 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize(), getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*2,
-                    getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize()*2, getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2,
-                    getLocationY()+getTotalBlockSize()*2, getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(1, 1).addBlock<BlockType>(0, 2).
+                addBlock<BlockType>(1, 2).addBlock<BlockType>(2, 2);
             
             setForeground(Color::BROWN);
             setBackground(getBackground());
@@ -240,16 +216,8 @@ void Tetromino<BlockType>::initTetromino () {
             offsetY = 1;
             break;
         case J:
-            block1 = new BlockType(getLocationX()+getTotalBlockSize()*2,
-                    getLocationY()+getTotalBlockSize(), getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*2,
-                    getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize()*2, getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2,
-                    getLocationY()+getTotalBlockSize()*2, getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(2, 1).addBlock<BlockType>(0, 2).
+                addBlock<BlockType>(1, 2).addBlock<BlockType>(2, 2);
             
             setForeground(Color::GRAY);
             setBackground(getBackground());
@@ -260,16 +228,8 @@ void Tetromino<BlockType>::initTetromino () {
             offsetY = 1;
             break;
         case L:
-            block1 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize(),
-                    getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize()*2,
-                    getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize()*2, getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2,
-                    getLocationY()+getTotalBlockSize()*2, getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(0, 1).addBlock<BlockType>(0, 2).
+                addBlock<BlockType>(1, 2).addBlock<BlockType>(2, 2);
             
             setForeground(Color::RED);
             setBackground(getBackground());
@@ -280,15 +240,8 @@ void Tetromino<BlockType>::initTetromino () {
             offsetY = 1;
             break;
         case S:
-            block1 = new BlockType(getLocationX(), getLocationY(), getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
-                    getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize(), getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize()*2,
-                    getLocationY()+getTotalBlockSize(), getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(0, 0).addBlock<BlockType>(1, 0).
+                addBlock<BlockType>(1, 1).addBlock<BlockType>(2, 1);
             
             setForeground(Color::DARK_GREEN);
             setBackground(getBackground());
@@ -298,16 +251,8 @@ void Tetromino<BlockType>::initTetromino () {
             realHeight = 2;
             break;
         case Z:
-            block1 = new BlockType(getLocationX()+getTotalBlockSize(), getLocationY(),
-                    getBlockSize(), getPadding());
-            block2 = new BlockType(getLocationX()+getTotalBlockSize()*2, getLocationY(),
-                    getBlockSize(), getPadding());
-            block3 = new BlockType(getLocationX(), getLocationY()+getTotalBlockSize(),
-                    getBlockSize(), getPadding());
-            block4 = new BlockType(getLocationX()+getTotalBlockSize(),
-                    getLocationY()+getTotalBlockSize(), getBlockSize(), getPadding());
-            
-            addBlock(block1).addBlock(block2).addBlock(block3).addBlock(block4);
+            addBlock<BlockType>(1, 0).addBlock<BlockType>(2, 0).
+                addBlock<BlockType>(0, 1).addBlock<BlockType>(1, 1);
             
             setForeground(Color::CYAN);
             setBackground(getBackground());

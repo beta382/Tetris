@@ -79,17 +79,17 @@ Screen* PauseScreen::respondToClick(Click click) {
     // For now, just return to the previous screen
     Screen* nextScreen = NULL;
     
-    if (click.x > resumeText.getLocationX() && 
+    if (click.x >= resumeText.getLocationX() && 
             click.x < resumeText.getLocationX()+resumeText.getWidth() &&
-        click.y > resumeText.getLocationY() && 
-        click.y < resumeText.getLocationY()+resumeText.getHeight())
+        click.y >= resumeText.getLocationY() && 
+            click.y < resumeText.getLocationY()+resumeText.getHeight())
     {
         nextScreen = background;
         background = NULL;
     } else if (
-        click.x > exitText.getLocationX() && 
+        click.x >= exitText.getLocationX() && 
             click.x < exitText.getLocationX()+exitText.getWidth() &&
-        click.y > exitText.getLocationY() && 
+        click.y >= exitText.getLocationY() && 
             click.y < exitText.getLocationY()+exitText.getHeight())
     {
         nextScreen = new Game(Color::TAN);
@@ -112,16 +112,16 @@ Screen* PauseScreen::doBackground() {
     int cursorX = g->getMouseX();
     int cursorY = g->getMouseY();
     
-    if (cursorX > resumeText.getLocationX() && 
+    if (cursorX >= resumeText.getLocationX() && 
             cursorX < resumeText.getLocationX()+resumeText.getWidth() &&
-        cursorY > resumeText.getLocationY() && 
+        cursorY >= resumeText.getLocationY() && 
             cursorY < resumeText.getLocationY()+resumeText.getHeight())
     {
         resumeText.setForeground(Color::REAL_GREEN);
     } else if (
-        cursorX > exitText.getLocationX() && 
+        cursorX >= exitText.getLocationX() && 
             cursorX < exitText.getLocationX()+exitText.getWidth() &&
-        cursorY > exitText.getLocationY() && 
+        cursorY >= exitText.getLocationY() && 
             cursorY < exitText.getLocationY()+exitText.getHeight())
     {
         exitText.setForeground(Color::DARK_RED);
@@ -198,323 +198,45 @@ void PauseScreen::erase() {
 void PauseScreen::init() {
     /* Eww */
     // Craft the "resume" text shape
-    resumeText.addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize(), 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize(), 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize(), 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize(), 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize(), 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-                
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*5, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*5, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*5, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*6, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*6, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*8, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*8, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*8, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*8, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*9, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*9, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*9, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*10, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*10, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*10, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*10, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*12, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*12, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*12, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*12, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*12, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*13, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*14, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*14, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*14, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*14, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*14, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-                
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*16, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*16, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*16, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*16, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*16, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*17, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*17, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*18, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*18, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*18, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*18, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*18, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*20, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*20, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*1, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*20, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*20, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*3, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*20, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*21, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*21, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*2, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*21, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*22, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*0, 
-                resumeText.getBlockSize(), resumeText.getPadding())).addBlock(
-        new Block(resumeText.getLocationX()+resumeText.getTotalBlockSize()*22, 
-                resumeText.getLocationY()+resumeText.getTotalBlockSize()*4, 
-                resumeText.getBlockSize(), resumeText.getPadding())
-    ); /* End resumeText */
-    
-    // Craft the "exit" text shape
-    exitText.addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*0, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*0, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*1, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*0, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*2, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*0, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*3, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*0, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*1, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*1, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*2, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*1, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*2, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*2, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*4, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*4, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*1, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*4, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*3, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*4, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*5, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*2, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*6, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*6, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*1, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*6, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*3, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(        
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*6, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-                        
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*8, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*8, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*9, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*9, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*1, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*9, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*2, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*9, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*3, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*9, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(        
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*10, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*10, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*12, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*13, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*0, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*13, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*1, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*13, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*2, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*13, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*3, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*13, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())).addBlock(
-        new Block(exitText.getLocationX()+exitText.getTotalBlockSize()*14, 
-                exitText.getLocationY()+exitText.getTotalBlockSize()*4, 
-                exitText.getBlockSize(), exitText.getPadding())
-    ); /* End exitText */
+    resumeText
+    /*R*/.addBlock<Block>(0, 0).addBlock<Block>(0, 1).addBlock<Block>(0, 2).addBlock<Block>(0, 3)
+            .addBlock<Block>(0, 4).addBlock<Block>(1, 1).addBlock<Block>(1, 2)
+            .addBlock<Block>(1, 4).addBlock<Block>(2, 0).addBlock<Block>(2, 2)
+            .addBlock<Block>(2, 3).addBlock<Block>(2, 4)
+    /*E*/.addBlock<Block>(4, 0).addBlock<Block>(4, 1).addBlock<Block>(4, 2).addBlock<Block>(4, 3)
+            .addBlock<Block>(4, 4).addBlock<Block>(5, 0).addBlock<Block>(5, 2)
+            .addBlock<Block>(5, 4).addBlock<Block>(6, 0).addBlock<Block>(6, 4)
+    /*S*/.addBlock<Block>(8, 0).addBlock<Block>(8, 2).addBlock<Block>(8, 3).addBlock<Block>(8, 4)
+            .addBlock<Block>(9, 0).addBlock<Block>(9, 2).addBlock<Block>(9, 4)
+            .addBlock<Block>(10, 0).addBlock<Block>(10, 1).addBlock<Block>(10, 2)
+            .addBlock<Block>(10, 4)
+    /*U*/.addBlock<Block>(12, 0).addBlock<Block>(12, 1).addBlock<Block>(12, 2)
+            .addBlock<Block>(12, 3).addBlock<Block>(12, 4).addBlock<Block>(13, 0)
+            .addBlock<Block>(14, 0).addBlock<Block>(14, 1).addBlock<Block>(14, 2)
+            .addBlock<Block>(14, 3).addBlock<Block>(14, 4)
+    /*M*/.addBlock<Block>(16, 0).addBlock<Block>(16, 1).addBlock<Block>(16, 2)
+            .addBlock<Block>(16, 3).addBlock<Block>(16, 4).addBlock<Block>(17, 2)
+            .addBlock<Block>(17, 3).addBlock<Block>(18, 0).addBlock<Block>(18, 1)
+            .addBlock<Block>(18, 2).addBlock<Block>(18, 3).addBlock<Block>(18, 4)
+    /*E*/.addBlock<Block>(20, 0).addBlock<Block>(20, 1).addBlock<Block>(20, 2)
+            .addBlock<Block>(20, 3).addBlock<Block>(20, 4).addBlock<Block>(21, 0)
+            .addBlock<Block>(21, 2).addBlock<Block>(21, 4).addBlock<Block>(22, 0)
+            .addBlock<Block>(22, 4);
+
+    exitText
+    /*E*/.addBlock<Block>(0, 0).addBlock<Block>(0, 1).addBlock<Block>(0, 2).addBlock<Block>(0, 3)
+            .addBlock<Block>(0, 4).addBlock<Block>(1, 0).addBlock<Block>(1, 2)
+            .addBlock<Block>(1, 4).addBlock<Block>(2, 0).addBlock<Block>(2, 4)
+    /*X*/.addBlock<Block>(4, 0).addBlock<Block>(4, 1).addBlock<Block>(4, 3).addBlock<Block>(4, 4)
+            .addBlock<Block>(5, 2).addBlock<Block>(6, 0).addBlock<Block>(6, 1)
+            .addBlock<Block>(6, 3).addBlock<Block>(6, 4)
+    /*I*/.addBlock<Block>(8, 0).addBlock<Block>(8, 4).addBlock<Block>(9, 0).addBlock<Block>(9, 1)
+            .addBlock<Block>(9, 2).addBlock<Block>(9, 3).addBlock<Block>(9, 4)
+            .addBlock<Block>(10, 0).addBlock<Block>(10, 4)
+    /*T*/.addBlock<Block>(12, 4).addBlock<Block>(13, 0).addBlock<Block>(13, 1)
+            .addBlock<Block>(13, 2).addBlock<Block>(13, 3).addBlock<Block>(13, 4)
+            .addBlock<Block>(14, 4);
+
     
     resumeText.setForeground(Color::GREEN);
     exitText.setForeground(Color::RED);

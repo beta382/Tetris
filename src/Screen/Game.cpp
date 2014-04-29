@@ -146,6 +146,8 @@ Screen* Game::respondToClick(Click click) {
 Screen* Game::doBackground() {
     Screen* nextScreen = NULL;
     
+
+    
     applyLayout();
     draw();
 

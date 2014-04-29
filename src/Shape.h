@@ -90,6 +90,10 @@ _registerForLeakcheckWithID(Shape)
          * Returns: A reference to this Shape object
          */
         Shape& addBlock(Block*);
+        
+        template <typename BlockType>
+        Shape& addBlock(int, int);
+        
 
         /*
          * Getter for the number of Block pointers in this Shape.
@@ -223,6 +227,20 @@ _registerForLeakcheckWithID(Shape)
         int blockSize;
         int padding;
 };
+
+/* ---------- Method template implementation ---------- */
+
+template <typename BlockType>
+Shape& Shape::addBlock(int x, int y) {
+    blocks.push_back(new BlockType(getLocationX()+getTotalBlockSize()*x, 
+            getLocationY()+getTotalBlockSize()*y, getBlockSize(), getPadding(), getForeground(), 
+            getBackground()));
+    
+    return *this;
+}
+
+
+/* ---------- Non-member ---------- */
 
 /*
  * Compares the two Shapes pointed to by the passed pointers, determining which is greater than the
