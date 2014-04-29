@@ -576,7 +576,7 @@ bool Game::doJoinAndRespawn() {
 
 
 /*
-* Draws score to console, currently.
+* Draws score to screen.
 */
 void Game::drawScore()
 {
@@ -600,11 +600,11 @@ void Game::drawScore()
     score4.draw();
     score5.draw();
     
-    cout << score << endl;
+    //cout << score << endl;
 }
 
 /*
-* Draws level to console, currently.
+* Draws level to screen.
 */
 void Game::drawLevel()
 {
@@ -619,5 +619,5 @@ void Game::drawLevel()
     level1.draw();
     level2.draw();
     
-    cout << level << endl;
+    //cout << level << endl;
 }
