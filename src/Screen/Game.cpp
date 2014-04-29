@@ -444,9 +444,16 @@ void Game::doRotateCWWithKick() {
             
             if (field.canRotateCW(currentTetromino)) {
                 doRotateCW();
-            } else { // Reset
+            } else { // Reset, try shifting down, we might be at the top of the screen 
                 currentTetromino->shiftRight();
-                currentTetromino->draw();
+                currentTetromino->shiftDown();
+                
+                if (field.canRotateCW(currentTetromino)) {
+                    doRotateCW();
+                } else { // Reset
+                    currentTetromino->shiftUp();
+                    currentTetromino->draw();
+                }
             }
         }
     }
@@ -471,9 +478,16 @@ void Game::doRotateCCWWithKick() {
             
             if (field.canRotateCCW(currentTetromino)) {
                 doRotateCCW();
-            } else { // Reset
+            } else { // Reset, try shifting down, we might be at the top of the screen 
                 currentTetromino->shiftLeft();
-                currentTetromino->draw();
+                currentTetromino->shiftDown();
+                
+                if (field.canRotateCCW(currentTetromino)) {
+                    doRotateCCW();
+                } else { // Reset
+                    currentTetromino->shiftUp();
+                    currentTetromino->draw();
+                }
             }
         }
     }
