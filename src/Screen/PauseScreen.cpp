@@ -16,9 +16,9 @@
  * Instantiates a PauseScreen object using the passed Screen* to return to.
  * 
  * Parameters:
- *   Screen* return: A pointer to the screen object to return to
+ *   Game* return: A pointer to the screen object to return to
  */
-PauseScreen::PauseScreen(Screen* background):
+PauseScreen::PauseScreen(Game* background):
 Screen(),
         background(background), resumeText(0, 0, 16, 2), exitText(0, 0, 16, 2)
 {
@@ -59,6 +59,7 @@ Screen* PauseScreen::respondToKey(int key) {
         case Key::ESC:
             nextScreen = new Game(Color::TAN);
             delete background;
+            background = NULL;
             break;
     }
     
@@ -93,6 +94,7 @@ Screen* PauseScreen::respondToClick(Click click) {
     {
         nextScreen = new Game(Color::TAN);
         delete background;
+        background = NULL;
     }
     
     return nextScreen;

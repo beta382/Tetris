@@ -14,6 +14,8 @@
 #include "Game.h"
 #include "../Shape.h"
 
+class Game; // Needed because of the circular inclusion
+
 /*
  * PauseScreen:
  *
@@ -27,12 +29,12 @@ _registerForLeakcheckWithID(PauseScreen)
     public:
         
         /*
-         * Instantiates a PauseScreen object using the passed Screen* to return to.
+         * Instantiates a PauseScreen object using the passed Games* to return to.
          * 
          * Parameters:
-         *   Screen* background: A pointer to the screen object to return to
+         *   Game* background: A pointer to the screen object to return to
          */
-        PauseScreen(Screen* background);
+        PauseScreen(Game* background);
         
         /*
          * Destructs this PauseScreen object.
@@ -105,9 +107,9 @@ _registerForLeakcheckWithID(PauseScreen)
         void init();
         
         /*
-         * The screen to return control to once this screen exits
+         * The game to return control to once this screen exits
          */
-        Screen* background;
+        Game* background;
         
         /*
          * Represents clickable text elements
