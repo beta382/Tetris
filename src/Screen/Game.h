@@ -12,9 +12,9 @@
 
 #include "Screen.h"
 #include "PauseScreen.h"
-#include "..\PlayingField.h"
-#include "..\TetrominoBase.h"
-#include "..\Image.h"
+#include "../PlayingField.h"
+#include "../TetrominoBase.h"
+#include "../Image.h"
 
 #include <cstdlib>
 #include <ctime>
@@ -77,6 +77,13 @@ _registerForLeakcheckWithID(Game)
          *   exits, or NULL if control should not shift to another Screen object
          */
         Screen* doBackground();
+        
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        void applyLayout();
         
         
         /* ---------- Implemented from Drawable ---------- */
@@ -226,15 +233,6 @@ _registerForLeakcheckWithID(Game)
         * Draws score. Duh.
         */
         void drawScore();
-        
-        /* ---------- Implimented from Screen ---------- */
-        
-        /*
-         * Sets Drawable member data width's, height's, and/or locations according to the size of
-         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
-         *   the screen size changes.
-         */
-        void applyLayout();
 };
 
 
@@ -247,13 +245,9 @@ template <typename BlockType>
 void Game::doResetTetromino() {
     delete currentTetromino;
     delete shadow;
-    
-    delete tetrominoNext;
-    tetrominoNext = new Tetromino<BlockType>(0, 0, field.getBlockSize(), field.getPadding(),
-            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
         
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino(tetrominoNext);
+    currentTetromino = field.spawnNewTetromino<BlockType>(currentTetromino->getShape());
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(), 
             currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
@@ -262,9 +256,6 @@ void Game::doResetTetromino() {
     while (field.canShiftDown(shadow)) {
         shadow->shiftDown();
     }
-    
-    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
-            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
     applyLayout();
     

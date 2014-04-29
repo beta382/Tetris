@@ -12,6 +12,9 @@
 
 #include "Screen.h"
 #include "Game.h"
+#include "../Shape.h"
+
+class Game; // Needed because of the circular inclusion
 
 /*
  * PauseScreen:
@@ -26,12 +29,17 @@ _registerForLeakcheckWithID(PauseScreen)
     public:
         
         /*
-         * Instantiates a PauseScreen object using the passed Screen* to return to.
+         * Instantiates a PauseScreen object using the passed Games* to return to.
          * 
          * Parameters:
-         *   Screen* returnTo: A pointer to the screen object to return to
+         *   Game* background: A pointer to the screen object to return to
          */
-        PauseScreen(Screen*);
+        PauseScreen(Game* background);
+        
+        /*
+         * Destructs this PauseScreen object.
+         */
+        ~PauseScreen();
         
 
         /* ---------- Implemented from Screen ---------- */
@@ -66,6 +74,13 @@ _registerForLeakcheckWithID(PauseScreen)
          */
         Screen* doBackground();
         
+        /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        void applyLayout();
+        
         /* ---------- Implemented from Drawable ---------- */
         
         /*
@@ -92,19 +107,15 @@ _registerForLeakcheckWithID(PauseScreen)
         void init();
         
         /*
-         * The screen to return control to once this screen exits
+         * The game to return control to once this screen exits
          */
-        Screen* returnTo;
-        
-        
-        /* ---------- Implimented from Screen ---------- */
+        Game* background;
         
         /*
-         * Sets Drawable member data width's, height's, and/or locations according to the size of
-         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
-         *   the screen size changes.
+         * Represents clickable text elements
          */
-        void applyLayout();
+        Shape resumeText;
+        Shape exitText;
 };
 
 

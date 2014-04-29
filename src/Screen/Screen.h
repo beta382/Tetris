@@ -10,8 +10,8 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "..\Drawable.h"
-#include "..\Rectangle.h"
+#include "../Drawable.h"
+#include "../Rectangle.h"
 
 /*
  * Screen:
@@ -59,6 +59,13 @@ _registerForLeakcheckWithID(Screen)
         virtual Screen* doBackground() = 0;
         
         /*
+         * Sets Drawable member data width's, height's, and/or locations according to the size of
+         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
+         *   the screen size changes.
+         */
+        virtual void applyLayout() = 0;
+        
+        /*
          * Returns whether or not this Screen object should be retained or deleted when control
          *   shifts to a different screen
          */
@@ -86,13 +93,6 @@ _registerForLeakcheckWithID(Screen)
          */
         Screen(const Screen& other);
         Screen& operator =(const Screen& other);
-        
-        /*
-         * Sets Drawable member data width's, height's, and/or locations according to the size of
-         *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
-         *   the screen size changes.
-         */
-        virtual void applyLayout() = 0;
         
         bool retain;
         

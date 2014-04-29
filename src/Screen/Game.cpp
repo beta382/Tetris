@@ -146,6 +146,11 @@ Screen* Game::respondToClick(Click click) {
 Screen* Game::doBackground() {
     Screen* nextScreen = NULL;
     
+    // If we previously retained this and returned, stop saying to retain or we'll leak
+    if (retain) {
+        retain = false;
+    }
+    
     applyLayout();
     draw();
 
@@ -289,7 +294,7 @@ void Game::init() {
     srand(time(0));
     
     // Spawn a new tetromino and create a shadow in the same place
-    currentTetromino = field.spawnNewTetromino(static_cast<TetrominoShape>(rand()%7));
+    currentTetromino = field.spawnNewTetromino<Block>(static_cast<TetrominoShape>(rand()%7));
     shadow = new Tetromino<GhostBlock>(currentTetromino->getLocationX(), 
             currentTetromino->getLocationY(), currentTetromino->getBlockSize(),
             currentTetromino->getPadding(), currentTetromino->getShape(), field.getForeground());
@@ -439,9 +444,16 @@ void Game::doRotateCWWithKick() {
             
             if (field.canRotateCW(currentTetromino)) {
                 doRotateCW();
-            } else { // Reset
+            } else { // Reset, try shifting down, we might be at the top of the screen 
                 currentTetromino->shiftRight();
-                currentTetromino->draw();
+                currentTetromino->shiftDown();
+                
+                if (field.canRotateCW(currentTetromino)) {
+                    doRotateCW();
+                } else { // Reset
+                    currentTetromino->shiftUp();
+                    currentTetromino->draw();
+                }
             }
         }
     }
@@ -466,9 +478,16 @@ void Game::doRotateCCWWithKick() {
             
             if (field.canRotateCCW(currentTetromino)) {
                 doRotateCCW();
-            } else { // Reset
+            } else { // Reset, try shifting down, we might be at the top of the screen 
                 currentTetromino->shiftLeft();
-                currentTetromino->draw();
+                currentTetromino->shiftDown();
+                
+                if (field.canRotateCCW(currentTetromino)) {
+                    doRotateCCW();
+                } else { // Reset
+                    currentTetromino->shiftUp();
+                    currentTetromino->draw();
+                }
             }
         }
     }
@@ -504,7 +523,7 @@ bool Game::doJoinAndRespawn() {
     
     score += field.mergeAndDelete(currentTetromino);
     
-    level = score/250 + 1;
+    level = score/500 + 1;
     
     //Changes fall speed as levels increase, caps speed at 60
     tick = (500 - 20*(level-1));
@@ -519,22 +538,22 @@ bool Game::doJoinAndRespawn() {
     
     currentTetromino = field.spawnNewTetromino(tetrominoNext);
 
-    if (blockType < RAND_MAX/40) { // 1/40
+    if (blockType < (RAND_MAX/50)) { // 1/50
         tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 2*(RAND_MAX/40)) { // 1/40
-        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 3*(RAND_MAX/40)) { // 1/40
-        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 4*(RAND_MAX/40)) { // 1/40
+    } else if (blockType < 2*(RAND_MAX/50)) { // 1/50
         tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 5*(RAND_MAX/40)) { // 1/40
+    } else if (blockType < 2*(RAND_MAX/50)+(RAND_MAX/69)) { // 1/69
+        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
+    } else if (blockType < 2*(RAND_MAX/50)+2*(RAND_MAX/69)) { // 1/69
+        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
+                field.getPadding(), shape, bgRectNext.getForeground());
+    } else if (blockType < 2*(RAND_MAX/50)+3*(RAND_MAX/69)) { // 1/69
         tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else { // 7/8
+    } else { // ~11/12
         tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
     }

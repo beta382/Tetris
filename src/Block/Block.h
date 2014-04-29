@@ -10,8 +10,8 @@
 #ifndef BLOCK_H_
 #define BLOCK_H_
 
-#include "..\Drawable.h"
-#include "..\util.h"
+#include "../Drawable.h"
+#include "../util.h"
 
 #include <vector>
 

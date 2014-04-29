@@ -123,6 +123,20 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
     
     explosion.blink(3, 150);
     
+    // Normalize blocks in case this got called from another block's effect
+    for (unsigned int i = 0; i < blockField.size(); i++) {
+        for (unsigned int j = 0; j < blockField[i].size(); j++) {
+            if (blockField[i][j] && blockField[i][j]->getUniqueID() == getUniqueID()) {
+                Block* tmp = blockField[i][j];
+                
+                // Not making a clone, this will give us a base Block
+                blockField[i][j] = new Block(*tmp);
+                delete tmp;
+                blockField[i][j]->draw();
+            }
+        }
+    }
+    
     // Actually clear the blocks
     for (int i = x-2; i <= x+2; i++) {
         for (int j = y-2; j <= y+2; j++) {
@@ -132,9 +146,7 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
                 Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;
                 
-                if (tmp->getUniqueID() != getUniqueID()) {
-                    points += tmp->doEffect(blockField, i, j);
-                }
+                points += tmp->doEffect(blockField, i, j);
                 
                 delete tmp;
             }
