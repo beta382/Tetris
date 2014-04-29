@@ -137,9 +137,7 @@ int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
                 Block* tmp = blockField[j][i];
                 blockField[j][i] = NULL;
                 
-                if (tmp->getUniqueID() != getUniqueID()) {
-                    points += tmp->doEffect(blockField, j, i);
-                }
+                points += tmp->doEffect(blockField, j, i);
                 
                 delete tmp;
             }

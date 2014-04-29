@@ -146,9 +146,7 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
                 Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;
                 
-                if (tmp->getUniqueID() != getUniqueID()) {
-                    points += tmp->doEffect(blockField, i, j);
-                }
+                points += tmp->doEffect(blockField, i, j);
                 
                 delete tmp;
             }
