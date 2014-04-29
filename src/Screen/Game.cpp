@@ -302,14 +302,14 @@ void Game::init() {
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
-    score1.setLocation(100, 100);
-    score2.setLocation(130, 100);
-    score3.setLocation(160, 100);
-    score4.setLocation(190, 100);
-    score5.setLocation(210, 100);
+    score1.setLocation(200, 100);
+    score2.setLocation(230, 100);
+    score3.setLocation(260, 100);
+    score4.setLocation(290, 100);
+    score5.setLocation(310, 100);
     
-    level1.setLocation(100, 70);
-    level2.setLocation(130, 70);
+    level1.setLocation(200, 70);
+    level2.setLocation(230, 70);
     
     draw();
 }
@@ -610,8 +610,8 @@ void Game::drawLevel()
 {
     int firstLevel, secondLevel;
     
-    firstLevel = score/10%10;
-    secondLevel = score%10;
+    firstLevel = level/10%10;
+    secondLevel = level%10;
     
     level1.setFileName(getName(firstLevel));
     level2.setFileName(getName(secondLevel));
