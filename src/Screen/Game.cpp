@@ -146,7 +146,10 @@ Screen* Game::respondToClick(Click click) {
 Screen* Game::doBackground() {
     Screen* nextScreen = NULL;
     
-
+    // If we previously retained this and returned, stop saying to retain or we'll leak
+    if (retain) {
+        retain = false;
+    }
     
     applyLayout();
     draw();
