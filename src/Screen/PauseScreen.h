@@ -12,6 +12,7 @@
 
 #include "Screen.h"
 #include "Game.h"
+#include "../Shape.h"
 
 /*
  * PauseScreen:
@@ -96,6 +97,11 @@ _registerForLeakcheckWithID(PauseScreen)
          */
         Screen* returnTo;
         
+        /*
+         * Represents clickable text elementes
+         */
+        Shape resumeText;
+        Shape exitText;
         
         /* ---------- Implimented from Screen ---------- */
         

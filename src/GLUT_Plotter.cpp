@@ -83,6 +83,10 @@ void GLUT_Plotter::RegisterMouseFunc(void (*func)(int button, int state,int x, i
     glutMouseFunc(func);
 }
 
+void GLUT_Plotter::RegisterPassiveMouseFunct(void (*func)(int x, int y)) {
+    glutPassiveMotionFunc(func);
+}
+
 void GLUT_Plotter::RegisterIdleFunc(void (*func)(void)) {
     glutIdleFunc(func);
 }
@@ -119,6 +123,20 @@ int GLUT_Plotter::getHeight() {
 }
 
 
+int GLUT_Plotter::getMouseX() {
+    return mouseX;
+}
+
+int GLUT_Plotter::getMouseY() {
+    return mouseY;
+}
+
+
+void GLUT_Plotter::setMouseLoc(int x, int y) {
+    mouseX = x;
+    mouseY = getHeight()-y;
+}
+
 char* GLUT_Plotter::getBuffer() {
     return buffer;
 }
@@ -150,10 +168,12 @@ void GLUT_Plotter::callBacks(bool _register) {
         RegisterKeyboardFunc(keyboardFunction);
         RegisterSpecialKeyboardFunc(SpecialKeyboardFunction);
         RegisterMouseFunc(mouseFunction);
+        RegisterPassiveMouseFunct(passiveMouseFunction);
     } else {
         RegisterKeyboardFunc(NULL);
         RegisterSpecialKeyboardFunc(NULL);
         RegisterMouseFunc(NULL);
+        RegisterPassiveMouseFunct(NULL);
     }
 }
 
@@ -202,10 +222,14 @@ void mouseFunction(int button, int state,int x, int y) {
     c.button = button;
     c.state = state;
     c.x = x;
-    c.y = y;
+    c.y = g->getHeight()-y;
     if(state == 0){
         g->addClick(c);
     }
+}
+
+void passiveMouseFunction(int x, int y) {
+    g->setMouseLoc(x, y);
 }
 
 void drawFunction(void) {

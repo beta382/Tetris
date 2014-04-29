@@ -35,6 +35,8 @@ class GLUT_Plotter {
         char *buffer;
         queue<int> keyboardQueue;
         queue<Click> mouseQueue;
+        
+        int mouseX, mouseY;
 
         unsigned int color;
 
@@ -51,6 +53,9 @@ class GLUT_Plotter {
 
         int getWidth();
         int getHeight();
+        int getMouseX();
+        int getMouseY();
+        void setMouseLoc(int, int);
         char* getBuffer();
         int getBufferLen();
         void setColor(unsigned int);
@@ -73,6 +78,7 @@ class GLUT_Plotter {
         void RegisterKeyboardFunc(void (*func)(unsigned char key, int x, int y));
         void RegisterSpecialKeyboardFunc(void (*func)(int key, int x, int y));
         void RegisterMouseFunc(void (*func)(int button, int state, int x, int y));
+        void RegisterPassiveMouseFunct(void (*func)(int x, int y));
         void RegisterIdleFunc(void (*func)(void));
 
         void MainLoop();
@@ -82,6 +88,7 @@ void drawFunction(void);
 void keyboardFunction(unsigned char, int, int);
 void SpecialKeyboardFunction(int, int, int);
 void mouseFunction(int button, int state, int x, int y);
+void passiveMouseFunction(int x, int y);
 
 void setpixel(char *buf, int x, int y, int r, int g, int b, int width);
 
