@@ -306,10 +306,10 @@ void Game::init() {
     score2.setLocation(230, 100);
     score3.setLocation(260, 100);
     score4.setLocation(290, 100);
-    score5.setLocation(310, 100);
+    score5.setLocation(320, 100);
     
-    level1.setLocation(200, 70);
-    level2.setLocation(230, 70);
+    level1.setLocation(200, 60);
+    level2.setLocation(230, 60);
     
     draw();
 }
