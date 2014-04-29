@@ -519,22 +519,22 @@ bool Game::doJoinAndRespawn() {
     
     currentTetromino = field.spawnNewTetromino(tetrominoNext);
 
-    if (blockType < RAND_MAX/40) { // 1/40
+    if (blockType < RAND_MAX/50) { // 1/50
         tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 2*(RAND_MAX/40)) { // 1/40
+    } else if (blockType < 2*(RAND_MAX/50)) { // 1/50
         tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 3*(RAND_MAX/40)) { // 1/40
+    } else if (blockType < 3*(RAND_MAX/50)) { // 1/50
         tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 4*(RAND_MAX/40)) { // 1/40
+    } else if (blockType < 4*(RAND_MAX/50)) { // 1/50
         tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else if (blockType < 5*(RAND_MAX/40)) { // 1/40
+    } else if (blockType < 5*(RAND_MAX/50)) { // 1/50
         tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
-    } else { // 7/8
+    } else { // 9/10
         tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
     }
