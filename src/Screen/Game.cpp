@@ -28,7 +28,7 @@ Screen(color),
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
-        logo("img/logo_medium.bmp")
+        logo("../img/logo_medium.bmp")
 {
     init();
 }
