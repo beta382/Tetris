@@ -302,6 +302,15 @@ void Game::init() {
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
+    score1.setLocation(100, 100);
+    score2.setLocation(130, 100);
+    score3.setLocation(160, 100);
+    score4.setLocation(190, 100);
+    score5.setLocation(210, 100);
+    
+    level1.setLocation(100, 70);
+    level2.setLocation(130, 70);
+    
     draw();
 }
 
@@ -571,6 +580,26 @@ bool Game::doJoinAndRespawn() {
 */
 void Game::drawScore()
 {
+    int firstScore, secondScore, thirdScore, fourthScore, fifthScore;
+    
+    firstScore = score/10000;
+    secondScore = score/1000%10;
+    thirdScore = score/100%10;
+    fourthScore = score/10%10;
+    fifthScore = score%10;
+    
+    score1.setFileName(getName(firstScore));
+    score2.setFileName(getName(secondScore));
+    score3.setFileName(getName(thirdScore));
+    score4.setFileName(getName(fourthScore));
+    score5.setFileName(getName(fifthScore));
+    
+    score1.draw();
+    score2.draw();
+    score3.draw();
+    score4.draw();
+    score5.draw();
+    
     cout << score << endl;
 }
 
@@ -579,5 +608,16 @@ void Game::drawScore()
 */
 void Game::drawLevel()
 {
+    int firstLevel, secondLevel;
+    
+    firstLevel = score/10%10;
+    secondLevel = score%10;
+    
+    level1.setFileName(getName(firstLevel));
+    level2.setFileName(getName(secondLevel));
+    
+    level1.draw();
+    level2.draw();
+    
     cout << level << endl;
 }

@@ -217,6 +217,15 @@ _registerForLeakcheckWithID(Game)
          */
         Image logo;
         
+        Image score1;
+        Image score2;
+        Image score3;
+        Image score4;
+        Image score5;
+        
+        Image level1;
+        Image level2;
+        
         /*
         * Draws level. Duh.
         */
