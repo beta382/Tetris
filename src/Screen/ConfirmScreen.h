@@ -34,6 +34,9 @@ _registerForLeakcheckWithID(ConfirmScreen)
 
     private:
         
+        //Prevent default instantiation, we need a background
+        ConfirmScreen();
+        
         Screen* bgScreen;
         BlockString title;
         BlockString yes, no;

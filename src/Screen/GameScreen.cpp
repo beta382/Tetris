@@ -29,8 +29,8 @@ Screen(color),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
         logo(0, 0, 15, 2, background), 
-        scoreText(0, 0, 12, 0, "score", Color::LIGHT_GRAY, background), 
-        levelText(0, 0, 12, 0, "level", Color::LIGHT_GRAY, background),
+        scoreStr(0, 0, 12, 0, "score", Color::LIGHT_GRAY, background), 
+        levelStr(0, 0, 12, 0, "level", Color::LIGHT_GRAY, background),
         scoreNum(0, 0, 8, 0, util::itoa(0), Color::BLACK, background),
         levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, background)
 {
@@ -134,7 +134,7 @@ void GameScreen::doBackground() throw (QUIT, NEW_SCREEN) {
         if (field.canShiftDown(currentTetromino)) {
             doShiftDown();
         } else if (!doJoinAndRespawn()) {
-            GSdoPause(); // TODO Make this the GameOver Screen
+            GSdoGameOver();
         }
         
         prevTime = curTime;
@@ -167,8 +167,8 @@ void GameScreen::draw() {
     }
     
     logo.draw();
-    scoreText.draw();
-    levelText.draw();
+    scoreStr.draw();
+    levelStr.draw();
     
     scoreNum.draw();
     levelNum.draw();
@@ -183,8 +183,8 @@ void GameScreen::erase() {
     if (isVisible) {
         levelNum.erase();
         scoreNum.erase();
-        levelText.erase();
-        scoreText.erase();
+        levelStr.erase();
+        scoreStr.erase();
         
         
         logo.erase();
@@ -254,17 +254,25 @@ void GameScreen::applyLayout() {
         );
     }
     
-    scoreText.setLocation(bgRectNext2.getLocationX()+bgRectNext2.getWidth()/2
-            -scoreText.getWidth()/2, bgRectNext2.getLocationY()-scoreText.getHeight()-50);
+    scoreStr.setLocation(bgRectNext2.getLocationX()+bgRectNext2.getWidth()/2
+            -scoreStr.getWidth()/2, bgRectNext2.getLocationY()-scoreStr.getHeight()-50);
     
-    scoreNum.setLocation(scoreText.getLocationX()+scoreText.getWidth()/2-scoreNum.getWidth()/2,
-            scoreText.getLocationY()-scoreNum.getHeight()-15);
+    scoreNum.setLocation(scoreStr.getLocationX()+scoreStr.getWidth()/2-scoreNum.getWidth()/2,
+            scoreStr.getLocationY()-scoreNum.getHeight()-15);
     
-    levelText.setLocation(scoreNum.getLocationX()+scoreNum.getWidth()/2-levelText.getWidth()/2,
-            scoreNum.getLocationY()-levelText.getHeight()-50);
+    levelStr.setLocation(scoreNum.getLocationX()+scoreNum.getWidth()/2-levelStr.getWidth()/2,
+            scoreNum.getLocationY()-levelStr.getHeight()-50);
     
-    levelNum.setLocation(levelText.getLocationX()+levelText.getWidth()/2-levelNum.getWidth()/2,
-            levelText.getLocationY()-levelNum.getHeight()-15);
+    levelNum.setLocation(levelStr.getLocationX()+levelStr.getWidth()/2-levelNum.getWidth()/2,
+            levelStr.getLocationY()-levelNum.getHeight()-15);
+}
+
+int GameScreen::getScore() const {
+    return score;
+}
+
+int GameScreen::getLevel() const {
+    return level;
 }
 
 

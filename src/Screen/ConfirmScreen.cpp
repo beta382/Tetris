@@ -91,7 +91,7 @@ void ConfirmScreen::draw() {
     
     // Darkens the screen
     for (int i = 0; i < g->getBufferLen(); i++) {
-        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/4;
+        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/8;
     }
     
     title.draw();

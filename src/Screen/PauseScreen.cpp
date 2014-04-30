@@ -136,9 +136,9 @@ void PauseScreen::applyLayout() {
     title.setLocation((getWidth()-title.getWidth())/2, getHeight()-title.getHeight()-30);
     
     resume.setLocation((g->getWidth()-resume.getWidth())/2,
-            g->getHeight()/2+resume.getTotalBlockSize());
+            g->getHeight()/2+resume.getTotalBlockSize()*2);
     exit.setLocation((g->getWidth()-exit.getWidth())/2,
-            resume.getLocationY()-exit.getHeight()-exit.getTotalBlockSize()*2);
+            resume.getLocationY()-exit.getHeight()-exit.getTotalBlockSize()*4);
 }
 
 
@@ -158,7 +158,7 @@ void PauseScreen::draw() {
         
         // Darkens the screen
         for (int i = 0; i < g->getBufferLen(); i++) {
-            sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/4;
+            sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/8;
         }
         
         title.draw();

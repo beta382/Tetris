@@ -12,6 +12,7 @@
 
 #include "Screen.h"
 #include "PauseScreen.h"
+#include "GameOverScreen.h"
 #include "../PlayingField.h"
 #include "../TetrominoBase.h"
 #include "../Logo.h"
@@ -24,9 +25,11 @@
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class PauseScreen;
 class ConfirmScreen;
+class GameOverScreen;
 
 #define GSdoPause() retain = true; prevTime -= clock(); throw NEW_SCREEN(new PauseScreen(this));
 #define GSdoExit() retain = true; prevTime -= clock(); throw NEW_SCREEN(new ConfirmScreen(this));
+#define GSdoGameOver() retain = true; throw NEW_SCREEN(new GameOverScreen(this));
 
 /*
  * GameScreen
@@ -93,6 +96,9 @@ _registerForLeakcheckWithID(GameScreen)
          *   the screen size changes.
          */
         void applyLayout();
+        
+        int getScore() const;
+        int getLevel() const;
         
         
         /* ---------- Implemented from Drawable ---------- */
@@ -234,8 +240,8 @@ _registerForLeakcheckWithID(GameScreen)
          */
         Logo logo;
         
-        BlockString scoreText;
-        BlockString levelText;
+        BlockString scoreStr;
+        BlockString levelStr;
         BlockString scoreNum;
         BlockString levelNum;
 };
