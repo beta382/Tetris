@@ -26,4 +26,6 @@ _registerForLeakcheckWithID(Image)
         void erase();
 };
 
+string getName(int n);
+
 #endif // IMAGE_H_INCLUDED
