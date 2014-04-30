@@ -28,7 +28,7 @@ Screen(color),
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
-        logo("img/logo_medium.bmp")
+        logo("../img/logo_medium.bmp"), scoreText("../img/score.bmp"), levelText("../img/level.bmp")
 {
     init();
 }
@@ -195,6 +195,8 @@ void Game::draw() {
     }
     
     logo.draw();
+    scoreText.draw();
+    levelText.draw();
     
     drawScore();
     
@@ -298,6 +300,18 @@ void Game::init() {
     
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
+    
+    score1.setLocation(240, 150);
+    score2.setLocation(270, 150);
+    score3.setLocation(300, 150);
+    score4.setLocation(330, 150);
+    score5.setLocation(360, 150);
+    
+    level1.setLocation(285, 60);
+    level2.setLocation(315, 60);
+    
+    scoreText.setLocation(250, 190);
+    levelText.setLocation(260, 100);
     
     draw();
 }
@@ -578,17 +592,48 @@ bool Game::doJoinAndRespawn() {
 
 
 /*
-* Draws score to console, currently.
+* Draws score to screen.
 */
 void Game::drawScore()
 {
-    cout << score << endl;
+    int firstScore, secondScore, thirdScore, fourthScore, fifthScore;
+    
+    firstScore = score/10000;
+    secondScore = score/1000%10;
+    thirdScore = score/100%10;
+    fourthScore = score/10%10;
+    fifthScore = score%10;
+    
+    score1.setFileName(getName(firstScore));
+    score2.setFileName(getName(secondScore));
+    score3.setFileName(getName(thirdScore));
+    score4.setFileName(getName(fourthScore));
+    score5.setFileName(getName(fifthScore));
+    
+    score1.draw();
+    score2.draw();
+    score3.draw();
+    score4.draw();
+    score5.draw();
+    
+    //cout << score << endl;
 }
 
 /*
-* Draws level to console, currently.
+* Draws level to screen.
 */
 void Game::drawLevel()
 {
-    cout << level << endl;
+    int firstLevel, secondLevel;
+    
+    firstLevel = level/10%10;
+    secondLevel = level%10;
+    
+    level1.setFileName(getName(firstLevel));
+    level2.setFileName(getName(secondLevel));
+    
+    level1.draw();
+    level2.draw();
+    
+    //cout << level << endl;
 }
