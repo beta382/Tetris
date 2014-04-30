@@ -3,8 +3,8 @@
  * Assignment name:        Tetris: Spring 2014 Group Project
  * Assignment description: Write an awesome Tetris clone
  * Due date:               Apr 30, 2014
- * Date created:           Apr  3, 2014
- * Date last modified:     Apr 27, 2014
+ * Date created:           Apr 29, 2014
+ * Date last modified:     Apr 29, 2014
  */
 
 #include "BlockString.h"
@@ -210,7 +210,13 @@ void BlockString::setString(string str) {
                     .addBlock<Block>(i*4+2, 1).addBlock<Block>(i*4+2, 2).addBlock<Block>(i*4+2, 3)
                     .addBlock<Block>(i*4+2, 4);
                 break;
-                    
+            default:
+                addBlock<Block>(i*4, 0).addBlock<Block>(i*4, 1).addBlock<Block>(i*4, 2)
+                    .addBlock<Block>(i*4, 3).addBlock<Block>(i*4, 4).addBlock<Block>(i*4+1, 0)
+                    .addBlock<Block>(i*4+1, 1).addBlock<Block>(i*4+1, 2).addBlock<Block>(i*4+1, 3)
+                    .addBlock<Block>(i*4+1, 4).addBlock<Block>(i*4+2, 0).addBlock<Block>(i*4+2, 1)
+                    .addBlock<Block>(i*4+2, 2).addBlock<Block>(i*4+2, 3).addBlock<Block>(i*4+2, 4);
+                break;
         }
     }
 }
