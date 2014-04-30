@@ -53,6 +53,7 @@ namespace Key {
     const int LEFT = 164;
     const int RIGHT = 166;
     const int ESC = 27;
+    const int BACKSPACE = 8;
     
 }
 
@@ -68,6 +69,11 @@ namespace util {
      *     events
      */
     void wait(clock_t ms, GLUT_Plotter* g);
+    
+    /*
+     * An itoa function that doesn't suck to use
+     */
+    string itoa(int);
 }
 
 #ifdef DO_LEAKCHECK

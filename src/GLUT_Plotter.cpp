@@ -9,7 +9,11 @@
 GLUT_Plotter* g;
 
 GLUT_Plotter::GLUT_Plotter(int w, int h) {
-    glutInitWindowSize(w, h);
+    
+    width  = w;
+    height = h;
+    buffer = new char[width*height*3];
+    
     g = this;
 
     init();
@@ -23,12 +27,10 @@ void GLUT_Plotter::init() {
     char **argv = new char*[1];
     argv[0] = new char[10];
     argv[0][0] = '\0';
+    
+    glutInitWindowSize(width, height);
 
     glutInit(argc, argv);
-    
-    width  = glutGet(GLUT_SCREEN_WIDTH);
-    height = glutGet(GLUT_SCREEN_HEIGHT);
-    buffer = new char[width*height*3];
     
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutCreateWindow("Tetris");
@@ -47,6 +49,9 @@ void GLUT_Plotter::init() {
 void GLUT_Plotter::init(int *argc, char **argv) {
 
     glutInit(argc, argv);
+    
+    glutInitWindowSize(width, height);
+    
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutCreateWindow("Tetris");
 
@@ -87,6 +92,10 @@ void GLUT_Plotter::RegisterPassiveMouseFunct(void (*func)(int x, int y)) {
     glutPassiveMotionFunc(func);
 }
 
+void GLUT_Plotter::RegisterReshapeFunct(void (*func)(int width, int height)) {
+    glutReshapeFunc(func);
+}
+
 void GLUT_Plotter::RegisterIdleFunc(void (*func)(void)) {
     glutIdleFunc(func);
 }
@@ -115,11 +124,11 @@ void GLUT_Plotter::Draw(void) {
 }
 
 int GLUT_Plotter::getWidth() {
-  return glutGet(GLUT_WINDOW_WIDTH);
+  return width;
 }
 
 int GLUT_Plotter::getHeight() {
-  return glutGet(GLUT_WINDOW_HEIGHT);
+  return height;
 }
 
 
@@ -163,6 +172,7 @@ void GLUT_Plotter::plot(int x, int y) {
 
 void GLUT_Plotter::callBacks(bool _register) {
     RegisterDisplayFunc(&drawFunction);
+    RegisterReshapeFunct(reshapeFunction);
     
     if (_register) {
         RegisterKeyboardFunc(keyboardFunction);
@@ -230,6 +240,10 @@ void mouseFunction(int button, int state,int x, int y) {
 
 void passiveMouseFunction(int x, int y) {
     g->setMouseLoc(x, y);
+}
+
+void reshapeFunction(int w, int h) {
+    glutReshapeWindow(g->getWidth(), g->getHeight());
 }
 
 void drawFunction(void) {

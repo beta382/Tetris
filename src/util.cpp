@@ -36,6 +36,21 @@ void util::wait(clock_t ms, GLUT_Plotter* g) {
 #    endif
 }
 
+/*
+ * An itoa function that doesn't suck to use
+ */
+string util::itoa(int i) {
+    string str;
+    
+    do {
+        str.insert(0, 1, static_cast<char>(i%10+48));
+        i /= 10;
+    } while (i > 0);
+    
+    return str;
+}
+
+
 map<void*, pair<string, size_t> > leakcheck::allocated;
 
 #ifdef DO_LEAKCHECK

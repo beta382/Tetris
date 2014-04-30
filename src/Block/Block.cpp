@@ -169,7 +169,10 @@ void Block::draw() {
     g->setColor(getForeground());
     for (int i = 0; i < getSize(); i++) {
         for (int j = 0; j < getSize(); j++) {
-            g->plot(getLocationX()+i, getLocationY()+j);
+            if (getLocationX()+i >= 0 && getLocationX()+i < g->getWidth() && 
+                    getLocationY()+j >= 0 && getLocationY()+j < g->getHeight()) {
+                g->plot(getLocationX()+i, getLocationY()+j);
+            }
         }
     }
     
@@ -184,7 +187,10 @@ void Block::erase() {
         g->setColor(getBackground());
         for (int i = 0; i < getSize(); i++) {
             for (int j = 0; j < getSize(); j++) {
-                g->plot(getLocationX()+i, getLocationY()+j);
+                if (getLocationX()+i >= 0 && getLocationX()+i < g->getWidth() && 
+                        getLocationY()+j >= 0 && getLocationY()+j < g->getHeight()) {
+                    g->plot(getLocationX()+i, getLocationY()+j);
+                }
             }
         }
 

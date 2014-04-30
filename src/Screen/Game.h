@@ -14,11 +14,15 @@
 #include "PauseScreen.h"
 #include "../PlayingField.h"
 #include "../TetrominoBase.h"
-#include "../Image.h"
+#include "../Logo.h"
+#include "../BlockString.h"
 
 #include <cstdlib>
 #include <ctime>
 #include <mmsystem.h>
+
+// Forward declaration of destination screens, due to potential for an inclusion loop
+class PauseScreen;
 
 /*
  * Game:
@@ -58,7 +62,7 @@ _registerForLeakcheckWithID(Game)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int);
+        Screen* respondToKey(int) throw (EXIT);
         
         /*
          * Performs an action based on the passed Click.
@@ -69,7 +73,7 @@ _registerForLeakcheckWithID(Game)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click);
+        Screen* respondToClick(Click) throw (EXIT);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -77,7 +81,7 @@ _registerForLeakcheckWithID(Game)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground();
+        Screen* doBackground() throw (EXIT);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -223,29 +227,12 @@ _registerForLeakcheckWithID(Game)
         /*
          * Game logo
          */
-        Image logo;
+        Logo logo;
         
-        Image score1;
-        Image score2;
-        Image score3;
-        Image score4;
-        Image score5;
-        
-        Image level1;
-        Image level2;
-        
-        Image scoreText;
-        Image levelText;
-        
-        /*
-        * Draws level. Duh.
-        */
-        void drawLevel();
-        
-        /*
-        * Draws score. Duh.
-        */
-        void drawScore();
+        BlockString scoreText;
+        BlockString levelText;
+        BlockString scoreNum;
+        BlockString levelNum;
 };
 
 

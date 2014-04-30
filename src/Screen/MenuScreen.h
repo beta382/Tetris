@@ -12,9 +12,14 @@
 
 #include "Screen.h"
 #include "Game.h"
-#include "../Image.h"
+#include "MenuScreen.h"
+#include "InstructionScreen.h"
+#include "../Logo.h"
+#include "../BlockString.h"
 
-class Game; // Needed because of the circular inclusion
+// Forward declaration of destination screens, due to potential for an inclusion loop
+class Game;
+class InstructionScreen;
 
 /*
  * MenuScreen:
@@ -53,7 +58,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int);
+        Screen* respondToKey(int) throw (EXIT);
         
         /*
          * Performs an action based on the passed Click.
@@ -64,7 +69,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click);
+        Screen* respondToClick(Click) throw (EXIT);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -72,7 +77,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground();
+        Screen* doBackground() throw (EXIT);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -102,17 +107,11 @@ _registerForLeakcheckWithID(MenuScreen)
         void init();
         
         
-        // Images for elements of menu screen
-        Image logo;
-        Image attribution;
-        Image play;
-        Image playHover;
-        Image howToPlay;
-        Image howToPlayHover;
-        Image howToPlayImage;
-        
-        // Boolean for whether how to play is visible
-        bool howToPlayVisible;
+        Logo logo;
+        BlockString play;
+        BlockString howToPlay;
+        BlockString exit;
+        BlockString attribution;
 };
 
 #endif // MENUSCREEN_H_INCLUDED

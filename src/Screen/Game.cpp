@@ -22,13 +22,17 @@
 Game::Game(unsigned int color): 
 Screen(color),
         prevTime(0), tick(500), score(0), level(1),
-        field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
+        field(0, 0, 10, 20, 24, 3, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
         currentTetromino(NULL), tetrominoNext(NULL), shadow(NULL),
         bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
-        logo("img/logo_medium.bmp"), scoreText("img/score.bmp"), levelText("img/level.bmp")
+        logo(0, 0, 15, 2, background), 
+        scoreText(0, 0, 12, 0, "score", Color::LIGHT_GRAY, background), 
+        levelText(0, 0, 12, 0, "level", Color::LIGHT_GRAY, background),
+        scoreNum(0, 0, 8, 0, util::itoa(0), Color::BLACK, background),
+        levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, background)
 {
     init();
 }
@@ -55,7 +59,7 @@ Game::~Game() {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::respondToKey(int key) {
+Screen* Game::respondToKey(int key) throw (EXIT) {
     Screen* nextScreen = NULL;
     
     switch (key) {
@@ -100,6 +104,7 @@ Screen* Game::respondToKey(int key) {
             doResetTetromino<LaserBlock>();
             break;
         case 'p':
+        case ' ':
             retain = true;
             
             // Set out previous time back so that when we return, we have a proper offset until the
@@ -122,7 +127,7 @@ Screen* Game::respondToKey(int key) {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::respondToClick(Click click) {
+Screen* Game::respondToClick(Click click) throw (EXIT) {
     // Do nothing for now
     Screen* nextScreen = NULL;
     
@@ -135,7 +140,7 @@ Screen* Game::respondToClick(Click click) {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::doBackground() {
+Screen* Game::doBackground() throw (EXIT) {
     Screen* nextScreen = NULL;
     
     // If we previously retained this and returned, stop saying to retain or we'll leak
@@ -198,9 +203,8 @@ void Game::draw() {
     scoreText.draw();
     levelText.draw();
     
-    drawScore();
-    
-    drawLevel();
+    scoreNum.draw();
+    levelNum.draw();
     
     isVisible = true;
 }
@@ -210,6 +214,12 @@ void Game::draw() {
  */
 void Game::erase() {
     if (isVisible) {
+        levelNum.erase();
+        scoreNum.erase();
+        levelText.erase();
+        scoreText.erase();
+        
+        
         logo.erase();
         
         if (tetrominoNext) {
@@ -247,8 +257,8 @@ void Game::applyLayout() {
     bgRect.setWidth(getWidth());
     bgRect.setHeight(getHeight());
     
-    int fieldDx = 10-field.getLocationX();
-    int fieldDy = 10-field.getLocationY();
+    int fieldDx = (getHeight()-field.getHeight())/2-field.getLocationX();
+    int fieldDy = (getHeight()-field.getHeight())/2-field.getLocationY();
     field.setLocation(field.getLocationX()+fieldDx, field.getLocationY()+fieldDy);
     
     if (currentTetromino) {
@@ -260,8 +270,8 @@ void Game::applyLayout() {
         shadow->setLocation(shadow->getLocationX()+fieldDx,  shadow->getLocationY()+fieldDy);
     }
     
-    logo.setLocation(field.getLocationX()+field.getWidth()+field.getTotalBlockSize(),
-            field.getLocationY()+field.getHeight()-logo.getHeight());
+    logo.setLocation((field.getLocationX()+field.getWidth()+getWidth())/2-logo.getWidth()/2,
+            getHeight()-logo.getHeight()-30);
     
     bgRectNext2.setLocation(logo.getLocationX()+logo.getWidth()/2-bgRectNext2.getWidth()/2, 
             logo.getLocationY()-bgRectNext2.getHeight()-field.getTotalBlockSize());
@@ -270,12 +280,24 @@ void Game::applyLayout() {
     
     if (tetrominoNext) {
         tetrominoNext->setLocation(
-            bgRectNext.getLocationX()+bgRectNext.getWidth()-tetrominoNext->getWidth()-
-                (bgRectNext.getWidth()/2-tetrominoNext->getRealWidth()/2),
-            bgRectNext.getLocationY()+bgRectNext.getHeight()-tetrominoNext->getHeight()-
-                (bgRectNext.getHeight()/2-tetrominoNext->getRealHeight()/2)
+            bgRectNext.getLocationX()+bgRectNext.getWidth()-tetrominoNext->getWidth()
+                -(bgRectNext.getWidth()/2-tetrominoNext->getRealWidth()/2),
+            bgRectNext.getLocationY()+bgRectNext.getHeight()-tetrominoNext->getHeight()
+                -(bgRectNext.getHeight()/2-tetrominoNext->getRealHeight()/2)
         );
     }
+    
+    scoreText.setLocation(bgRectNext2.getLocationX()+bgRectNext2.getWidth()/2
+            -scoreText.getWidth()/2, bgRectNext2.getLocationY()-scoreText.getHeight()-50);
+    
+    scoreNum.setLocation(scoreText.getLocationX()+scoreText.getWidth()/2-scoreNum.getWidth()/2,
+            scoreText.getLocationY()-scoreNum.getHeight()-15);
+    
+    levelText.setLocation(scoreNum.getLocationX()+scoreNum.getWidth()/2-levelText.getWidth()/2,
+            scoreNum.getLocationY()-levelText.getHeight()-50);
+    
+    levelNum.setLocation(levelText.getLocationX()+levelText.getWidth()/2-levelNum.getWidth()/2,
+            levelText.getLocationY()-levelNum.getHeight()-15);
 }
 
 
@@ -300,18 +322,6 @@ void Game::init() {
     
     tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
-    
-    score1.setLocation(240, 150);
-    score2.setLocation(270, 150);
-    score3.setLocation(300, 150);
-    score4.setLocation(330, 150);
-    score5.setLocation(360, 150);
-    
-    level1.setLocation(285, 60);
-    level2.setLocation(315, 60);
-    
-    scoreText.setLocation(250, 190);
-    levelText.setLocation(260, 100);
     
     draw();
 }
@@ -531,8 +541,13 @@ bool Game::doJoinAndRespawn() {
     
     int old_level = level;
     level = score/500 + 1;
-    if(level > old_level)
+    
+    levelNum.setString(util::itoa(level));
+    scoreNum.setString(util::itoa(score));
+    
+    if(level > old_level) {
         PlaySound("sounds/level_up.wav", NULL, SND_ASYNC);
+    }
     
     //Changes fall speed as levels increase, caps speed at 60
     tick = (500 - 20*(level-1));
@@ -591,52 +606,4 @@ bool Game::doJoinAndRespawn() {
     }
     
     return couldSpawn;
-}
-
-
-/*
-* Draws score to screen.
-*/
-void Game::drawScore()
-{
-    int firstScore, secondScore, thirdScore, fourthScore, fifthScore;
-    
-    firstScore = score/10000;
-    secondScore = score/1000%10;
-    thirdScore = score/100%10;
-    fourthScore = score/10%10;
-    fifthScore = score%10;
-    
-    score1.setFileName(getName(firstScore));
-    score2.setFileName(getName(secondScore));
-    score3.setFileName(getName(thirdScore));
-    score4.setFileName(getName(fourthScore));
-    score5.setFileName(getName(fifthScore));
-    
-    score1.draw();
-    score2.draw();
-    score3.draw();
-    score4.draw();
-    score5.draw();
-    
-    cout << score << endl;
-}
-
-/*
-* Draws level to screen.
-*/
-void Game::drawLevel()
-{
-    int firstLevel, secondLevel;
-    
-    firstLevel = level/10%10;
-    secondLevel = level%10;
-    
-    level1.setFileName(getName(firstLevel));
-    level2.setFileName(getName(secondLevel));
-    
-    level1.draw();
-    level2.draw();
-    
-    cout << level << endl;
 }

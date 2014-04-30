@@ -16,12 +16,12 @@
  * Instantiates a PauseScreen object using the passed Screen* to return to.
  * 
  * Parameters:
- *   Game* return: A pointer to the screen object to return to
+ *   Game* bgGame: A pointer to the screen object to return to
  */
-PauseScreen::PauseScreen(Game* background):
+PauseScreen::PauseScreen(Game* bgGame):
 Screen(),
-        background(background), resumeText(0, 0, 16, 2, "resume", Color::GREEN), 
-        exitText(0, 0, 16, 2, "exit", Color::RED)
+        bgGame(bgGame), resumeText(0, 0, 16, 2, "resume"), 
+        exitText(0, 0, 16, 2, "exit")
 {
 }
 
@@ -30,7 +30,7 @@ Screen(),
  */
 PauseScreen::~PauseScreen() {
     erase();
-    delete background;
+    delete bgGame;
 }
 
 
@@ -45,21 +45,20 @@ PauseScreen::~PauseScreen() {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* PauseScreen::respondToKey(int key) {
+Screen* PauseScreen::respondToKey(int key) throw (EXIT) {
     Screen* nextScreen = NULL;
     
     switch (key) {
-        case 'r':
         case 'p':
         case ' ':
-            nextScreen = background;
-            background = NULL;
+            nextScreen = bgGame;
+            bgGame = NULL;
             break;
         case 'e':
         case Key::ESC:
-            nextScreen = new Game(Color::TAN);
-            delete background;
-            background = NULL;
+            nextScreen = new MenuScreen(Color::TAN);
+            delete bgGame;
+            bgGame = NULL;
             break;
     }
     
@@ -75,7 +74,7 @@ Screen* PauseScreen::respondToKey(int key) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* PauseScreen::respondToClick(Click click) {
+Screen* PauseScreen::respondToClick(Click click) throw (EXIT) {
     // For now, just return to the previous screen
     Screen* nextScreen = NULL;
     
@@ -84,17 +83,17 @@ Screen* PauseScreen::respondToClick(Click click) {
         click.y >= resumeText.getLocationY() && 
             click.y < resumeText.getLocationY()+resumeText.getHeight())
     {
-        nextScreen = background;
-        background = NULL;
+        nextScreen = bgGame;
+        bgGame = NULL;
     } else if (
         click.x >= exitText.getLocationX() && 
             click.x < exitText.getLocationX()+exitText.getWidth() &&
         click.y >= exitText.getLocationY() && 
             click.y < exitText.getLocationY()+exitText.getHeight())
     {
-        nextScreen = new Game(Color::TAN);
-        delete background;
-        background = NULL;
+        nextScreen = new MenuScreen(Color::TAN);
+        delete bgGame;
+        bgGame = NULL;
     }
     
     return nextScreen;
@@ -106,7 +105,7 @@ Screen* PauseScreen::respondToClick(Click click) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* PauseScreen::doBackground() {
+Screen* PauseScreen::doBackground() throw (EXIT) {
     Screen* nextScreen = NULL;
     
     int cursorX = g->getMouseX();
@@ -118,6 +117,7 @@ Screen* PauseScreen::doBackground() {
             cursorY < resumeText.getLocationY()+resumeText.getHeight())
     {
         resumeText.setForeground(Color::REAL_GREEN);
+        exitText.setForeground(Color::RED);
     } else if (
         cursorX >= exitText.getLocationX() && 
             cursorX < exitText.getLocationX()+exitText.getWidth() &&
@@ -125,6 +125,7 @@ Screen* PauseScreen::doBackground() {
             cursorY < exitText.getLocationY()+exitText.getHeight())
     {
         exitText.setForeground(Color::DARK_RED);
+        resumeText.setForeground(Color::GREEN);
     } else {
         resumeText.setForeground(Color::GREEN);
         exitText.setForeground(Color::RED);
@@ -156,16 +157,16 @@ void PauseScreen::applyLayout() {
 void PauseScreen::draw() {
     isVisible = true;
     
-    if (background) {
-        background->applyLayout();
-        background->draw();
+    if (bgGame) {
+        bgGame->applyLayout();
+        bgGame->draw();
     }
     
     char* sharedPixelBuffer = g->getBuffer();
     
     // Darkens the screen
     for (int i = 0; i < g->getBufferLen(); i++) {
-        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/3;
+        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/4;
     }
     
     
@@ -181,8 +182,8 @@ void PauseScreen::erase() {
         exitText.erase();
         resumeText.erase();
         
-        if (background) {
-            background->erase();
+        if (bgGame) {
+            bgGame->erase();
         }
         
         isVisible = false;

@@ -20,9 +20,15 @@
  *   Game* return: A pointer to the screen object to return to
  */
 MenuScreen::MenuScreen(unsigned int color):
-Screen(color)
+Screen(color),
+        logo(0, 0, 25, 3, background),
+        play(0, 0, 23, 0, "play", Color::BLACK, background),
+        howToPlay(0, 0, 10, 0, "how to play", Color::BLACK, background),
+        exit(0, 0, 10, 0, "exit", Color::BLACK, background),
+        attribution(0, 0, 2, 0, 
+                "created by: wes cossick, evan green, austin hash, and taylor jones", Color::GRAY,
+                background)
 {
-    init();
 }
 
 /*
@@ -44,7 +50,7 @@ MenuScreen::~MenuScreen() {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::respondToKey(int key) {
+Screen* MenuScreen::respondToKey(int key) throw (EXIT) {
     Screen* nextScreen = NULL;
     
     return nextScreen;
@@ -59,30 +65,28 @@ Screen* MenuScreen::respondToKey(int key) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::respondToClick(Click click) {
+Screen* MenuScreen::respondToClick(Click click) throw (EXIT) {
     // For now, just return to the previous screen
     Screen* nextScreen = NULL;
     
     if(click.x >= play.getLocationX() && 
             click.x < play.getLocationX()+play.getWidth() &&
         click.y >= play.getLocationY() && 
-            click.y < play.getLocationY()+play.getHeight()
-       && !howToPlayVisible)
+            click.y < play.getLocationY()+play.getHeight())
     {
         nextScreen = new Game(Color::TAN);
-    }
-    else if(
-        click.x >= howToPlay.getLocationX() && 
+    } else if (
+        click.x >= howToPlay.getLocationX() &&
             click.x < howToPlay.getLocationX()+howToPlay.getWidth() &&
         click.y >= howToPlay.getLocationY() && 
             click.y < howToPlay.getLocationY()+howToPlay.getHeight())
     {
-        howToPlayVisible = true;
-    }
-    else if(click.x >= 0 && click.x < 100
-       && click.y >= 355 && click.y < 400)
+        nextScreen = new InstructionScreen(Color::TAN);
+    } else if (
+        click.x >= exit.getLocationX() && click.x < exit.getLocationX()+exit.getWidth() &&
+        click.y >= exit.getLocationY() && click.y < exit.getLocationY()+exit.getHeight())
     {
-        howToPlayVisible = false;
+        throw EXIT();
     }
     
     return nextScreen;
@@ -94,7 +98,7 @@ Screen* MenuScreen::respondToClick(Click click) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::doBackground() {
+Screen* MenuScreen::doBackground() throw (EXIT) {
     Screen* nextScreen = NULL;
     
     int cursorX = g->getMouseX();
@@ -105,23 +109,22 @@ Screen* MenuScreen::doBackground() {
         cursorY >= play.getLocationY() && 
             cursorY < play.getLocationY()+play.getHeight())
     {
-        play.setFileName("img/Play Hover.bmp");
-    }
-    else
-    {
-        play.setFileName("img/Play.bmp");
-    }
-    
-    if (cursorX >= howToPlay.getLocationX() && 
+        play.setForeground(Color::GRAY);
+    } else if (cursorX >= howToPlay.getLocationX() && 
             cursorX < howToPlay.getLocationX()+howToPlay.getWidth() &&
         cursorY >= howToPlay.getLocationY() && 
             cursorY < howToPlay.getLocationY()+howToPlay.getHeight())
     {
-        howToPlay.setFileName("img/How To Play Hover.bmp");
-    }
-    else
+        howToPlay.setForeground(Color::GRAY);
+    } else if (
+        cursorX >= exit.getLocationX() && cursorX < exit.getLocationX()+exit.getWidth() &&
+        cursorY >= exit.getLocationY() && cursorY < exit.getLocationY()+exit.getHeight())
     {
-        howToPlay.setFileName("img/How To Play.bmp");
+        exit.setForeground(Color::GRAY);
+    } else {
+        play.setForeground(Color::BLACK);
+        howToPlay.setForeground(Color::BLACK);
+        exit.setForeground(Color::BLACK);
     }
     
     applyLayout();
@@ -136,7 +139,21 @@ Screen* MenuScreen::doBackground() {
  *   the screen size changes.
  */
 void MenuScreen::applyLayout() {
-    // Can be updated later
+    setWidth(g->getWidth());
+    setHeight(g->getHeight());
+    
+    bgRect.setWidth(getWidth());
+    bgRect.setHeight(getHeight());
+    
+    logo.setLocation((getWidth()-logo.getWidth())/2, getHeight()-logo.getHeight()-30);
+    
+    play.setLocation((getWidth()-play.getWidth())/2, logo.getLocationY()-play.getHeight()-60);
+    
+    howToPlay.setLocation((getWidth()-howToPlay.getWidth())/2, 
+            play.getLocationY()-howToPlay.getHeight()-70);
+    exit.setLocation((getWidth()-exit.getWidth())/2, howToPlay.getLocationY()-exit.getHeight()-30);
+    
+    attribution.setLocation((getWidth()-attribution.getWidth())/2, 10);
 }
 
 
@@ -146,18 +163,14 @@ void MenuScreen::applyLayout() {
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy.
  */
 void MenuScreen::draw() {
-    isVisible = true;
-    
     bgRect.draw();
     logo.draw();
     play.draw();
     howToPlay.draw();
+    exit.draw();
     attribution.draw();
     
-    if(howToPlayVisible)
-        howToPlayImage.draw();
-    else
-        howToPlayImage.erase();
+    isVisible = true;
 }
 
 /*
@@ -165,26 +178,14 @@ void MenuScreen::draw() {
  */
 void MenuScreen::erase() {
     if (isVisible) {
+        attribution.draw();
+        exit.draw();
+        howToPlay.draw();
+        play.draw();
+        logo.draw();
+        bgRect.draw();
+        
+        
         isVisible = false;
     }
-}
-
-
-/* ---------- Private ---------- */
-
-/*
- * Initializes this MenuScreen
- */
-void MenuScreen::init() {
-    logo.setFileName("img/logo_large.bmp");
-    play.setFileName("img/Play.bmp");
-    howToPlay.setFileName("img/How To Play.bmp");
-    attribution.setFileName("img/Attribution.bmp");
-    howToPlayImage.setFileName("img/How to Play Screen.bmp");
-
-    logo.setLocation(25, 300);
-    play.setLocation(150, 180);
-    howToPlay.setLocation(8, 100);
-    attribution.setLocation(25, 5);
-    howToPlayImage.setLocation(0, 0);
 }

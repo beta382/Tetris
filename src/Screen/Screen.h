@@ -13,6 +13,8 @@
 #include "../Drawable.h"
 #include "../Rectangle.h"
 
+class EXIT{};
+
 /*
  * Screen:
  * 
@@ -35,7 +37,7 @@ _registerForLeakcheckWithID(Screen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen* respondToKey(int key) = 0;
+        virtual Screen* respondToKey(int key) throw (EXIT)= 0;
         
         /*
          * Performs an action based on the passed Click.  Must be implimented by children of
@@ -47,7 +49,7 @@ _registerForLeakcheckWithID(Screen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen* respondToClick(Click click) = 0;
+        virtual Screen* respondToClick(Click click) throw (EXIT) = 0;
         
         /*
          * Performs actions that should happen continuously in the background on this Screen. Must
@@ -56,7 +58,7 @@ _registerForLeakcheckWithID(Screen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen* doBackground() = 0;
+        virtual Screen* doBackground() throw (EXIT) = 0;
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
