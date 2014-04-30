@@ -8,27 +8,27 @@
  */
 
 
-#include "MenuScreen.h"
+#include "HowToPlay.h"
 
 
 /* ---------- Constructors/Destructor ---------- */
 
 /*
- * Instantiates a MenuScreen object using the passed Screen* to return to.
+ * Instantiates a HowToPlay object using the passed Screen* to return to.
  * 
  * Parameters:
  *   Game* return: A pointer to the screen object to return to
  */
-MenuScreen::MenuScreen(unsigned int color):
+HowToPlay::HowToPlay(unsigned int color):
 Screen(color)
 {
     init();
 }
 
 /*
- * Destructs this MenuScreen object.
+ * Destructs this HowToPlay object.
  */
-MenuScreen::~MenuScreen() {
+HowToPlay::~HowToPlay() {
     erase();
 }
 
@@ -44,7 +44,7 @@ MenuScreen::~MenuScreen() {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::respondToKey(int key) {
+Screen* HowToPlay::respondToKey(int key) {
     Screen* nextScreen = NULL;
     
     return nextScreen;
@@ -59,30 +59,14 @@ Screen* MenuScreen::respondToKey(int key) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::respondToClick(Click click) {
+Screen* HowToPlay::respondToClick(Click click) {
     // For now, just return to the previous screen
     Screen* nextScreen = NULL;
     
-    if(click.x >= play.getLocationX() && 
-            click.x < play.getLocationX()+play.getWidth() &&
-        click.y >= play.getLocationY() && 
-            click.y < play.getLocationY()+play.getHeight()
-       && !howToPlayVisible)
-    {
-        nextScreen = new Game(Color::TAN);
-    }
-    else if(
-        click.x >= howToPlay.getLocationX() && 
-            click.x < howToPlay.getLocationX()+howToPlay.getWidth() &&
-        click.y >= howToPlay.getLocationY() && 
-            click.y < howToPlay.getLocationY()+howToPlay.getHeight())
-    {
-        howToPlayVisible = true;
-    }
-    else if(click.x >= 0 && click.x < 100
+    if(click.x >= 0 && click.x < 100
        && click.y >= 355 && click.y < 400)
     {
-        howToPlayVisible = false;
+        nextScreen = new MenuScreen(Color::TAN);
     }
     
     return nextScreen;
@@ -94,35 +78,8 @@ Screen* MenuScreen::respondToClick(Click click) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::doBackground() {
+Screen* HowToPlay::doBackground() {
     Screen* nextScreen = NULL;
-    
-    int cursorX = g->getMouseX();
-    int cursorY = g->getMouseY();
-    
-    if (cursorX >= play.getLocationX() && 
-            cursorX < play.getLocationX()+play.getWidth() &&
-        cursorY >= play.getLocationY() && 
-            cursorY < play.getLocationY()+play.getHeight())
-    {
-        play.setFileName("Tetris/img/Play Hover.bmp");
-    }
-    else
-    {
-        play.setFileName("Tetris/img/Play.bmp");
-    }
-    
-    if (cursorX >= howToPlay.getLocationX() && 
-            cursorX < howToPlay.getLocationX()+howToPlay.getWidth() &&
-        cursorY >= howToPlay.getLocationY() && 
-            cursorY < howToPlay.getLocationY()+howToPlay.getHeight())
-    {
-        howToPlay.setFileName("Tetris/img/How To Play Hover.bmp");
-    }
-    else
-    {
-        howToPlay.setFileName("Tetris/img/How To Play.bmp");
-    }
     
     applyLayout();
     draw();
@@ -135,7 +92,7 @@ Screen* MenuScreen::doBackground() {
  *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
  *   the screen size changes.
  */
-void MenuScreen::applyLayout() {
+void HowToPlay::applyLayout() {
     // Can be updated later
 }
 
@@ -145,25 +102,16 @@ void MenuScreen::applyLayout() {
 /*
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy.
  */
-void MenuScreen::draw() {
+void HowToPlay::draw() {
     isVisible = true;
     
-    bgRect.draw();
-    logo.draw();
-    play.draw();
-    howToPlay.draw();
-    attribution.draw();
-    
-    if(howToPlayVisible)
-        howToPlayImage.draw();
-    else
-        howToPlayImage.erase();
+    howToPlayImage.draw();
 }
 
 /*
  * Erases all Drawable member data from the screen in an order that preserves view heiarchy.
  */
-void MenuScreen::erase() {
+void HowToPlay::erase() {
     if (isVisible) {
         isVisible = false;
     }
@@ -173,18 +121,10 @@ void MenuScreen::erase() {
 /* ---------- Private ---------- */
 
 /*
- * Initializes this MenuScreen
+ * Initializes this HowToPlay
  */
-void MenuScreen::init() {
-    logo.setFileName("Tetris/img/logo_large.bmp");
-    play.setFileName("Tetris/img/Play.bmp");
-    howToPlay.setFileName("Tetris/img/How To Play.bmp");
-    attribution.setFileName("Tetris/img/Attribution.bmp");
+void HowToPlay::init() {
     howToPlayImage.setFileName("Tetris/img/How to Play Screen.bmp");
 
-    logo.setLocation(25, 300);
-    play.setLocation(150, 180);
-    howToPlay.setLocation(8, 100);
-    attribution.setLocation(25, 5);
     howToPlayImage.setLocation(0, 0);
 }
