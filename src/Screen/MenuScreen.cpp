@@ -149,12 +149,12 @@ void MenuScreen::init() {
     howToPlay.setFileName("../img/How To Play.bmp");
     howToPlayHover.setFileName("../img/How To Play Hover.bmp");
     attribution.setFileName("../img/Attribution.bmp");
-    /* Will set when ready
-    logo.setLocation();
-    play.setLocation();
-    playHover.setLocation();
-    howToPlay.setLocation();
-    howToPlayHover.setLocation();
-    attribution.setLocation();
-    */    
+
+    logo.setLocation(25, 300);
+    play.setLocation(150, 180);
+    playHover.setLocation(150, 180);
+    howToPlay.setLocation(8, 100);
+    howToPlayHover.setLocation(8, 100);
+    attribution.setLocation(25, 5);
+      
 }
