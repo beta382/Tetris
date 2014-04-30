@@ -505,6 +505,9 @@ int PlayingField::doLineClear(vector<int> clearableLines) {
     // Clear fallingShapes when this finally exits, should be totally NULL at this point
     fallingShapes.clear();
     
+    // SFX
+    PlaySound("sounds/line_clear.wav", NULL, SND_ASYNC);
+    
     return points;
 }
 

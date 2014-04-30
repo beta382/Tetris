@@ -105,11 +105,11 @@ Screen* MenuScreen::doBackground() {
         cursorY >= play.getLocationY() && 
             cursorY < play.getLocationY()+play.getHeight())
     {
-        play.setFileName("Tetris/img/Play Hover.bmp");
+        play.setFileName("img/Play Hover.bmp");
     }
     else
     {
-        play.setFileName("Tetris/img/Play.bmp");
+        play.setFileName("img/Play.bmp");
     }
     
     if (cursorX >= howToPlay.getLocationX() && 
@@ -117,11 +117,11 @@ Screen* MenuScreen::doBackground() {
         cursorY >= howToPlay.getLocationY() && 
             cursorY < howToPlay.getLocationY()+howToPlay.getHeight())
     {
-        howToPlay.setFileName("Tetris/img/How To Play Hover.bmp");
+        howToPlay.setFileName("img/How To Play Hover.bmp");
     }
     else
     {
-        howToPlay.setFileName("Tetris/img/How To Play.bmp");
+        howToPlay.setFileName("img/How To Play.bmp");
     }
     
     applyLayout();
@@ -176,11 +176,11 @@ void MenuScreen::erase() {
  * Initializes this MenuScreen
  */
 void MenuScreen::init() {
-    logo.setFileName("Tetris/img/logo_large.bmp");
-    play.setFileName("Tetris/img/Play.bmp");
-    howToPlay.setFileName("Tetris/img/How To Play.bmp");
-    attribution.setFileName("Tetris/img/Attribution.bmp");
-    howToPlayImage.setFileName("Tetris/img/How to Play Screen.bmp");
+    logo.setFileName("img/logo_large.bmp");
+    play.setFileName("img/Play.bmp");
+    howToPlay.setFileName("img/How To Play.bmp");
+    attribution.setFileName("img/Attribution.bmp");
+    howToPlayImage.setFileName("img/How to Play Screen.bmp");
 
     logo.setLocation(25, 300);
     play.setLocation(150, 180);

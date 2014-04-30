@@ -81,16 +81,16 @@ string getName(int n)
 {
     string name;
     
-    if(n == 1) name = "../img/1.bmp";
-    else if(n == 2) name = "../img/2.bmp";
-    else if(n == 3) name = "../img/3.bmp";
-    else if(n == 4) name = "../img/4.bmp";
-    else if(n == 5) name = "../img/5.bmp";
-    else if(n == 6) name = "../img/6.bmp";
-    else if(n == 7) name = "../img/7.bmp";
-    else if(n == 8) name = "../img/8.bmp";
-    else if(n == 9) name = "../img/9.bmp";
-    else if(n == 0) name = "../img/0.bmp";
+    if(n == 1) name = "img/1.bmp";
+    else if(n == 2) name = "img/2.bmp";
+    else if(n == 3) name = "img/3.bmp";
+    else if(n == 4) name = "img/4.bmp";
+    else if(n == 5) name = "img/5.bmp";
+    else if(n == 6) name = "img/6.bmp";
+    else if(n == 7) name = "img/7.bmp";
+    else if(n == 8) name = "img/8.bmp";
+    else if(n == 9) name = "img/9.bmp";
+    else if(n == 0) name = "img/0.bmp";
     
     return name;
 }

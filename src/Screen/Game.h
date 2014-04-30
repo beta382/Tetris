@@ -18,6 +18,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <mmsystem.h>
 
 /*
  * Game:

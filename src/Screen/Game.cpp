@@ -28,7 +28,7 @@ Screen(color),
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
-        logo("../img/logo_medium.bmp"), scoreText("../img/score.bmp"), levelText("../img/level.bmp")
+        logo("img/logo_medium.bmp"), scoreText("img/score.bmp"), levelText("img/level.bmp")
 {
     init();
 }
@@ -537,7 +537,10 @@ bool Game::doJoinAndRespawn() {
     
     score += field.mergeAndDelete(currentTetromino);
     
+    int old_level = level;
     level = score/500 + 1;
+    if(level > old_level)
+        PlaySound("sounds/level_up.wav", NULL, SND_ASYNC);
     
     //Changes fall speed as levels increase, caps speed at 60
     tick = (500 - 20*(level-1));
