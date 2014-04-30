@@ -99,11 +99,6 @@ Screen* Game::respondToKey(int key) {
         case '5':
             doResetTetromino<LaserBlock>();
             break;
-        case 'j':
-            if (!doJoinAndRespawn()) {
-                nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
-            }
-            break;
         case 'p':
             retain = true;
             
@@ -112,9 +107,6 @@ Screen* Game::respondToKey(int key) {
             prevTime -= clock();
             
             nextScreen = new PauseScreen(this);
-            break;
-        default:
-            cout << key << endl;
             break;
     }
     
