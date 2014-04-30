@@ -624,7 +624,7 @@ void Game::drawScore()
     score4.draw();
     score5.draw();
     
-    //cout << score << endl;
+    cout << score << endl;
 }
 
 /*
@@ -643,5 +643,5 @@ void Game::drawLevel()
     level1.draw();
     level2.draw();
     
-    //cout << level << endl;
+    cout << level << endl;
 }
