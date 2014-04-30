@@ -22,6 +22,14 @@ Shape(x, y, blockSize, padding, background)
 }
 
 void BlockString::setString(string str) {
+    
+    for (unsigned int i = 0; i < blocks.size(); i++) {
+        delete blocks[i];
+        blocks[i] = NULL;
+    }
+    
+    blocks.clear();
+    
     for (unsigned int i = 0; i < str.length(); i++) {
         switch (toupper(str.at(i))) {
             case 'A':
