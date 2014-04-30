@@ -12,7 +12,6 @@
 
 #include "Screen.h"
 #include "Game.h"
-#include "HowToPlay.h"
 #include "../Image.h"
 
 class Game; // Needed because of the circular inclusion
