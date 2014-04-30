@@ -12,7 +12,7 @@
 
 #include "Screen.h"
 #include "Game.h"
-#include "../Shape.h"
+#include "../BlockString.h"
 
 class Game; // Needed because of the circular inclusion
 
@@ -102,11 +102,6 @@ _registerForLeakcheckWithID(PauseScreen)
         PauseScreen();
         
         /*
-         * Initializes this PauseScreen
-         */
-        void init();
-        
-        /*
          * The game to return control to once this screen exits
          */
         Game* background;
@@ -114,8 +109,8 @@ _registerForLeakcheckWithID(PauseScreen)
         /*
          * Represents clickable text elements
          */
-        Shape resumeText;
-        Shape exitText;
+        BlockString resumeText;
+        BlockString exitText;
 };
 
 

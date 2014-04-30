@@ -20,9 +20,9 @@
  */
 PauseScreen::PauseScreen(Game* background):
 Screen(),
-        background(background), resumeText(0, 0, 16, 2), exitText(0, 0, 16, 2)
+        background(background), resumeText(0, 0, 16, 2, "resume", Color::GREEN), 
+        exitText(0, 0, 16, 2, "exit", Color::RED)
 {
-    init();
 }
 
 /*
@@ -187,56 +187,4 @@ void PauseScreen::erase() {
         
         isVisible = false;
     }
-}
-
-
-/* ---------- Private ---------- */
-
-/*
- * Initializes this PauseScreen
- */
-void PauseScreen::init() {
-    /* Eww */
-    // Craft the "resume" text shape
-    resumeText
-    /*R*/.addBlock<Block>(0, 0).addBlock<Block>(0, 1).addBlock<Block>(0, 2).addBlock<Block>(0, 3)
-            .addBlock<Block>(0, 4).addBlock<Block>(1, 1).addBlock<Block>(1, 2)
-            .addBlock<Block>(1, 4).addBlock<Block>(2, 0).addBlock<Block>(2, 2)
-            .addBlock<Block>(2, 3).addBlock<Block>(2, 4)
-    /*E*/.addBlock<Block>(4, 0).addBlock<Block>(4, 1).addBlock<Block>(4, 2).addBlock<Block>(4, 3)
-            .addBlock<Block>(4, 4).addBlock<Block>(5, 0).addBlock<Block>(5, 2)
-            .addBlock<Block>(5, 4).addBlock<Block>(6, 0).addBlock<Block>(6, 4)
-    /*S*/.addBlock<Block>(8, 0).addBlock<Block>(8, 2).addBlock<Block>(8, 3).addBlock<Block>(8, 4)
-            .addBlock<Block>(9, 0).addBlock<Block>(9, 2).addBlock<Block>(9, 4)
-            .addBlock<Block>(10, 0).addBlock<Block>(10, 1).addBlock<Block>(10, 2)
-            .addBlock<Block>(10, 4)
-    /*U*/.addBlock<Block>(12, 0).addBlock<Block>(12, 1).addBlock<Block>(12, 2)
-            .addBlock<Block>(12, 3).addBlock<Block>(12, 4).addBlock<Block>(13, 0)
-            .addBlock<Block>(14, 0).addBlock<Block>(14, 1).addBlock<Block>(14, 2)
-            .addBlock<Block>(14, 3).addBlock<Block>(14, 4)
-    /*M*/.addBlock<Block>(16, 0).addBlock<Block>(16, 1).addBlock<Block>(16, 2)
-            .addBlock<Block>(16, 3).addBlock<Block>(16, 4).addBlock<Block>(17, 2)
-            .addBlock<Block>(17, 3).addBlock<Block>(18, 0).addBlock<Block>(18, 1)
-            .addBlock<Block>(18, 2).addBlock<Block>(18, 3).addBlock<Block>(18, 4)
-    /*E*/.addBlock<Block>(20, 0).addBlock<Block>(20, 1).addBlock<Block>(20, 2)
-            .addBlock<Block>(20, 3).addBlock<Block>(20, 4).addBlock<Block>(21, 0)
-            .addBlock<Block>(21, 2).addBlock<Block>(21, 4).addBlock<Block>(22, 0)
-            .addBlock<Block>(22, 4);
-
-    exitText
-    /*E*/.addBlock<Block>(0, 0).addBlock<Block>(0, 1).addBlock<Block>(0, 2).addBlock<Block>(0, 3)
-            .addBlock<Block>(0, 4).addBlock<Block>(1, 0).addBlock<Block>(1, 2)
-            .addBlock<Block>(1, 4).addBlock<Block>(2, 0).addBlock<Block>(2, 4)
-    /*X*/.addBlock<Block>(4, 0).addBlock<Block>(4, 1).addBlock<Block>(4, 3).addBlock<Block>(4, 4)
-            .addBlock<Block>(5, 2).addBlock<Block>(6, 0).addBlock<Block>(6, 1)
-            .addBlock<Block>(6, 3).addBlock<Block>(6, 4)
-    /*I*/.addBlock<Block>(8, 0).addBlock<Block>(8, 4).addBlock<Block>(9, 0).addBlock<Block>(9, 1)
-            .addBlock<Block>(9, 2).addBlock<Block>(9, 3).addBlock<Block>(9, 4)
-            .addBlock<Block>(10, 0).addBlock<Block>(10, 4)
-    /*T*/.addBlock<Block>(12, 4).addBlock<Block>(13, 0).addBlock<Block>(13, 1)
-            .addBlock<Block>(13, 2).addBlock<Block>(13, 3).addBlock<Block>(13, 4)
-            .addBlock<Block>(14, 4);
-    
-    resumeText.setForeground(Color::GREEN);
-    exitText.setForeground(Color::RED);
 }
