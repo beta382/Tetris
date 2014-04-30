@@ -11,7 +11,7 @@
 // Just a convenience header
 
 #include "Screen/Screen.h"
-#include "Screen/Game.h"
+#include "Screen/GameScreen.h"
 #include "Screen/PauseScreen.h"
 #include "Screen/MenuScreen.h"
 

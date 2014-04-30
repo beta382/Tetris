@@ -16,19 +16,17 @@
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class MenuScreen;
 
+#define ISdoMenu() throw NEW_SCREEN(new MenuScreen(Color::TAN));
+
 class InstructionScreen: public Screen {
 _registerForLeakcheckWithID(InstructionScreen)
     public:
         InstructionScreen(unsigned int color = Color::BLACK);
-        
         ~InstructionScreen();
         
-        Screen* respondToKey(int) throw (EXIT);
-        
-        Screen* respondToClick(Click) throw (EXIT);
-        
-        Screen* doBackground() throw (EXIT);
-        
+        void respondToKey(int) throw (QUIT, NEW_SCREEN);
+        void respondToClick(Click) throw (QUIT, NEW_SCREEN);
+        void doBackground() throw (QUIT, NEW_SCREEN);
         void applyLayout();
         
         void draw();

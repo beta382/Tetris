@@ -54,6 +54,7 @@ namespace Key {
     const int RIGHT = 166;
     const int ESC = 27;
     const int BACKSPACE = 8;
+    const int ENTER = 13;
     
 }
 

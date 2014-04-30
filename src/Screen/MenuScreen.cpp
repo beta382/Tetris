@@ -50,10 +50,19 @@ MenuScreen::~MenuScreen() {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::respondToKey(int key) throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
-    return nextScreen;
+void MenuScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
+    switch (key) {
+        case 'p':
+        case Key::ENTER:
+            MSdoGame();
+            break;
+        case 'i':
+            MSdoInstruction();
+            break;
+        case Key::ESC:
+            MSdoExit();
+            break;
+    }
 }
 
 /*
@@ -65,31 +74,28 @@ Screen* MenuScreen::respondToKey(int key) throw (EXIT) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::respondToClick(Click click) throw (EXIT) {
-    // For now, just return to the previous screen
-    Screen* nextScreen = NULL;
-    
-    if(click.x >= play.getLocationX() && 
-            click.x < play.getLocationX()+play.getWidth() &&
-        click.y >= play.getLocationY() && 
-            click.y < play.getLocationY()+play.getHeight())
-    {
-        nextScreen = new Game(Color::TAN);
-    } else if (
-        click.x >= howToPlay.getLocationX() &&
-            click.x < howToPlay.getLocationX()+howToPlay.getWidth() &&
-        click.y >= howToPlay.getLocationY() && 
-            click.y < howToPlay.getLocationY()+howToPlay.getHeight())
-    {
-        nextScreen = new InstructionScreen(Color::TAN);
-    } else if (
-        click.x >= exit.getLocationX() && click.x < exit.getLocationX()+exit.getWidth() &&
-        click.y >= exit.getLocationY() && click.y < exit.getLocationY()+exit.getHeight())
-    {
-        throw EXIT();
+void MenuScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
+    if (click.button == GLUT_LEFT_BUTTON && click.state == GLUT_UP) {
+        if(click.x >= play.getLocationX() && 
+                click.x < play.getLocationX()+play.getWidth() &&
+            click.y >= play.getLocationY() && 
+                click.y < play.getLocationY()+play.getHeight())
+        {
+            MSdoGame();
+        } else if (
+            click.x >= howToPlay.getLocationX() &&
+                click.x < howToPlay.getLocationX()+howToPlay.getWidth() &&
+            click.y >= howToPlay.getLocationY() && 
+                click.y < howToPlay.getLocationY()+howToPlay.getHeight())
+        {
+            MSdoInstruction();
+        } else if (
+            click.x >= exit.getLocationX() && click.x < exit.getLocationX()+exit.getWidth() &&
+            click.y >= exit.getLocationY() && click.y < exit.getLocationY()+exit.getHeight())
+        {
+            MSdoExit();
+        }
     }
-    
-    return nextScreen;
 }
 
 /*
@@ -98,9 +104,7 @@ Screen* MenuScreen::respondToClick(Click click) throw (EXIT) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* MenuScreen::doBackground() throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
+void MenuScreen::doBackground() throw (QUIT, NEW_SCREEN) {
     int cursorX = g->getMouseX();
     int cursorY = g->getMouseY();
     
@@ -110,17 +114,23 @@ Screen* MenuScreen::doBackground() throw (EXIT) {
             cursorY < play.getLocationY()+play.getHeight())
     {
         play.setForeground(Color::GRAY);
+        howToPlay.setForeground(Color::BLACK);
+        exit.setForeground(Color::BLACK);
     } else if (cursorX >= howToPlay.getLocationX() && 
             cursorX < howToPlay.getLocationX()+howToPlay.getWidth() &&
         cursorY >= howToPlay.getLocationY() && 
             cursorY < howToPlay.getLocationY()+howToPlay.getHeight())
     {
         howToPlay.setForeground(Color::GRAY);
+        play.setForeground(Color::BLACK);
+        exit.setForeground(Color::BLACK);
     } else if (
         cursorX >= exit.getLocationX() && cursorX < exit.getLocationX()+exit.getWidth() &&
         cursorY >= exit.getLocationY() && cursorY < exit.getLocationY()+exit.getHeight())
     {
         exit.setForeground(Color::GRAY);
+        play.setForeground(Color::BLACK);
+        howToPlay.setForeground(Color::BLACK);
     } else {
         play.setForeground(Color::BLACK);
         howToPlay.setForeground(Color::BLACK);
@@ -129,8 +139,6 @@ Screen* MenuScreen::doBackground() throw (EXIT) {
     
     applyLayout();
     draw();
-    
-    return nextScreen;
 }
 
 /*

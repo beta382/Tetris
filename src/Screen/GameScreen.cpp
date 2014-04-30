@@ -7,7 +7,7 @@
  * Date last modified:     Apr 27, 2014
  */
 
-#include "Game.h"
+#include "GameScreen.h"
 
 
 /* ---------- Constructors/Destructor ---------- */
@@ -19,7 +19,7 @@
  *   unsigned int color: The value to initialize this Game object's foreground with, defaults to
  *     Color::BLACK
  */
-Game::Game(unsigned int color): 
+GameScreen::GameScreen(unsigned int color): 
 Screen(color),
         prevTime(0), tick(500), score(0), level(1),
         field(0, 0, 10, 20, 24, 3, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
@@ -40,7 +40,7 @@ Screen(color),
 /*
  * Destructs this Game object.
  */
-Game::~Game() {
+GameScreen::~GameScreen() {
     erase();
     delete currentTetromino;
     delete shadow;
@@ -59,9 +59,7 @@ Game::~Game() {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::respondToKey(int key) throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
+void GameScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'w':
         case Key::UP: // UP
@@ -85,37 +83,13 @@ Screen* Game::respondToKey(int key) throw (EXIT) {
         case 'e': // Rotate CW
             doRotateCWWithKick();
             break;
-        case '0': // Testing
-            doResetTetromino<Block>();
-            break;
-        case '1':
-            doResetTetromino<ExplodingBlock>();
-            break;
-        case '2':
-            doResetTetromino<GravityBlock>();
-            break;
-        case '3':
-            doResetTetromino<LeftMagnetBlock>();
-            break;
-        case '4':
-            doResetTetromino<RightMagnetBlock>();
-            break;
-        case '5':
-            doResetTetromino<LaserBlock>();
-            break;
         case 'p':
         case ' ':
-            retain = true;
-            
-            // Set out previous time back so that when we return, we have a proper offset until the
-            // next tick
-            prevTime -= clock();
-            
-            nextScreen = new PauseScreen(this);
+            GSdoPause();
             break;
+        case Key::ESC:
+            GSdoExit();
     }
-    
-    return nextScreen;
 }
 
 /*
@@ -127,11 +101,8 @@ Screen* Game::respondToKey(int key) throw (EXIT) {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::respondToClick(Click click) throw (EXIT) {
+void GameScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
     // Do nothing for now
-    Screen* nextScreen = NULL;
-    
-    return nextScreen;
 }
 
 /*
@@ -140,9 +111,7 @@ Screen* Game::respondToClick(Click click) throw (EXIT) {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::doBackground() throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
+void GameScreen::doBackground() throw (QUIT, NEW_SCREEN) {
     // If we previously retained this and returned, stop saying to retain or we'll leak
     if (retain) {
         retain = false;
@@ -165,13 +134,11 @@ Screen* Game::doBackground() throw (EXIT) {
         if (field.canShiftDown(currentTetromino)) {
             doShiftDown();
         } else if (!doJoinAndRespawn()) {
-            nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
+            GSdoPause(); // TODO Make this the GameOver Screen
         }
         
         prevTime = curTime;
     }
-
-    return nextScreen;
 }
 
 
@@ -180,7 +147,7 @@ Screen* Game::doBackground() throw (EXIT) {
 /*
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy.
  */
-void Game::draw() {
+void GameScreen::draw() {
     bgRect.draw();
     field.draw();
     
@@ -212,7 +179,7 @@ void Game::draw() {
 /*
  * Erases all Drawable member data from the screen in an order that preserves view heiarchy.
  */
-void Game::erase() {
+void GameScreen::erase() {
     if (isVisible) {
         levelNum.erase();
         scoreNum.erase();
@@ -250,7 +217,7 @@ void Game::erase() {
  *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
  *   the screen size changes.
  */
-void Game::applyLayout() {
+void GameScreen::applyLayout() {
     setWidth(g->getWidth());
     setHeight(g->getHeight());
 
@@ -306,7 +273,7 @@ void Game::applyLayout() {
 /*
  * Instantiates this Game object's dynamically allocated member data and starts the RNG.
  */
-void Game::init() {
+void GameScreen::init() {
     srand(time(0));
     
     // Spawn a new tetromino and create a shadow in the same place
@@ -329,7 +296,7 @@ void Game::init() {
 /*
  * Properly performs a shift up on currentTetromino, performing checks.
  */
-void Game::doShiftUp() {
+void GameScreen::doShiftUp() {
     if (field.canShiftUp(currentTetromino)) {
         currentTetromino->erase();
         currentTetromino->shiftUp();
@@ -340,7 +307,7 @@ void Game::doShiftUp() {
 /*
  * Properly performs a shift down on currentTetromino, performing checks.
  */
-void Game::doShiftDown() {
+void GameScreen::doShiftDown() {
     if (field.canShiftDown(currentTetromino)) {
         currentTetromino->erase();
         currentTetromino->shiftDown();
@@ -353,7 +320,7 @@ void Game::doShiftDown() {
 /*
  * Properly performs a shift left on currentTetromino, performing checks.
  */
-void Game::doShiftLeft() {
+void GameScreen::doShiftLeft() {
     if (field.canShiftLeft(currentTetromino)) {
         // Erase and move the current tetromino, but don't redraw it just yet
         currentTetromino->erase();
@@ -375,7 +342,7 @@ void Game::doShiftLeft() {
 /*
  * Properly performs a shift right on currentTetromino, performing checks.
  */
-void Game::doShiftRight() {
+void GameScreen::doShiftRight() {
     if (field.canShiftRight(currentTetromino)) {
         // Erase and move the current tetromino, but don't redraw it just yet
         currentTetromino->erase();
@@ -397,7 +364,7 @@ void Game::doShiftRight() {
 /*
  * Properly performs a clockwise rotation on currentTetromino WITHOUT performing checks.
  */
-void Game::doRotateCW() {
+void GameScreen::doRotateCW() {
     // Erase and rotate the current tetromino, but don't redraw it just yet
     currentTetromino->erase();
     currentTetromino->rotateCW();
@@ -421,7 +388,7 @@ void Game::doRotateCW() {
 /*
  * Properly performs a counter-clockwise rotation on currentTetromino WITHOUT performing checks.
  */
-void Game::doRotateCCW() {
+void GameScreen::doRotateCCW() {
     // Erase and rotate the current tetromino, but don't redraw it just yet
     currentTetromino->erase();
     currentTetromino->rotateCCW();       
@@ -445,7 +412,7 @@ void Game::doRotateCCW() {
 /*
  * Properly performs a clockwise rotation on currentTetromino, performing checks and wall kicks.
  */
-void Game::doRotateCWWithKick() {
+void GameScreen::doRotateCWWithKick() {
     // If we can rotate the current tetromino CW within the block field, do so
     if (field.canRotateCW(currentTetromino)) {
         doRotateCW();
@@ -479,7 +446,7 @@ void Game::doRotateCWWithKick() {
  * Properly performs a counter-clockwise rotation on currentTetromino, performing checks and wall
  *   kicks.
  */
-void Game::doRotateCCWWithKick() {
+void GameScreen::doRotateCCWWithKick() {
     // If we can rotate the current tetromino CCW within the block field, do so
     if (field.canRotateCCW(currentTetromino)) {
         doRotateCCW();
@@ -513,7 +480,7 @@ void Game::doRotateCCWWithKick() {
  * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the screen
  *   without merging.
  */
-void Game::doSoftFall() {
+void GameScreen::doSoftFall() {
     while(field.canShiftDown(currentTetromino)) {
         doShiftDown();
         util::wait(25, g);
@@ -534,7 +501,7 @@ void Game::doSoftFall() {
  * 
  * Returns: True if a Tetromino could be successfully spawned, false otherwise
  */
-bool Game::doJoinAndRespawn() {
+bool GameScreen::doJoinAndRespawn() {
     bool couldSpawn;
     
     score += field.mergeAndDelete(currentTetromino);

@@ -233,9 +233,8 @@ void mouseFunction(int button, int state,int x, int y) {
     c.state = state;
     c.x = x;
     c.y = g->getHeight()-y;
-    if(state == 0){
-        g->addClick(c);
-    }
+    
+    g->addClick(c);
 }
 
 void passiveMouseFunction(int x, int y) {

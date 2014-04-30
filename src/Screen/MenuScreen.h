@@ -11,15 +11,19 @@
 #define MENUSCREEN_H_INCLUDED
 
 #include "Screen.h"
-#include "Game.h"
+#include "GameScreen.h"
 #include "MenuScreen.h"
 #include "InstructionScreen.h"
 #include "../Logo.h"
 #include "../BlockString.h"
 
 // Forward declaration of destination screens, due to potential for an inclusion loop
-class Game;
+class GameScreen;
 class InstructionScreen;
+
+#define MSdoGame() throw NEW_SCREEN(new GameScreen(Color::TAN));
+#define MSdoInstruction() throw NEW_SCREEN(new InstructionScreen(Color::TAN));
+#define MSdoExit() throw QUIT();
 
 /*
  * MenuScreen:
@@ -58,7 +62,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int) throw (EXIT);
+        void respondToKey(int) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs an action based on the passed Click.
@@ -69,7 +73,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click) throw (EXIT);
+        void respondToClick(Click) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -77,7 +81,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground() throw (EXIT);
+        void doBackground() throw (QUIT, NEW_SCREEN);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of

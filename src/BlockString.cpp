@@ -267,6 +267,11 @@ void BlockString::setString(string str) {
                 addBlock<Block>(i*4, 0).addBlock<Block>(i*4, 1).addBlock<Block>(i*4+1, 2)
                     .addBlock<Block>(i*4+2, 3).addBlock<Block>(i*4+2, 4);
                 break;
+            case '?':
+                addBlock<Block>(i*4, 4).addBlock<Block>(i*4+1, 0).addBlock<Block>(i*4+1, 2)
+                    .addBlock<Block>(i*4+1, 4).addBlock<Block>(i*4+2, 2).addBlock<Block>(i*4+2, 3)
+                    .addBlock<Block>(i*4+2, 4);
+                break;
             case ' ':
                 break;
             default:

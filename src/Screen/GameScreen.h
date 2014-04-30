@@ -23,32 +23,36 @@
 
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class PauseScreen;
+class ConfirmScreen;
+
+#define GSdoPause() retain = true; prevTime -= clock(); throw NEW_SCREEN(new PauseScreen(this));
+#define GSdoExit() retain = true; prevTime -= clock(); throw NEW_SCREEN(new ConfirmScreen(this));
 
 /*
- * Game:
+ * GameScreen
  *
  * Inherits from Screen.
  *
- * Game is intended to represent the game screen, and be a wrapper for everything that the game
- *   screen contains. Game IS NOT intended to be inherited from.
+ * GameScreen is intended to represent the GameScreenscreen, and be a wrapper for everything that
+ *   the game screen contains. GameScreenIS NOT intended to be inherited from.
  */
-class Game: public Screen {
-_registerForLeakcheckWithID(Game)
+class GameScreen: public Screen {
+_registerForLeakcheckWithID(GameScreen)
     public:
         
         /*
-         * Instantiates a Game object using the passed foreground color or default values.
+         * Instantiates a GameScreenobject using the passed foreground color or default values.
          * 
          * Parameters:
-         *   unsigned int color: The value to initialize this Game object's foreground with,
+         *   unsigned int color: The value to initialize this GameScreenobject's foreground with,
          *     defaults to Color::BLACK
          */
-        Game(unsigned int color = Color::BLACK);
+        GameScreen(unsigned int color = Color::BLACK);
 
         /*
-         * Destructs this Game object.
+         * Destructs this GameScreenobject.
          */
-        ~Game();
+        ~GameScreen();
         
         
         /* ---------- Implemented from Screen ---------- */
@@ -62,7 +66,7 @@ _registerForLeakcheckWithID(Game)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int) throw (EXIT);
+        void respondToKey(int) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs an action based on the passed Click.
@@ -73,7 +77,7 @@ _registerForLeakcheckWithID(Game)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click) throw (EXIT);
+        void respondToClick(Click) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -81,7 +85,7 @@ _registerForLeakcheckWithID(Game)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground() throw (EXIT);
+        void doBackground() throw (QUIT, NEW_SCREEN);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -108,11 +112,12 @@ _registerForLeakcheckWithID(Game)
         /*
          * Prohibit copying or assignment
          */
-        Game(const Game&);
-        Game& operator =(const Game&);
+        GameScreen(const GameScreen&);
+        GameScreen& operator =(const GameScreen&);
         
         /*
-         * Instantiates this Game object's dynamically allocated member data and starts the RNG.
+         * Instantiates this GameScreen object's dynamically allocated member data and starts the
+         *   RNG.
          */
         void init();
 
@@ -180,7 +185,7 @@ _registerForLeakcheckWithID(Game)
         bool doJoinAndRespawn();
         
         /*
-         * Used as a game "tick" marker for automatic tetromino falling, and the duration of the
+         * Used as a "tick" marker for automatic tetromino falling, and the duration of the
          *   tick itself
          */
         clock_t prevTime;
@@ -225,7 +230,7 @@ _registerForLeakcheckWithID(Game)
         MyRectangle bgRectNext2;
         
         /*
-         * Game logo
+         * GameScreen logo
          */
         Logo logo;
         
@@ -242,7 +247,7 @@ _registerForLeakcheckWithID(Game)
  * Resets the currentTetromino and spawns a new one. Exists for testing purposes.
  */
 template <typename BlockType>
-void Game::doResetTetromino() {
+void GameScreen::doResetTetromino() {
     delete currentTetromino;
     delete shadow;
         

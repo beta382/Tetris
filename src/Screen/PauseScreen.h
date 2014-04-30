@@ -11,14 +11,18 @@
 #define PAUSESCREEN_H_
 
 #include "Screen.h"
-#include "Game.h"
+#include "GameScreen.h"
 #include "MenuScreen.h"
+#include "ConfirmScreen.h"
 #include "../BlockString.h"
 
 // Forward declaration of destination screens, due to potential for an inclusion loop
-class Game;
+class GameScreen;
 class MenuScreen;
+class ConfirmScreen;
 
+#define PSdoResume() {Screen* tmp = bgScreen; bgScreen = NULL; throw NEW_SCREEN(tmp);}
+#define PSdoExit() retain = true; throw NEW_SCREEN(new ConfirmScreen(this));
 
 /*
  * PauseScreen:
@@ -36,9 +40,9 @@ _registerForLeakcheckWithID(PauseScreen)
          * Instantiates a PauseScreen object using the passed Games* to return to.
          * 
          * Parameters:
-         *   Game* bgGame: A pointer to the screen object to return to
+         *   Game* bgScreen: A pointer to the screen object to return to
          */
-        PauseScreen(Game* bgGame);
+        PauseScreen(GameScreen* bgScreen);
         
         /*
          * Destructs this PauseScreen object.
@@ -57,7 +61,7 @@ _registerForLeakcheckWithID(PauseScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int) throw (EXIT);
+        void respondToKey(int) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs an action based on the passed Click.
@@ -68,7 +72,7 @@ _registerForLeakcheckWithID(PauseScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click) throw (EXIT);
+        void respondToClick(Click) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -76,7 +80,7 @@ _registerForLeakcheckWithID(PauseScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground() throw (EXIT);
+        void doBackground() throw (QUIT, NEW_SCREEN);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -108,13 +112,11 @@ _registerForLeakcheckWithID(PauseScreen)
         /*
          * The game to return control to once this screen exits
          */
-        Game* bgGame;
+        GameScreen* bgScreen;
         
-        /*
-         * Represents clickable text elements
-         */
-        BlockString resumeText;
-        BlockString exitText;
+        BlockString title;
+        BlockString resume;
+        BlockString exit;
 };
 
 

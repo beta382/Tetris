@@ -37,33 +37,27 @@ InstructionScreen::~InstructionScreen() {
 
 
 
-Screen* InstructionScreen::respondToKey(int key) throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
+void InstructionScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'b':
         case Key::BACKSPACE:
-            nextScreen = new MenuScreen(Color::TAN);
+            ISdoMenu();
     }
-    
-    return nextScreen;
 }
 
-Screen* InstructionScreen::respondToClick(Click click) throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
-    if (click.x >= back.getLocationX() && 
-            click.x < back.getLocationX()+back.getWidth() &&
-        click.y >= back.getLocationY() && 
-            click.y < back.getLocationY()+back.getHeight())
-    {
-        nextScreen = new MenuScreen(Color::TAN);
+void InstructionScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
+    if (click.button == GLUT_LEFT_BUTTON && click.state == GLUT_UP) {
+        if (click.x >= back.getLocationX() && 
+                click.x < back.getLocationX()+back.getWidth() &&
+            click.y >= back.getLocationY() && 
+                click.y < back.getLocationY()+back.getHeight())
+        {
+            ISdoMenu()
+        }
     }
-    
-    return nextScreen;
 }
 
-Screen* InstructionScreen::doBackground() throw (EXIT) {
+void InstructionScreen::doBackground() throw (QUIT, NEW_SCREEN) {
     int cursorX = g->getMouseX();
     int cursorY = g->getMouseY();
     
@@ -79,8 +73,6 @@ Screen* InstructionScreen::doBackground() throw (EXIT) {
     
     applyLayout();
     draw();
-    
-    return NULL;
 }
 
 void InstructionScreen::applyLayout() {

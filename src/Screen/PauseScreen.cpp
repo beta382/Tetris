@@ -16,12 +16,13 @@
  * Instantiates a PauseScreen object using the passed Screen* to return to.
  * 
  * Parameters:
- *   Game* bgGame: A pointer to the screen object to return to
+ *   Game* bgScreen: A pointer to the screen object to return to
  */
-PauseScreen::PauseScreen(Game* bgGame):
+PauseScreen::PauseScreen(GameScreen* bgScreen):
 Screen(),
-        bgGame(bgGame), resumeText(0, 0, 16, 2, "resume"), 
-        exitText(0, 0, 16, 2, "exit")
+        bgScreen(bgScreen), title(0, 0, 20, 0, "paused", Color::LIGHT_GRAY),
+        resume(0, 0, 12, 0, "resume game", Color::GREEN), 
+        exit(0, 0, 12, 0, "exit to menu", Color::RED)
 {
 }
 
@@ -30,7 +31,7 @@ Screen(),
  */
 PauseScreen::~PauseScreen() {
     erase();
-    delete bgGame;
+    delete bgScreen;
 }
 
 
@@ -45,24 +46,17 @@ PauseScreen::~PauseScreen() {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* PauseScreen::respondToKey(int key) throw (EXIT) {
-    Screen* nextScreen = NULL;
-    
+void PauseScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'p':
         case ' ':
-            nextScreen = bgGame;
-            bgGame = NULL;
+            PSdoResume();
             break;
         case 'e':
         case Key::ESC:
-            nextScreen = new MenuScreen(Color::TAN);
-            delete bgGame;
-            bgGame = NULL;
+            PSdoExit();
             break;
     }
-    
-    return nextScreen;
 }
 
 /*
@@ -74,29 +68,21 @@ Screen* PauseScreen::respondToKey(int key) throw (EXIT) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* PauseScreen::respondToClick(Click click) throw (EXIT) {
-    // For now, just return to the previous screen
-    Screen* nextScreen = NULL;
-    
-    if (click.x >= resumeText.getLocationX() && 
-            click.x < resumeText.getLocationX()+resumeText.getWidth() &&
-        click.y >= resumeText.getLocationY() && 
-            click.y < resumeText.getLocationY()+resumeText.getHeight())
-    {
-        nextScreen = bgGame;
-        bgGame = NULL;
-    } else if (
-        click.x >= exitText.getLocationX() && 
-            click.x < exitText.getLocationX()+exitText.getWidth() &&
-        click.y >= exitText.getLocationY() && 
-            click.y < exitText.getLocationY()+exitText.getHeight())
-    {
-        nextScreen = new MenuScreen(Color::TAN);
-        delete bgGame;
-        bgGame = NULL;
+void PauseScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
+    if (click.button == GLUT_LEFT_BUTTON && click.state == GLUT_UP) {
+        if (click.x >= resume.getLocationX() && 
+                click.x < resume.getLocationX()+resume.getWidth() &&
+            click.y >= resume.getLocationY() && 
+                click.y < resume.getLocationY()+resume.getHeight())
+        {
+            PSdoResume();
+        } else if (
+            click.x >= exit.getLocationX() && click.x < exit.getLocationX()+exit.getWidth() &&
+            click.y >= exit.getLocationY() && click.y < exit.getLocationY()+exit.getHeight())
+        {
+            PSdoExit();
+        }
     }
-    
-    return nextScreen;
 }
 
 /*
@@ -105,36 +91,37 @@ Screen* PauseScreen::respondToClick(Click click) throw (EXIT) {
  * Returns: A pointer to the Screen object control should shift to after this function
  *   exits, or NULL if control should not shift to another Screen object
  */
-Screen* PauseScreen::doBackground() throw (EXIT) {
-    Screen* nextScreen = NULL;
+void PauseScreen::doBackground() throw (QUIT, NEW_SCREEN) {
+    // If we previously retained this and returned, stop saying to retain or we'll leak
+    if (retain) {
+        retain = false;
+    }
     
     int cursorX = g->getMouseX();
     int cursorY = g->getMouseY();
     
-    if (cursorX >= resumeText.getLocationX() && 
-            cursorX < resumeText.getLocationX()+resumeText.getWidth() &&
-        cursorY >= resumeText.getLocationY() && 
-            cursorY < resumeText.getLocationY()+resumeText.getHeight())
+    if (cursorX >= resume.getLocationX() && 
+            cursorX < resume.getLocationX()+resume.getWidth() &&
+        cursorY >= resume.getLocationY() && 
+            cursorY < resume.getLocationY()+resume.getHeight())
     {
-        resumeText.setForeground(Color::REAL_GREEN);
-        exitText.setForeground(Color::RED);
+        resume.setForeground(Color::REAL_GREEN);
+        exit.setForeground(Color::RED);
     } else if (
-        cursorX >= exitText.getLocationX() && 
-            cursorX < exitText.getLocationX()+exitText.getWidth() &&
-        cursorY >= exitText.getLocationY() && 
-            cursorY < exitText.getLocationY()+exitText.getHeight())
+        cursorX >= exit.getLocationX() && 
+            cursorX < exit.getLocationX()+exit.getWidth() &&
+        cursorY >= exit.getLocationY() && 
+            cursorY < exit.getLocationY()+exit.getHeight())
     {
-        exitText.setForeground(Color::DARK_RED);
-        resumeText.setForeground(Color::GREEN);
+        exit.setForeground(Color::DARK_RED);
+        resume.setForeground(Color::GREEN);
     } else {
-        resumeText.setForeground(Color::GREEN);
-        exitText.setForeground(Color::RED);
+        resume.setForeground(Color::GREEN);
+        exit.setForeground(Color::RED);
     }
     
     applyLayout();
     draw();
-    
-    return nextScreen;
 }
 
 /*
@@ -143,9 +130,15 @@ Screen* PauseScreen::doBackground() throw (EXIT) {
  *   the screen size changes.
  */
 void PauseScreen::applyLayout() {
-    resumeText.setLocation(g->getWidth()/2-resumeText.getWidth()/2, g->getHeight()/2+30);
-    exitText.setLocation(g->getWidth()/2-exitText.getWidth()/2, g->getHeight()/2
-            -exitText.getHeight()-30);
+    setWidth(g->getWidth());
+    setHeight(g->getHeight());
+    
+    title.setLocation((getWidth()-title.getWidth())/2, getHeight()-title.getHeight()-30);
+    
+    resume.setLocation((g->getWidth()-resume.getWidth())/2,
+            g->getHeight()/2+resume.getTotalBlockSize());
+    exit.setLocation((g->getWidth()-exit.getWidth())/2,
+            resume.getLocationY()-exit.getHeight()-exit.getTotalBlockSize()*2);
 }
 
 
@@ -155,23 +148,26 @@ void PauseScreen::applyLayout() {
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy.
  */
 void PauseScreen::draw() {
-    isVisible = true;
-    
-    if (bgGame) {
-        bgGame->applyLayout();
-        bgGame->draw();
+    if (bgScreen) {
+        bgScreen->applyLayout();
+        bgScreen->draw();
     }
     
-    char* sharedPixelBuffer = g->getBuffer();
-    
-    // Darkens the screen
-    for (int i = 0; i < g->getBufferLen(); i++) {
-        sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/4;
+    if (!retain) {
+        char* sharedPixelBuffer = g->getBuffer();
+        
+        // Darkens the screen
+        for (int i = 0; i < g->getBufferLen(); i++) {
+            sharedPixelBuffer[i] = static_cast<unsigned char>(sharedPixelBuffer[i])/4;
+        }
+        
+        title.draw();
+        
+        resume.draw();
+        exit.draw();
+        
+        isVisible = true;
     }
-    
-    
-    resumeText.draw();
-    exitText.draw();
 }
 
 /*
@@ -179,11 +175,12 @@ void PauseScreen::draw() {
  */
 void PauseScreen::erase() {
     if (isVisible) {
-        exitText.erase();
-        resumeText.erase();
+        exit.erase();
+        resume.erase();
+        title.erase();
         
-        if (bgGame) {
-            bgGame->erase();
+        if (bgScreen) {
+            bgScreen->erase();
         }
         
         isVisible = false;
