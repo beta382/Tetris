@@ -18,6 +18,7 @@
 #include <vector>
 #include <algorithm>
 #include <ctime>
+#include <mmsystem.h>
 
 /*
  * PlayingField:

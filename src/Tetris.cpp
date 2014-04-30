@@ -12,7 +12,7 @@
 //Tetris Constructor
 
 Tetris::Tetris(GLUT_Plotter* g):
-        g(g), screen(new Game(Color::TAN))
+        g(g), screen(new MenuScreen(Color::TAN))
 {
 }
 

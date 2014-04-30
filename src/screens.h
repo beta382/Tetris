@@ -13,6 +13,8 @@
 #include "Screen/Screen.h"
 #include "Screen/Game.h"
 #include "Screen/PauseScreen.h"
+#include "Screen/MenuScreen.h"
+#include "Screen/HowToPlay.h"
 
 // Include more Screen subclasses here, then just include this file instead of all the subclasses
 
