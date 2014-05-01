@@ -275,6 +275,7 @@ void BlockString::setString(string str) {
             case '!':
                 addBlock<Block>(i*4+1, 0).addBlock<Block>(i*4+1, 2).addBlock<Block>(i*4+1, 3)
                 .addBlock<Block>(i*4+1, 4);
+                break;
             case ' ':
                 break;
             default:
