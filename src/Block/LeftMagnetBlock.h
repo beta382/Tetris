@@ -11,7 +11,6 @@
 #define LEFTMAGNETBLOCK_H_
 
 #include "Block.h"
-#include "../Shape/BlockField.h"
 
 /*
  * LeftMagnetBlock:
@@ -81,14 +80,14 @@ _registerForLeakcheckWithID(LeftMagnetBlock)
          *   PlayingField.
          *   
          * Parameters:
-         *   BlockField& blockField: A reference to the blockField to perform the
+         *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the
          *     effect on
          *   int x: The x-coordinate of this LeftMagnetBlock within the blockField
          *   int y: The y-coordinate of this LeftMagnetBlock within the blockField
          *   
          * Returns: The number of points the special effect accumulated
          */
-        int doEffect(BlockField&, int x, int y);
+        int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this LeftMagnetBlock, including it's uniqueID.

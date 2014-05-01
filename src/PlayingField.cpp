@@ -21,8 +21,7 @@ Drawable(0, 0, 10, 20),
         bgRect(x+borderWidth, y+borderWidth, getWidth()-borderWidth*2, getHeight()-borderWidth*2, 
                 foreground, background),
         bgRect2(x, y, getWidth(), getHeight(), borderColor, background),
-        blockField(x+borderWidth+padding, y+borderWidth+padding, width, height, blockSize, padding,
-                foreground)
+        blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
 
@@ -52,8 +51,7 @@ Drawable(x, y, width, height, foreground, background),
         bgRect(x+borderWidth, y+borderWidth, getWidth()-borderWidth*2, getHeight()-borderWidth*2, 
                 foreground, background),
         bgRect2(x, y, getWidth(), getHeight(), borderColor, background),
-        blockField(x+borderWidth+padding, y+borderWidth+padding, width, height, blockSize, padding,
-                foreground)
+        blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
 }
 
@@ -67,9 +65,16 @@ Drawable(x, y, width, height, foreground, background),
 PlayingField::PlayingField(const PlayingField& other): 
 Drawable(other),
         blockSize(other.blockSize), padding(other.padding), borderWidth(other.borderWidth), 
-        borderColor(other.borderColor), bgRect(other.bgRect), bgRect2(other.bgRect2),
-        blockField(other.blockField)
+        borderColor(other.borderColor),bgRect(other.bgRect), bgRect2(other.bgRect2),
+        blockField(width, vector<Block*>(height, static_cast<Block*>(NULL)))
 {
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            if (other.blockField.at(i).at(j)) {
+                blockField[i][j] = other.blockField.at(i).at(j)->makeNewClone();
+            }
+        }
+    }
 }
 
 /*
@@ -77,6 +82,11 @@ Drawable(other),
  */
 PlayingField::~PlayingField() {
     erase();
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            delete blockField[i][j];
+        }
+    }
 }
 
 
@@ -95,6 +105,16 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
     if  (this != &rhs) {
         erase();
         
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                delete blockField[i][j];
+            }
+            
+            blockField[i].clear();
+        }
+        
+        blockField.clear();
+        
         Drawable::operator =(rhs);
         blockSize = rhs.blockSize;
         padding = rhs.padding;
@@ -102,7 +122,16 @@ PlayingField& PlayingField::operator =(const PlayingField& rhs) {
         borderColor = rhs.borderColor;
         bgRect = rhs.bgRect;
         bgRect2 = rhs.bgRect2;
-        blockField = rhs.blockField;
+        
+        blockField.assign(width, vector<Block*>(height, static_cast<Block*>(NULL)));
+        
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (rhs.blockField.at(i).at(j)) {
+                    blockField[i][j] = rhs.blockField.at(i).at(j)->makeNewClone();
+                }
+            }
+        }
         
         draw();
     }
@@ -418,7 +447,7 @@ bool PlayingField::couldAdd(const Block* block) const {
     
     // Check that it isn't out-of-bounds or intersecting an existing Block
     if (xIndex < 0 || xIndex >= width || yIndex < 0 || yIndex >= height ||
-            blockField.get(xIndex, yIndex))
+            blockField.at(xIndex).at(yIndex))
     {
         can = false;
     }
@@ -449,8 +478,9 @@ int PlayingField::doLineClear(vector<int> clearableLines) {
     Shape clearedBlocks;
     for (unsigned int i = 0; i < clearableLines.size(); i++) {
         for (int j = 0; j < width; j++) {
-            clearedBlocks.addBlock(blockField.get(j, clearableLines[i]));
-            blockField.at(j, clearableLines[i]) = NULL;
+            clearedBlocks.addBlock(blockField[j][clearableLines[i]]->makeNewClone());
+            delete blockField[j][clearableLines[i]];
+            blockField[j][clearableLines[i]] = NULL;
         }
     }
 
@@ -492,7 +522,7 @@ vector<int> PlayingField::getClearableLines() {
     for (int i = 0; i < height; i++) {
         bool isClearable = true;
         for (int j = 0; j < width && isClearable; j++) {
-            if (!blockField.get(j, i)) {
+            if (!blockField[j][i]) {
                 isClearable = false;
             }
         }
@@ -522,15 +552,15 @@ void PlayingField::normalizeBlocks(Shape& shape) {
             // blockField
             for (int j = 0; j < width; j++) {
                 for (int k = 0; k < height; k++) {
-                    if (blockField.get(j, k) &&
-                            blockField.get(j, k)->getUniqueID() == shape[i]->getUniqueID())
+                    if (blockField[j][k] &&
+                            blockField[j][k]->getUniqueID() == shape[i]->getUniqueID())
                     {
-                        Block* tmp = blockField.get(j, k);
+                        Block* tmp = blockField[j][k];
                         
                         // Not making a clone, this will give us a base Block
-                        blockField.at(j, k) = new Block(*tmp);
+                        blockField[j][k] = new Block(*tmp);
                         delete tmp;
-                        blockField.get(j, k)->draw();
+                        blockField[j][k]->draw();
                     }
                 }
             }
@@ -563,8 +593,8 @@ void PlayingField::normalizeBlocks(Shape& shape) {
  * Returns: The number of points the special effects accumulated
  */
 int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) {
-    BlockField remainingBlockField(blockField.getLocationX(), blockField.getLocationY(),
-            width, height, blockSize, padding, foreground);
+    vector<vector<Block*> > remainingBlockField(width,
+            vector<Block*>(height, static_cast<Block*>(NULL)));
     
     int points = 0;
     
@@ -577,9 +607,9 @@ int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fa
             int indexY = yIndexFromLocation(curBlock);
             
             // Delete anything that may already be here
-            delete blockField.get(indexX, indexY);
+            delete blockField[indexX][indexY];
             
-            blockField.at(indexX, indexY) = curBlock;
+            blockField[indexX][indexY] = curBlock;
             
             curBlock->draw();
         }
@@ -598,8 +628,8 @@ int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fa
             int indexX = xIndexFromLocation(curBlock);
             int indexY = yIndexFromLocation(curBlock);
             
-            blockField.at(indexX, indexY) = NULL;
-            remainingBlockField.at(indexX, indexY) = curBlock;
+            blockField[indexX][indexY] = NULL;
+            remainingBlockField[indexX][indexY] = curBlock;
             
             // NULL the leftover Block pointer copy in fallingShapes
             (*fallingShapes[i])[j] = NULL;
@@ -705,19 +735,19 @@ int PlayingField::doFall(vector<Shape*>& fallingShapes) {
  * Allocates contiguous Shapes objects from the Blocks in the passed blockField.
  * 
  * Parameters:
- *   BlockField& blockField: The blockField to from contiguous shapes from
+ *   vector<vector<Block*> >& blockField: The blockField to from contiguous shapes from
  *   
  * Returns: A vector of pointers to the formed Shape objects
  */
-vector<Shape*> PlayingField::formNewContiguousShapes(BlockField& blockField) {
+vector<Shape*> PlayingField::formNewContiguousShapes(vector<vector<Block*> >& blockField) {
     vector<Shape*> shapes;
     
-    for (int i = 0; blockField.getInternalWidth() > 0 && i < blockField.getInternalHeight(); i++) {
-        for (int j = 0; j < blockField.getInternalWidth(); j++) {
-            if (blockField.get(j, i)) {
-                Shape* curShape = new Shape(blockField.get(j, i)->getLocationX(),
-                        blockField.get(j, i)->getLocationY(), blockField.get(j, i)->getSize(),
-                        blockField.get(j, i)->getPadding());
+    for (unsigned int i = 0; blockField.size() > 0 && i < blockField[0].size(); i++) {
+        for (unsigned int j = 0; j < blockField.size(); j++) {
+            if (blockField[j][i]) {
+                Shape* curShape = new Shape(blockField[j][i]->getLocationX(),
+                        blockField[j][i]->getLocationY(), blockField[j][i]->getSize(),
+                        blockField[j][i]->getPadding());
 
                 r_makeContiguousShape(curShape, j, i, blockField);
                 
@@ -741,18 +771,19 @@ vector<Shape*> PlayingField::formNewContiguousShapes(BlockField& blockField) {
  *   Shape* shape: A pointer to the Shape object to add contiguous blocks to
  *   int x: The x-coordinate of the block to attempt to add
  *   int y: The y-coordinate of the block to attempt to add
- *   BlockField& blockField: The blockField to pull Blocks from when making the Shape
+ *   vector<vector<Block*> >& blockField: The blockField to pull Blocks from when making the Shape
  */
-void PlayingField::r_makeContiguousShape(Shape* shape, int x, int y, BlockField& blockField)
+void PlayingField::r_makeContiguousShape(Shape* shape, int x, int y, 
+        vector<vector<Block*> >& blockField)
 {
-    if (x < 0 || x >= static_cast<int>(blockField.getInternalWidth()) || y < 0 ||
-            y >= static_cast<int>(blockField.getInternalHeight()) || !blockField.get(x, y)) {
+    if (x < 0 || x >= static_cast<int>(blockField.size()) || y < 0 ||
+            y >= static_cast<int>(blockField[x].size()) || !blockField[x][y]) {
         return;
     }
     
-    shape->addBlock(blockField.get(x, y));
+    shape->addBlock(blockField[x][y]);
     
-    blockField.at(x, y) = NULL;
+    blockField[x][y] = NULL;
     
     r_makeContiguousShape(shape, x+1, y, blockField);
     r_makeContiguousShape(shape, x, y+1, blockField);
@@ -773,9 +804,9 @@ void PlayingField::mergeCopy(const Shape* shape) {
         int indexY = yIndexFromLocation(curBlock);
         
         // Delete anything that may already be here
-        delete blockField.get(indexX, indexY);
+        delete blockField[indexX][indexY];
         
-        blockField.at(indexX, indexY) = curBlock;
+        blockField[indexX][indexY] = curBlock;
         
         curBlock->draw();
     }
@@ -841,7 +872,16 @@ void PlayingField::setLocation(int x, int y) {
     int dX = x - getLocationX();
     int dY = y - getLocationY();
     
-    blockField.setLocation(blockField.getLocationX()+dX, blockField.getLocationY()+dY);
+    erase();
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            if (blockField[i][j]) {
+                blockField[i][j]->setLocation(blockField[i][j]->getLocationX()+dX,
+                        blockField[i][j]->getLocationY()+dY);
+            }
+        }
+    }
+    
     bgRect.setLocation(bgRect.getLocationX()+dX, bgRect.getLocationY()+dY);
     bgRect2.setLocation(bgRect2.getLocationX()+dX, bgRect2.getLocationY()+dY);
     
@@ -860,7 +900,14 @@ void PlayingField::setLocation(int x, int y) {
 void PlayingField::draw() {
     bgRect2.draw();
     bgRect.draw();
-    blockField.draw();
+
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            if (blockField[i][j]) {
+                blockField[i][j]->draw();
+            }
+        }
+    }
 
     isVisible = true;
 }
@@ -870,7 +917,14 @@ void PlayingField::draw() {
  */
 void PlayingField::erase() {
     if (isVisible) {
-        blockField.erase();
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (blockField[i][j]) {
+                    blockField[i][j]->erase();
+                }
+            }
+        }
+        
         bgRect.erase();
         bgRect2.erase();
         

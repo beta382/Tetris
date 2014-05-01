@@ -87,30 +87,30 @@ GravityBlock& GravityBlock::operator =(const GravityBlock& rhs) {
  *   Should be called when this GravityBlock is cleared from the PlayingField.
  *   
  * Parameters:
- *   BlockField& blockField: A reference to the blockField to perform the effect on
+ *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this GravityBlock within the blockField
  *   int y: The y-coordinate of this GravityBlock within the blockField
  *   
  * Returns: The number of points the special effect accumulated
  */
-int GravityBlock::doEffect(BlockField& blockField, int x, int y) {
+int GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
     int points = 100;
     
     bool didFall = true;
     while (didFall) {
         didFall = false;
         
-        for (int i = 0; i < blockField.getInternalWidth(); i++) {
-            for (int j = 1; j < blockField.getInternalHeight(); j++) {
-                if (blockField.get(i, j) && !blockField.get(i, j-1)) {
-                    blockField.get(i, j)->erase();
-                    blockField.at(i, j-1) = blockField.get(i, j);
+        for (unsigned int i = 0; i < blockField.size(); i++) {
+            for (unsigned int j = 1; j < blockField[i].size(); j++) {
+                if (blockField[i][j] && !blockField[i][j-1]) {
+                    blockField[i][j]->erase();
+                    blockField[i][j-1] = blockField[i][j];
 
-                    blockField.at(i, j) = NULL;
+                    blockField[i][j] = NULL;
                     
-                    blockField.get(i, j-1)->setLocation(blockField.get(i, j-1)->getLocationX(), 
-                            blockField.get(i, j-1)->getLocationY()-blockField.get(i, j-1)->getTotalSize());
-                    blockField.get(i, j-1)->draw();
+                    blockField[i][j-1]->setLocation(blockField[i][j-1]->getLocationX(), 
+                            blockField[i][j-1]->getLocationY()-blockField[i][j-1]->getTotalSize());
+                    blockField[i][j-1]->draw();
                     
                     didFall = true;
                 }

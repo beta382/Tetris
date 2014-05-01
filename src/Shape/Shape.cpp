@@ -34,7 +34,7 @@ Drawable(),
  */
 Shape::Shape (int x, int y, int blockSize, int padding, unsigned int background):
 Drawable(x, y, 0, 0, Color::WHITE, background),
-        blocks(), blockSize(blockSize), padding(padding)
+        blockSize(blockSize), padding(padding)
 {
 }
 

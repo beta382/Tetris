@@ -11,8 +11,9 @@
 #define BLOCK_H_
 
 #include "../Drawable.h"
-//#include "../Shape/BlockField.h"
-class BlockField;
+#include "../util.h"
+
+#include <vector>
 
 /*
  * Block:
@@ -117,14 +118,14 @@ _registerForLeakcheckWithID(Block)
          *   coordinates. Should be called when this Block is cleared from the PlayingField.
          *   
          * Parameters:
-         *   BlockField& blockField: A reference to the blockField to perform the
+         *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the
          *     effect on
          *   int x: The x-coordinate of this Block within the blockField
          *   int y: The y-coordinate of this Block within the blockField
          *   
          * Returns: The number of points the special effect accumulated
          */
-        virtual int doEffect(BlockField&, int x, int y);
+        virtual int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this Block, including it's uniqueID. Should be overridden by Block

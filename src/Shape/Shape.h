@@ -11,7 +11,7 @@
 #define SHAPE_H_
 
 #include "../Drawable.h"
-#include "../Block/Block.h"
+#include "../blocks.h"
 
 #include <vector>
 

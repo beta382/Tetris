@@ -87,13 +87,13 @@ ExplodingBlock& ExplodingBlock::operator =(const ExplodingBlock& rhs) {
  *   coordinates. Should be called when this ExplodingBlock is cleared from the PlayingField.
  *   
  * Parameters:
- *   BlockField& blockField: A reference to the blockField to perform the effect on
+ *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this ExplodingBlock within the blockField
  *   int y: The y-coordinate of this ExplodingBlock within the blockField
  *   
  * Returns: The number of points the special effect accumulated
  */
-int ExplodingBlock::doEffect(BlockField& blockField, int x, int y) {
+int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
     int points = 100;
     
     // Make an explosion rectangle
@@ -101,19 +101,19 @@ int ExplodingBlock::doEffect(BlockField& blockField, int x, int y) {
     int explosionY = (y >= 2) ? getLocationY()-getTotalSize()*2 : getLocationY()-getTotalSize()*y;
     
     int explosionWidth;
-    if (x >= 2 && (blockField.getInternalWidth()-x-1) >= 2) {
+    if (x >= 2 && (blockField.size()-x-1) >= 2) {
         explosionWidth = getTotalSize()*5-getPadding();
     } else if (x >= 2) {
-        explosionWidth = getTotalSize()*(blockField.getInternalWidth()-x+2)-getPadding();
+        explosionWidth = getTotalSize()*(blockField.size()-x+2)-getPadding();
     } else {
         explosionWidth = getTotalSize()*(x+3)-getPadding();
     }
 
     int explosionHeight;
-    if (y >= 2 && (blockField.getInternalHeight()-y-1) >= 2) {
+    if (y >= 2 && (blockField[0].size()-y-1) >= 2) {
         explosionHeight = getTotalSize()*5-getPadding();
     } else if (y >= 2) {
-        explosionHeight = getTotalSize()*(blockField.getInternalWidth()-y+2)-getPadding();
+        explosionHeight = getTotalSize()*(blockField.size()-y+2)-getPadding();
     } else {
         explosionHeight = getTotalSize()*(y+3)-getPadding();
     }
@@ -124,15 +124,15 @@ int ExplodingBlock::doEffect(BlockField& blockField, int x, int y) {
     explosion.blink(3, 150);
     
     // Normalize blocks in case this got called from another block's effect
-    for (int i = 0; i < blockField.getInternalWidth(); i++) {
-        for (int j = 0; j < blockField.getInternalHeight(); j++) {
-            if (blockField.get(i, j) && blockField.get(i, j)->getUniqueID() == getUniqueID()) {
-                Block* tmp = blockField.get(i, j);
+    for (unsigned int i = 0; i < blockField.size(); i++) {
+        for (unsigned int j = 0; j < blockField[i].size(); j++) {
+            if (blockField[i][j] && blockField[i][j]->getUniqueID() == getUniqueID()) {
+                Block* tmp = blockField[i][j];
                 
                 // Not making a clone, this will give us a base Block
-                blockField.at(i, j) = new Block(*tmp);
+                blockField[i][j] = new Block(*tmp);
                 delete tmp;
-                blockField.get(i, j)->draw();
+                blockField[i][j]->draw();
             }
         }
     }
@@ -140,11 +140,11 @@ int ExplodingBlock::doEffect(BlockField& blockField, int x, int y) {
     // Actually clear the blocks
     for (int i = x-2; i <= x+2; i++) {
         for (int j = y-2; j <= y+2; j++) {
-            if (i >= 0 && i < blockField.getInternalWidth() &&
-                j >= 0 && j < blockField.getInternalHeight() && blockField.get(i, j))
+            if (i >= 0 && i < static_cast<int>(blockField.size()) &&
+                j >= 0 && j < static_cast<int>(blockField[i].size()) && blockField[i][j])
             {
-                Block* tmp = blockField.get(i, j);
-                blockField.at(i, j) = NULL;
+                Block* tmp = blockField[i][j];
+                blockField[i][j] = NULL;
                 
                 points += tmp->doEffect(blockField, i, j);
                 

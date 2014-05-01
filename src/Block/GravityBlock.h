@@ -11,7 +11,6 @@
 #define GRAVITYBLOCK_H_
 
 #include "Block.h"
-#include "../Shape/BlockField.h"
 
 /*
  * GravityBlock:
@@ -80,14 +79,14 @@ _registerForLeakcheckWithID(GravityBlock)
          *   coordinates. Should be called when this GravityBlock is cleared from the PlayingField.
          *   
          * Parameters:
-         *   BlockField& blockField: A reference to the blockField to perform the
+         *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the
          *     effect on
          *   int x: The x-coordinate of this GravityBlock within the blockField
          *   int y: The y-coordinate of this GravityBlock within the blockField
          *   
          * Returns: The number of points the special effect accumulated
          */
-        int doEffect(BlockField&, int x, int y);
+        int doEffect(vector<vector<Block*> >&, int x, int y);
 
         /*
          * Allocates a clone of this GravityBlock, including it's uniqueID.

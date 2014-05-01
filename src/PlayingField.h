@@ -12,9 +12,10 @@
 
 #include "Drawable.h"
 #include "Shape/Tetromino.h"
-#include "Shape/BlockField.h"
+#include "Shape/Shape.h"
 #include "Rect.h"
 
+#include <vector>
 #include <algorithm>
 #include <ctime>
 #include <mmsystem.h>
@@ -335,11 +336,11 @@ _registerForLeakcheckWithID(PlayingField)
          * Allocates contiguous Shapes objects from the Blocks in the passed blockField.
          * 
          * Parameters:
-         *   BlockField& blockField: The blockField to from contiguous shapes from
+         *   vector<vector<Block*> >& blockField: The blockField to from contiguous shapes from
          *   
          * Returns: A vector of pointers to the formed Shape objects
          */
-        vector<Shape*> formNewContiguousShapes(BlockField&);
+        vector<Shape*> formNewContiguousShapes(vector<vector<Block*> >&);
 
         /*
          * Recursively makes a Shape from contiguous Blocks in the passed blockField, starting at
@@ -351,10 +352,10 @@ _registerForLeakcheckWithID(PlayingField)
          *   Shape* shape: A pointer to the Shape object to add contiguous blocks to
          *   int x: The x-coordinate of the block to attempt to add
          *   int y: The y-coordinate of the block to attempt to add
-         *   BlockField& blockField: The blockField to pull Blocks from when making
+         *   vector<vector<Block*> >& blockField: The blockField to pull Blocks from when making
          *     the Shape
          */
-        void r_makeContiguousShape(Shape *, int, int, BlockField&);
+        void r_makeContiguousShape(Shape *, int, int, vector<vector<Block*> >&);
 
         /*
          * Merges a clone of the Shape pointed to by the passed pointer into the blockField.
@@ -417,7 +418,7 @@ _registerForLeakcheckWithID(PlayingField)
         /*
          * Represents the field of Blocks at the core of the playing field
          */
-        BlockField blockField;
+        vector<vector<Block*> > blockField;
 };
 
 
