@@ -4,11 +4,9 @@ Group project for CSI 1440 - Freshman Spring Semester
 
 For complete documentation, check out the source code.
 
-## Outline
+## Project structure
 
 ***Bold Italics*** indicates an abstract object
-
-## Project structure
 
 - Objects
   - ***Drawable***
