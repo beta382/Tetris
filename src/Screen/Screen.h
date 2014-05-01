@@ -11,7 +11,7 @@
 #define SCREEN_H_
 
 #include "../Drawable.h"
-#include "../Rectangle.h"
+#include "../Rect.h"
 
 class Screen;
 
@@ -107,7 +107,7 @@ _registerForLeakcheckWithID(Screen)
         /*
          * Represents the background fill for this Screen object.
          */
-        MyRectangle bgRect;
+        Rect bgRect;
 };
 
 #endif /* SCREEN_H_ */

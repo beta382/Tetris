@@ -111,7 +111,7 @@ int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
         baseRow = y-1;
     }
     
-    MyRectangle laser(getLocationX()-getTotalSize()*x, laserY, blockField.size()*getTotalSize()-
+    Rect laser(getLocationX()-getTotalSize()*x, laserY, blockField.size()*getTotalSize()-
             getPadding(), getTotalSize()*3-getPadding(), Color::RED, getBackground());
     
     laser.blink(3, 150);

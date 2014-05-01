@@ -13,7 +13,7 @@
 #include "Drawable.h"
 #include "Shape/Tetromino.h"
 #include "Shape/Shape.h"
-#include "Rectangle.h"
+#include "Rect.h"
 
 #include <vector>
 #include <algorithm>
@@ -408,12 +408,12 @@ _registerForLeakcheckWithID(PlayingField)
         /*
          * Represents the background fill for this PlayingField object.
          */
-        MyRectangle bgRect;
+        Rect bgRect;
         
         /*
          * Represents the border fill for this PlayingField object.
          */
-        MyRectangle bgRect2;
+        Rect bgRect2;
         
         /*
          * Represents the field of Blocks at the core of the playing field

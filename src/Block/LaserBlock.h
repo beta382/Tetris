@@ -11,7 +11,7 @@
 #define LASERBLOCK_H_
 
 #include "Block.h"
-#include "../Rectangle.h"
+#include "../Rect.h"
 
 /*
  * LaserBlock:

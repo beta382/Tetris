@@ -118,7 +118,7 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
         explosionHeight = getTotalSize()*(y+3)-getPadding();
     }
     
-    MyRectangle explosion(explosionX, explosionY, explosionWidth, explosionHeight, Color::RED,
+    Rect explosion(explosionX, explosionY, explosionWidth, explosionHeight, Color::RED,
             getBackground());
     
     explosion.blink(3, 150);

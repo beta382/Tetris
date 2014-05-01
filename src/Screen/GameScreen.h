@@ -228,12 +228,12 @@ _registerForLeakcheckWithID(GameScreen)
         /*
          * Background rectangle for next block
          */
-        MyRectangle bgRectNext;
+        Rect bgRectNext;
         
         /*
          * Background rectangle border for next block
          */
-        MyRectangle bgRectNext2;
+        Rect bgRectNext2;
         
         /*
          * GameScreen logo

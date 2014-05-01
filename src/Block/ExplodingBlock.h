@@ -11,7 +11,7 @@
 #define EXPLODINGBLOCK_H_
 
 #include "Block.h"
-#include "../Rectangle.h"
+#include "../Rect.h"
 
 /*
  * ExplodingBlock:
