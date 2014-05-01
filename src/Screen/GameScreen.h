@@ -27,10 +27,6 @@ class PauseScreen;
 class ConfirmScreen;
 class GameOverScreen;
 
-#define GSdoPause() retain = true; prevTime -= clock(); throw NEW_SCREEN(new PauseScreen(this));
-#define GSdoExit() retain = true; prevTime -= clock(); throw NEW_SCREEN(new ConfirmScreen(this));
-#define GSdoGameOver() retain = true; throw NEW_SCREEN(new GameOverScreen(this));
-
 /*
  * GameScreen
  *
@@ -189,6 +185,10 @@ _registerForLeakcheckWithID(GameScreen)
 
          */
         bool doJoinAndRespawn();
+        
+        void doPause() throw (NEW_SCREEN);
+        void doExit() throw (NEW_SCREEN);
+        void doGameOver() throw (NEW_SCREEN);
         
         /*
          * Used as a "tick" marker for automatic tetromino falling, and the duration of the

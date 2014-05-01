@@ -27,7 +27,7 @@ void GameOverScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case Key::ESC:
         case Key::ENTER:
-            GOSdoMenu();
+            doMenu();
             break;
     }
 }
@@ -37,7 +37,7 @@ void GameOverScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
         if (click.x >= menu.getLocationX() && click.x < menu.getLocationX()+menu.getWidth() &&
             click.y >= menu.getLocationY() && click.y < menu.getLocationY()+menu.getHeight())
         {
-            GOSdoMenu();
+            doMenu();
         }
     }
 }
@@ -110,4 +110,8 @@ void GameOverScreen::erase() {
         
         isVisible = false;
     }
+}
+
+void GameOverScreen::doMenu() throw (NEW_SCREEN) {
+    throw NEW_SCREEN(new MenuScreen(Color::TAN));
 }

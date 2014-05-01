@@ -41,7 +41,7 @@ void InstructionScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'b':
         case Key::BACKSPACE:
-            ISdoMenu();
+            doMenu();
     }
 }
 
@@ -52,7 +52,7 @@ void InstructionScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
             click.y >= back.getLocationY() && 
                 click.y < back.getLocationY()+back.getHeight())
         {
-            ISdoMenu()
+            doMenu();
         }
     }
 }
@@ -157,4 +157,6 @@ void InstructionScreen::erase() {
     }
 }
 
-
+void InstructionScreen::doMenu() throw (NEW_SCREEN) {
+    throw NEW_SCREEN(new MenuScreen(Color::TAN));
+}

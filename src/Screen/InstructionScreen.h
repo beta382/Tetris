@@ -16,8 +16,6 @@
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class MenuScreen;
 
-#define ISdoMenu() throw NEW_SCREEN(new MenuScreen(Color::TAN));
-
 class InstructionScreen: public Screen {
 _registerForLeakcheckWithID(InstructionScreen)
     public:
@@ -32,6 +30,9 @@ _registerForLeakcheckWithID(InstructionScreen)
         void draw();
         void erase();
     private:
+        
+        void doMenu() throw (NEW_SCREEN);
+        
         Logo logo;
         BlockString title;
         BlockString back;

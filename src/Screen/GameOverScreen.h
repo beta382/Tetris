@@ -15,8 +15,6 @@
 
 class MenuScreen;
 
-#define GOSdoMenu() throw NEW_SCREEN(new MenuScreen(Color::TAN));
-
 class GameOverScreen: public Screen {
 _registerForLeakcheckWithID(GameOverScreen)
     public:
@@ -35,6 +33,8 @@ _registerForLeakcheckWithID(GameOverScreen)
         
         //Prevent default instantiation, we need a background
         GameOverScreen();
+        
+        void doMenu() throw (NEW_SCREEN);
         
         GameScreen* bgScreen;
         

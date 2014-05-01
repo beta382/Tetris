@@ -54,13 +54,13 @@ void MenuScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'p':
         case Key::ENTER:
-            MSdoGame();
+            doGame();
             break;
         case 'i':
-            MSdoInstruction();
+            doInstruction();
             break;
         case Key::ESC:
-            MSdoExit();
+            doExit();
             break;
     }
 }
@@ -81,19 +81,19 @@ void MenuScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
             click.y >= play.getLocationY() && 
                 click.y < play.getLocationY()+play.getHeight())
         {
-            MSdoGame();
+            doGame();
         } else if (
             click.x >= howToPlay.getLocationX() &&
                 click.x < howToPlay.getLocationX()+howToPlay.getWidth() &&
             click.y >= howToPlay.getLocationY() && 
                 click.y < howToPlay.getLocationY()+howToPlay.getHeight())
         {
-            MSdoInstruction();
+            doInstruction();
         } else if (
             click.x >= exit.getLocationX() && click.x < exit.getLocationX()+exit.getWidth() &&
             click.y >= exit.getLocationY() && click.y < exit.getLocationY()+exit.getHeight())
         {
-            MSdoExit();
+            doExit();
         }
     }
 }
@@ -196,4 +196,14 @@ void MenuScreen::erase() {
         
         isVisible = false;
     }
+}
+void MenuScreen::doGame() throw (NEW_SCREEN) {
+    throw NEW_SCREEN(new GameScreen(Color::TAN));
+}
+
+void MenuScreen::doInstruction() throw (NEW_SCREEN) {
+    throw NEW_SCREEN(new InstructionScreen(Color::TAN));
+}
+void MenuScreen::doExit() throw (QUIT) {
+    throw QUIT();
 }

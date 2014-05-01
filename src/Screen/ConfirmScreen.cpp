@@ -23,11 +23,11 @@ void ConfirmScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch(key) {
         case 'y':
         case Key::ENTER:
-            CSdoYes();
+            doYes();
             break;
         case 'n':
         case Key::BACKSPACE:
-            CSdoNo();
+            doNo();
             break;
     }
 }
@@ -37,12 +37,12 @@ void ConfirmScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
         if (click.x >= yes.getLocationX() && click.x < yes.getLocationX()+yes.getWidth() &&
             click.y >= yes.getLocationY() && click.y < yes.getLocationY()+yes.getHeight())
         {
-            CSdoYes();
+            doYes();
         } else if (
             click.x >= no.getLocationX() && click.x < no.getLocationX()+no.getWidth() &&
             click.y >= no.getLocationY() && click.y < no.getLocationY()+no.getHeight())
         {
-            CSdoNo();
+            doNo();
         }
     }
 }
@@ -117,4 +117,14 @@ void ConfirmScreen::erase() {
     }
 }
 
+void ConfirmScreen::doYes() throw (NEW_SCREEN) {
+    delete bgScreen;
+    bgScreen = NULL;
+    throw NEW_SCREEN(new MenuScreen(Color::TAN));
+}
 
+void ConfirmScreen::doNo() throw (NEW_SCREEN) {
+    Screen* tmp = bgScreen;
+    bgScreen = NULL;
+    throw NEW_SCREEN(tmp);
+}

@@ -85,10 +85,10 @@ void GameScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
             break;
         case 'p':
         case ' ':
-            GSdoPause();
+            doPause();
             break;
         case Key::ESC:
-            GSdoExit();
+            doExit();
     }
 }
 
@@ -134,7 +134,7 @@ void GameScreen::doBackground() throw (QUIT, NEW_SCREEN) {
         if (field.canShiftDown(currentTetromino)) {
             doShiftDown();
         } else if (!doJoinAndRespawn()) {
-            GSdoGameOver();
+            doGameOver();
         }
         
         prevTime = curTime;
@@ -581,4 +581,21 @@ bool GameScreen::doJoinAndRespawn() {
     }
     
     return couldSpawn;
+}
+
+void GameScreen::doPause() throw (NEW_SCREEN) {
+    retain = true;
+    prevTime -= clock(); 
+    throw NEW_SCREEN(new PauseScreen(this));
+}
+
+void GameScreen::doExit() throw (NEW_SCREEN) {
+    retain = true;
+    prevTime -= clock();
+    throw NEW_SCREEN(new ConfirmScreen(this));
+}
+
+void GameScreen::doGameOver() throw (NEW_SCREEN) {
+    retain = true;
+    throw NEW_SCREEN(new GameOverScreen(this));
 }

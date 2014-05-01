@@ -21,9 +21,6 @@ class GameScreen;
 class MenuScreen;
 class ConfirmScreen;
 
-#define PSdoResume() {Screen* tmp = bgScreen; bgScreen = NULL; throw NEW_SCREEN(tmp);}
-#define PSdoExit() retain = true; throw NEW_SCREEN(new ConfirmScreen(this));
-
 /*
  * PauseScreen:
  *
@@ -108,6 +105,9 @@ _registerForLeakcheckWithID(PauseScreen)
          * Prevent default instantiation; we need to know where to return to.
          */
         PauseScreen();
+        
+        void doResume() throw (NEW_SCREEN);
+        void doExit() throw (NEW_SCREEN);
         
         /*
          * The game to return control to once this screen exits

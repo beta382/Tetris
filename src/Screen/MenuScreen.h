@@ -21,10 +21,6 @@
 class GameScreen;
 class InstructionScreen;
 
-#define MSdoGame() throw NEW_SCREEN(new GameScreen(Color::TAN));
-#define MSdoInstruction() throw NEW_SCREEN(new InstructionScreen(Color::TAN));
-#define MSdoExit() throw QUIT();
-
 /*
  * MenuScreen:
  *
@@ -104,12 +100,10 @@ _registerForLeakcheckWithID(MenuScreen)
         void erase();
         
     private:
-
-        /*
-         * Initializes this MenuScreen
-         */
-        void init();
         
+        void doGame() throw (NEW_SCREEN);
+        void doInstruction() throw (NEW_SCREEN);
+        void doExit() throw (QUIT);
         
         Logo logo;
         BlockString play;

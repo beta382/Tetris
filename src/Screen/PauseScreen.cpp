@@ -50,11 +50,11 @@ void PauseScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'p':
         case ' ':
-            PSdoResume();
+            doResume();
             break;
         case 'e':
         case Key::ESC:
-            PSdoExit();
+            doExit();
             break;
     }
 }
@@ -75,12 +75,12 @@ void PauseScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
             click.y >= resume.getLocationY() && 
                 click.y < resume.getLocationY()+resume.getHeight())
         {
-            PSdoResume();
+            doResume();
         } else if (
             click.x >= exit.getLocationX() && click.x < exit.getLocationX()+exit.getWidth() &&
             click.y >= exit.getLocationY() && click.y < exit.getLocationY()+exit.getHeight())
         {
-            PSdoExit();
+            doExit();
         }
     }
 }
@@ -185,4 +185,15 @@ void PauseScreen::erase() {
         
         isVisible = false;
     }
+}
+
+void PauseScreen::doResume() throw (NEW_SCREEN) {
+    Screen* tmp = bgScreen;
+    bgScreen = NULL;
+    throw NEW_SCREEN(tmp);
+}
+
+void PauseScreen::doExit() throw (NEW_SCREEN) {
+    retain = true;
+    throw NEW_SCREEN(new ConfirmScreen(this));
 }

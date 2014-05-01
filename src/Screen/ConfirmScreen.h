@@ -15,9 +15,6 @@
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class MenuScreen;
 
-#define CSdoYes() delete bgScreen; bgScreen = NULL; throw NEW_SCREEN(new MenuScreen(Color::TAN));
-#define CSdoNo() {Screen* tmp = bgScreen; bgScreen = NULL; throw NEW_SCREEN(tmp);}
-
 class ConfirmScreen: public Screen {
 _registerForLeakcheckWithID(ConfirmScreen)
     public:
@@ -36,6 +33,9 @@ _registerForLeakcheckWithID(ConfirmScreen)
         
         //Prevent default instantiation, we need a background
         ConfirmScreen();
+        
+        void doYes() throw (NEW_SCREEN);
+        void doNo() throw (NEW_SCREEN);
         
         Screen* bgScreen;
         BlockString title;
