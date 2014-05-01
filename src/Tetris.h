@@ -10,7 +10,8 @@
 #define TETRIS_H_
 
 #include "GLUT_Plotter.h"
-#include "screens.h"
+#include "Screen/Screen.h"
+#include "Screen/MenuScreen.h"
 #include "util.h"
 
 class Tetris {

@@ -10,8 +10,8 @@
 
 #include "Screen.h"
 #include "MenuScreen.h"
-#include "../Logo.h"
-#include "../BlockString.h"
+#include "../Shape/Logo.h"
+#include "../Shape/BlockString.h"
 
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class MenuScreen;

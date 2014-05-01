@@ -14,9 +14,9 @@
 #include "PauseScreen.h"
 #include "GameOverScreen.h"
 #include "../PlayingField.h"
-#include "../TetrominoBase.h"
-#include "../Logo.h"
-#include "../BlockString.h"
+#include "../Shape/TetrominoBase.h"
+#include "../Shape/Logo.h"
+#include "../Shape/BlockString.h"
 
 #include <cstdlib>
 #include <ctime>

@@ -11,8 +11,8 @@
 #define PLAYINGFIELD_H_
 
 #include "Drawable.h"
-#include "Tetromino.h"
-#include "Shape.h"
+#include "Shape/Tetromino.h"
+#include "Shape/Shape.h"
 #include "Rectangle.h"
 
 #include <vector>

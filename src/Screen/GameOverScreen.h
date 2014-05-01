@@ -11,7 +11,7 @@
 #include "Screen.h"
 #include "GameScreen.h"
 #include "MenuScreen.h"
-#include "../BlockString.h"
+#include "../Shape/BlockString.h"
 
 class MenuScreen;
 

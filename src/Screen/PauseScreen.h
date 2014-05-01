@@ -14,7 +14,7 @@
 #include "GameScreen.h"
 #include "MenuScreen.h"
 #include "ConfirmScreen.h"
-#include "../BlockString.h"
+#include "../Shape/BlockString.h"
 
 // Forward declaration of destination screens, due to potential for an inclusion loop
 class GameScreen;

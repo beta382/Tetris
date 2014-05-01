@@ -13,7 +13,7 @@
 #include "GLUT_Plotter.h"
 #include "util.h"
 
-#include <ctime>
+#include <ctime> // TODO: Comment new stuff
 
 /*
  * Drawable:

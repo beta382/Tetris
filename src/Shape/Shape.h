@@ -10,8 +10,8 @@
 #ifndef SHAPE_H_
 #define SHAPE_H_
 
-#include "Drawable.h"
-#include "blocks.h"
+#include "../Drawable.h"
+#include "../blocks.h"
 
 #include <vector>
 
