@@ -12,7 +12,9 @@
 
 #include "Screen.h"
 #include "PauseScreen.h"
+#include "ConfirmScreen.h"
 #include "GameOverScreen.h"
+#include "../blocks.h"
 #include "../PlayingField.h"
 #include "../Shape/TetrominoBase.h"
 #include "../Shape/Logo.h"

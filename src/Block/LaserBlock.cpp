@@ -87,13 +87,13 @@ LaserBlock& LaserBlock::operator =(const LaserBlock& rhs) {
  *   Should be called when this LaserBlock is cleared from the PlayingField.
  *   
  * Parameters:
- *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
+ *   BlockField& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this LaserBlock within the blockField
  *   int y: The y-coordinate of this LaserBlock within the blockField
  *   
  * Returns: The number of points the special effect accumulated
  */
-int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+int LaserBlock::doEffect(BlockField& blockField, int x, int y) {
     int points = 100;
     
     
@@ -103,39 +103,39 @@ int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
     if (y <= 0) {
         laserY = getLocationY()-getTotalSize()*y; // Zeros the location
         baseRow = 0;
-    } else if (y >= static_cast<int>(blockField[0].size()-1)) {
-        laserY = getLocationY()+getTotalSize()*(blockField[0].size()-3-y); // Maxes the location
-        baseRow = blockField[0].size()-3;
+    } else if (y >= (blockField.getInternalHeight()-1)) {
+        laserY = getLocationY()+getTotalSize()*(blockField.getInternalHeight()-3-y); // Maxes the location
+        baseRow = blockField.getInternalHeight()-3;
     } else {
         laserY = getLocationY()-getTotalSize();
         baseRow = y-1;
     }
     
-    Rect laser(getLocationX()-getTotalSize()*x, laserY, blockField.size()*getTotalSize()-
+    Rect laser(getLocationX()-getTotalSize()*x, laserY, blockField.getInternalWidth()*getTotalSize()-
             getPadding(), getTotalSize()*3-getPadding(), Color::RED, getBackground());
     
     laser.blink(3, 150);
     
     // Normalize blocks in case this got called from another block's effect
-    for (unsigned int i = 0; i < blockField.size(); i++) {
-        for (unsigned int j = 0; j < blockField[i].size(); j++) {
-            if (blockField[i][j] && blockField[i][j]->getUniqueID() == getUniqueID()) {
-                Block* tmp = blockField[i][j];
+    for (int i = 0; i < blockField.getInternalWidth(); i++) {
+        for (int j = 0; j < blockField.getInternalHeight(); j++) {
+            if (blockField.get(i, j) && blockField.get(i, j)->getUniqueID() == getUniqueID()) {
+                Block* tmp = blockField.get(i, j);
                 
                 // Not making a clone, this will give us a base Block
-                blockField[i][j] = new Block(*tmp);
+                blockField.at(i, j) = new Block(*tmp);
                 delete tmp;
-                blockField[i][j]->draw();
+                blockField.get(i, j)->draw();
             }
         }
     }
     
     // Actually clear the blocks
     for (int i = baseRow; i < baseRow+3; i++) {
-        for (unsigned int j = 0; j < blockField.size(); j++) {
-            if (i >= 0 && i < static_cast<int>(blockField[j].size()) && blockField[j][i]) {
-                Block* tmp = blockField[j][i];
-                blockField[j][i] = NULL;
+        for (int j = 0; j < blockField.getInternalWidth(); j++) {
+            if (i >= 0 && i < blockField.getInternalHeight() && blockField.get(j, i)) {
+                Block* tmp = blockField.get(j, i);
+                blockField.at(j, i) = NULL;
                 
                 points += tmp->doEffect(blockField, j, i);
                 

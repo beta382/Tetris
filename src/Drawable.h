@@ -13,7 +13,7 @@
 #include "GLUT_Plotter.h"
 #include "util.h"
 
-#include <ctime> // TODO: Comment new stuff
+#include <ctime> // TODO: Comment new stuff, make a blockfield Shape object
 
 /*
  * Drawable:

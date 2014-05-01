@@ -87,32 +87,32 @@ RightMagnetBlock& RightMagnetBlock::operator =(const RightMagnetBlock& rhs) {
  *   coordinates. Should be called when this RightMagnetBlock is cleared from the PlayingField.
  *   
  * Parameters:
- *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
+ *   BlockField& blockField: A reference to the blockField to perform the effect on
  *   int x: The x-coordinate of this RightMagnetBlock within the blockField
  *   int y: The y-coordinate of this RightMagnetBlock within the blockField
  *   
  * Returns: The number of points the special effect accumulated
  */
-int RightMagnetBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
+int RightMagnetBlock::doEffect(BlockField& blockField, int x, int y) {
     int points = 100;
     
     bool didMagnet = true;
     while (didMagnet) {
         didMagnet = false;
         
-        for (unsigned int i = 0; i < blockField[0].size(); i++) {
-            for (int j = static_cast<int>(blockField.size())-2; j >= 0; j--) {
-                if (blockField[j][i] && !blockField[j+1][i]) {
-                    blockField[j][i]->erase();
-                    blockField[j+1][i] = blockField[j][i];
+        for (int i = 0; i < blockField.getInternalHeight(); i++) {
+            for (int j = blockField.getInternalWidth()-2; j >= 0; j--) {
+                if (blockField.get(j, i) && !blockField.get(j+1, i)) {
+                    blockField.get(j, i)->erase();
+                    blockField.at(j+1, i) = blockField.get(j, i);
 
-                    blockField[j][i] = NULL;
+                    blockField.at(j, i) = NULL;
                     
-                    blockField[j+1][i]->setLocation(
-                        blockField[j+1][i]->getLocationX()+blockField[j+1][i]->getTotalSize(), 
-                        blockField[j+1][i]->getLocationY()
+                    blockField.get(j+1, i)->setLocation(
+                        blockField.get(j+1, i)->getLocationX()+blockField.get(j+1, i)->getTotalSize(), 
+                        blockField.get(j+1, i)->getLocationY()
                     );
-                    blockField[j+1][i]->draw();
+                    blockField.get(j+1, i)->draw();
                     
                     didMagnet = true;
                 }

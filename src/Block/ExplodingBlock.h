@@ -12,6 +12,7 @@
 
 #include "Block.h"
 #include "../Rect.h"
+#include "../Shape/BlockField.h"
 
 /*
  * ExplodingBlock:
@@ -81,14 +82,14 @@ _registerForLeakcheckWithID(ExplodingBlock)
          *   PlayingField.
          *   
          * Parameters:
-         *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the
+         *   BlockField& blockField: A reference to the blockField to perform the
          *     effect on
          *   int x: The x-coordinate of this ExplodingBlock within the blockField
          *   int y: The y-coordinate of this ExplodingBlock within the blockField
          *   
          * Returns: The number of points the special effect accumulated
          */
-        int doEffect(vector<vector<Block*> >&, int x, int y);
+        int doEffect(BlockField&, int x, int y);
 
         /*
          * Allocates a clone of this ExplodingBlock, including it's uniqueID.
