@@ -466,7 +466,12 @@ void PlayingField::doLineClear(vector<int> clearableLines, void (*scoreCallback)
     // always cleared/reset before exiting the top-level of a single call.
     static vector<Shape*> fallingShapes;
     static int cascadeDegree = 0;
-    cascadeDegree++;
+    
+    if (cascadeDegree == 0) {
+        cascadeDegree = 1;
+    } else {
+        cascadeDegree *= 2;
+    }
     
     // SFX
     PlaySound("sounds/line_clear.wav", NULL, SND_ASYNC);

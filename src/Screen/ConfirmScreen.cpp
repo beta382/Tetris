@@ -12,7 +12,6 @@ Screen(),
     bgScreen(prevScreen), title(0, 0, 12, 0, "really exit?", Color::LIGHT_GRAY), 
     yes(0, 0, 22, 0, "yes", Color::GREEN), no(0, 0, 22, 0, "no", Color::RED)
 {
-    id = 5;
 }
 
 ConfirmScreen::~ConfirmScreen() {

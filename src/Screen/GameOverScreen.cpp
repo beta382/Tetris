@@ -16,7 +16,6 @@ Screen(),
         levelNum(0, 0, 12, 0, util::itoa(bgScreen->getLevel()), Color::GRAY),
         menu(0, 0, 10, 0, "return to menu", Color::LIGHT_GRAY)
 {
-    id = 6;
 }
 
 GameOverScreen::~GameOverScreen() {

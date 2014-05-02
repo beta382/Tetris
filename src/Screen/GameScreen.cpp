@@ -37,7 +37,6 @@ Screen(color),
         levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, foreground)
 {
     gs = this;
-    id = 3;
     init();
 }
 
