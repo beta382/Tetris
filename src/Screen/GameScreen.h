@@ -232,20 +232,20 @@ _registerForLeakcheckWithID(GameScreen)
         /*
          * Background rectangle for next block
          */
-        Rect bgRectNext;
+        Rect upNextbg;
         
         /*
          * Background rectangle border for next block
          */
-        Rect bgRectNext2;
+        Rect upNextbgBorder;
         
         /*
          * GameScreen logo
          */
         Logo logo;
         
-        BlockString scoreStr;
-        BlockString levelStr;
+        BlockString scoreLabel;
+        BlockString levelLabel;
         BlockString scoreNum;
         BlockString levelNum;
 };

@@ -26,13 +26,13 @@ Screen(color),
         prevTime(0), tick(500), score(0), level(1),
         field(0, 0, 10, 20, 24, 3, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
         currentTetromino(NULL), nextTetromino(NULL), shadow(NULL),
-        bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
+        upNextbg(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
-        bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
+        upNextbgBorder(0, 0, upNextbg.getWidth()+4, upNextbg.getHeight()+4, Color::DARK_TAN, 
                 foreground),
         logo(0, 0, 15, 2, background), 
-        scoreStr(0, 0, 12, 0, "score", Color::LIGHT_GRAY, foreground), 
-        levelStr(0, 0, 12, 0, "level", Color::LIGHT_GRAY, foreground),
+        scoreLabel(0, 0, 12, 0, "score", Color::LIGHT_GRAY, foreground), 
+        levelLabel(0, 0, 12, 0, "level", Color::LIGHT_GRAY, foreground),
         scoreNum(0, 0, 8, 0, util::itoa(0), Color::BLACK, foreground),
         levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, foreground)
 {
@@ -164,16 +164,16 @@ void GameScreen::draw() {
         currentTetromino->draw();
     }
     
-    bgRectNext2.draw();
-    bgRectNext.draw();
+    upNextbgBorder.draw();
+    upNextbg.draw();
 
     if (nextTetromino) {
         nextTetromino->draw();
     }
     
     logo.draw();
-    scoreStr.draw();
-    levelStr.draw();
+    scoreLabel.draw();
+    levelLabel.draw();
     
     scoreNum.draw();
     levelNum.draw();
@@ -188,8 +188,8 @@ void GameScreen::erase() {
     if (isVisible) {
         levelNum.erase();
         scoreNum.erase();
-        levelStr.erase();
-        scoreStr.erase();
+        levelLabel.erase();
+        scoreLabel.erase();
         
         
         logo.erase();
@@ -198,8 +198,8 @@ void GameScreen::erase() {
             nextTetromino->erase();
         }
         
-        bgRectNext.erase();
-        bgRectNext2.erase();
+        upNextbg.erase();
+        upNextbgBorder.erase();
         
         if (currentTetromino) {
             currentTetromino->erase();
@@ -245,31 +245,31 @@ void GameScreen::applyLayout() {
     logo.setLocation((field.getLocationX()+field.getWidth()+getWidth())/2-logo.getWidth()/2,
             getHeight()-logo.getHeight()-30);
     
-    bgRectNext2.setLocation(logo.getLocationX()+logo.getWidth()/2-bgRectNext2.getWidth()/2, 
-            logo.getLocationY()-bgRectNext2.getHeight()-field.getTotalBlockSize());
+    upNextbgBorder.setLocation(logo.getLocationX()+logo.getWidth()/2-upNextbgBorder.getWidth()/2, 
+            logo.getLocationY()-upNextbgBorder.getHeight()-field.getTotalBlockSize());
     
-    bgRectNext.setLocation(bgRectNext2.getLocationX()+2, bgRectNext2.getLocationY()+2);
+    upNextbg.setLocation(upNextbgBorder.getLocationX()+2, upNextbgBorder.getLocationY()+2);
     
     if (nextTetromino) {
         nextTetromino->setLocation(
-            bgRectNext.getLocationX()+bgRectNext.getWidth()-nextTetromino->getWidth()
-                -(bgRectNext.getWidth()/2-nextTetromino->getRealWidth()/2),
-            bgRectNext.getLocationY()+bgRectNext.getHeight()-nextTetromino->getHeight()
-                -(bgRectNext.getHeight()/2-nextTetromino->getRealHeight()/2)
+            upNextbg.getLocationX()+upNextbg.getWidth()-nextTetromino->getWidth()
+                -(upNextbg.getWidth()/2-nextTetromino->getRealWidth()/2),
+            upNextbg.getLocationY()+upNextbg.getHeight()-nextTetromino->getHeight()
+                -(upNextbg.getHeight()/2-nextTetromino->getRealHeight()/2)
         );
     }
     
-    scoreStr.setLocation(bgRectNext2.getLocationX()+bgRectNext2.getWidth()/2
-            -scoreStr.getWidth()/2, bgRectNext2.getLocationY()-scoreStr.getHeight()-50);
+    scoreLabel.setLocation(upNextbgBorder.getLocationX()+upNextbgBorder.getWidth()/2
+            -scoreLabel.getWidth()/2, upNextbgBorder.getLocationY()-scoreLabel.getHeight()-50);
     
-    scoreNum.setLocation(scoreStr.getLocationX()+scoreStr.getWidth()/2-scoreNum.getWidth()/2,
-            scoreStr.getLocationY()-scoreNum.getHeight()-15);
+    scoreNum.setLocation(scoreLabel.getLocationX()+scoreLabel.getWidth()/2-scoreNum.getWidth()/2,
+            scoreLabel.getLocationY()-scoreNum.getHeight()-15);
     
-    levelStr.setLocation(scoreNum.getLocationX()+scoreNum.getWidth()/2-levelStr.getWidth()/2,
-            scoreNum.getLocationY()-levelStr.getHeight()-50);
+    levelLabel.setLocation(scoreNum.getLocationX()+scoreNum.getWidth()/2-levelLabel.getWidth()/2,
+            scoreNum.getLocationY()-levelLabel.getHeight()-50);
     
-    levelNum.setLocation(levelStr.getLocationX()+levelStr.getWidth()/2-levelNum.getWidth()/2,
-            levelStr.getLocationY()-levelNum.getHeight()-15);
+    levelNum.setLocation(levelLabel.getLocationX()+levelLabel.getWidth()/2-levelNum.getWidth()/2,
+            levelLabel.getLocationY()-levelNum.getHeight()-15);
 }
 
 int GameScreen::getScore() const {
@@ -301,7 +301,7 @@ void GameScreen::init() {
     }
     
     nextTetromino = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
-            static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
+            static_cast<TetrominoShape>(rand()%7), upNextbg.getForeground());
     
     draw();
 }
@@ -530,22 +530,22 @@ bool GameScreen::doJoinAndRespawn() {
 
     if (blockType < (RAND_MAX/50)) { // 1/50
         nextTetromino = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
+                field.getPadding(), shape, upNextbg.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)) { // 1/50
         nextTetromino = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
+                field.getPadding(), shape, upNextbg.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+(RAND_MAX/69)) { // 1/69
         nextTetromino = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
+                field.getPadding(), shape, upNextbg.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+2*(RAND_MAX/69)) { // 1/69
         nextTetromino = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
+                field.getPadding(), shape, upNextbg.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+3*(RAND_MAX/69)) { // 1/69
         nextTetromino = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
-                field.getPadding(), shape, bgRectNext.getForeground());
+                field.getPadding(), shape, upNextbg.getForeground());
     } else { // ~11/12
         nextTetromino = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
-                shape, bgRectNext.getForeground());
+                shape, upNextbg.getForeground());
     }
     
     couldSpawn = currentTetromino; // If currentTetromino is NULL, couldSpawn becomes false
