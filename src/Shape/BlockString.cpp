@@ -34,9 +34,10 @@ Shape()
  *     with, defaults to Color::BLACK
  */
 BlockString::BlockString(int x, int y, int blockSize, int padding, string str,
-        unsigned int background):
+        unsigned int foreground, unsigned int background):
 Shape(x, y, blockSize, padding, background)
 {
+    this->foreground = foreground;
     setString(str);
 }
 
@@ -245,6 +246,37 @@ void BlockString::setString(string str) {
                     .addBlock<Block>(i*4+1, 2).addBlock<Block>(i*4+1, 4).addBlock<Block>(i*4+2, 0)
                     .addBlock<Block>(i*4+2, 1).addBlock<Block>(i*4+2, 2).addBlock<Block>(i*4+2, 3)
                     .addBlock<Block>(i*4+2, 4);
+                break;
+            case ':':
+                addBlock<Block>(i*4, 0).addBlock<Block>(i*4, 1).addBlock<Block>(i*4, 3)
+                .addBlock<Block>(i*4, 4).addBlock<Block>(i*4+1, 0).addBlock<Block>(i*4+1, 1)
+                .addBlock<Block>(i*4+1, 3).addBlock<Block>(i*4+1, 4);
+                break;
+            case ',':
+                addBlock<Block>(i*4, 0).addBlock<Block>(i*4, 1).addBlock<Block>(i*4+1, -1)
+                .addBlock<Block>(i*4+1, 0).addBlock<Block>(i*4+1, 1);
+                break;
+            case '-':
+                addBlock<Block>(i*4, 2).addBlock<Block>(i*4+1, 2).addBlock<Block>(i*4+2, 2);
+                break;
+            case '<':
+                addBlock<Block>(i*4, 2).addBlock<Block>(i*4+1, 1).addBlock<Block>(i*4+1, 3)
+                    .addBlock<Block>(i*4+2, 0).addBlock<Block>(i*4+2, 4);
+                break;
+            case '/':
+                addBlock<Block>(i*4, 0).addBlock<Block>(i*4, 1).addBlock<Block>(i*4+1, 2)
+                    .addBlock<Block>(i*4+2, 3).addBlock<Block>(i*4+2, 4);
+                break;
+            case '?':
+                addBlock<Block>(i*4, 4).addBlock<Block>(i*4+1, 0).addBlock<Block>(i*4+1, 2)
+                    .addBlock<Block>(i*4+1, 4).addBlock<Block>(i*4+2, 2).addBlock<Block>(i*4+2, 3)
+                    .addBlock<Block>(i*4+2, 4);
+                break;
+            case '!':
+                addBlock<Block>(i*4+1, 0).addBlock<Block>(i*4+1, 2).addBlock<Block>(i*4+1, 3)
+                .addBlock<Block>(i*4+1, 4);
+                break;
+            case ' ':
                 break;
             default:
                 addBlock<Block>(i*4, 0).addBlock<Block>(i*4, 1).addBlock<Block>(i*4, 2)

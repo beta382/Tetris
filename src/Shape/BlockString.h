@@ -36,11 +36,13 @@ _registerForLeakcheckWithID(BlockString)
          *   int padding: The value to initialize this BlockString object's padding with
          *   string str: The value to initialize this BlockString object's string with, defaults to
          *     the empty string
+         *   unsigned int background: The value to initialize this BlockString object's foreground
+         *     with, defaults to Color::WHITE
          *   unsigned int background: The value to initialize this BlockString object's background
          *     with, defaults to Color::BLACK
          */
-        BlockString(int x, int y, int blockSize, int padding, string str = "",
-                unsigned int background = Color::BLACK);
+        BlockString(int x, int y, int blockSize, int padding, string str = "", 
+                unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK);
         
         /*
          * Sets this BlockString object's blocks to represent the passed string.

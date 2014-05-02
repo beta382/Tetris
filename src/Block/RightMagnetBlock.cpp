@@ -93,9 +93,9 @@ RightMagnetBlock& RightMagnetBlock::operator =(const RightMagnetBlock& rhs) {
  *   
  * Returns: The number of points the special effect accumulated
  */
-int RightMagnetBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    int points = 100;
-    
+void RightMagnetBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y,
+        void (*scoreCallback)(int))
+{
     bool didMagnet = true;
     while (didMagnet) {
         didMagnet = false;
@@ -124,7 +124,7 @@ int RightMagnetBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y
         }
     }
     
-    return points;
+    scoreCallback(100);
 }
 
 /*

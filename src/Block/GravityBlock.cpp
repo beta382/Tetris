@@ -93,9 +93,9 @@ GravityBlock& GravityBlock::operator =(const GravityBlock& rhs) {
  *   
  * Returns: The number of points the special effect accumulated
  */
-int GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    int points = 100;
-    
+void GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y,
+        void (*scoreCallback)(int))
+{
     bool didFall = true;
     while (didFall) {
         didFall = false;
@@ -122,7 +122,7 @@ int GravityBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
         }
     }
     
-    return points;
+    scoreCallback(100);
 }
 
 /*

@@ -11,10 +11,15 @@
 #define MENUSCREEN_H_INCLUDED
 
 #include "Screen.h"
-#include "Game.h"
-#include "../Image.h"
+#include "GameScreen.h"
+#include "MenuScreen.h"
+#include "InstructionScreen.h"
+#include "../Shape/Logo.h"
+#include "../Shape/BlockString.h"
 
-class Game; // Needed because of the circular inclusion
+// Forward declaration of destination screens, due to potential for an inclusion loop
+class GameScreen;
+class InstructionScreen;
 
 /*
  * MenuScreen:
@@ -53,7 +58,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int);
+        void respondToKey(int) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs an action based on the passed Click.
@@ -64,7 +69,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click);
+        void respondToClick(Click) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -72,7 +77,7 @@ _registerForLeakcheckWithID(MenuScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground();
+        void doBackground() throw (QUIT, NEW_SCREEN);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -95,24 +100,16 @@ _registerForLeakcheckWithID(MenuScreen)
         void erase();
         
     private:
-
-        /*
-         * Initializes this MenuScreen
-         */
-        void init();
         
+        void doGame() throw (NEW_SCREEN);
+        void doInstruction() throw (NEW_SCREEN);
+        void doExit() throw (QUIT);
         
-        // Images for elements of menu screen
-        Image logo;
-        Image attribution;
-        Image play;
-        Image playHover;
-        Image howToPlay;
-        Image howToPlayHover;
-        Image howToPlayImage;
-        
-        // Boolean for whether how to play is visible
-        bool howToPlayVisible;
+        Logo logo;
+        BlockString play;
+        BlockString howToPlay;
+        BlockString exit;
+        BlockString attribution;
 };
 
 #endif // MENUSCREEN_H_INCLUDED

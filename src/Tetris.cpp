@@ -22,44 +22,44 @@ Tetris::~Tetris() {
 
 //Tetris Main Game Loop
 void Tetris::Play (void) {
-    
-    Screen* newScreen = NULL;
-    
-    //Check for Keyboard Hit
-    while (g->kbhit()) {
-        int k = g->getKey();
-        
-        switch (k) {
-            case Key::ESC: // ESC
-                delete this;
-                
-                leakcheck::report(cout);
-                exit(0);
-                break;
-            case '`':
-                leakcheck::report(cout);
-                break;
-            default:
-                newScreen = screen->respondToKey(k);
-                break;
+    try {
+        //Check for Keyboard Hit
+        while (g->kbhit()) {
+            int k = g->getKey();
+            
+            switch (k) {
+                case '`':
+                    leakcheck::report(cout);
+                    break;
+                default:
+                    screen->respondToKey(k);
+                    break;
+            }
         }
-    }
-
-    _checkNewScreen();
-    
-    //Check for mouse click
-    while (g->click()) {
-        Click c = g->getClick();
         
-        newScreen = screen->respondToClick(c);
+        //Check for mouse click
+        while (g->click()) {
+            Click c = g->getClick();
+            
+            screen->respondToClick(c);
+        }
+        
+        //Do the screen's background function
+        screen->doBackground();
+        
+        // Update screen - draw game
+        g->Draw();
+    } catch (QUIT& e) {
+        delete this;
+        
+        leakcheck::report(cout);
+        exit(0);
+    } catch (NEW_SCREEN& e) {
+        
+        if (!screen->shouldRetain()) {
+            delete screen;
+        }
+        
+        screen = e.screen;
     }
-    
-    _checkNewScreen();
-    
-    //Do the screen's background function
-    newScreen = screen->doBackground();
-    _checkNewScreen();
-    
-    // Update screen - draw game
-    g->Draw();
 }

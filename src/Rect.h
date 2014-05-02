@@ -7,21 +7,21 @@
  * Date last modified:     Apr 26, 2014
  */
 
-#ifndef RECTANGLE_H_
-#define RECTANGLE_H_
+#ifndef RECT_H_
+#define RECT_H_
 
 #include "Drawable.h"
 
-class MyRectangle: public Drawable {
-_registerForLeakcheckWithID(MyRectangle)
+class Rect: public Drawable {
+_registerForLeakcheckWithID(Rect)
     public:
-        MyRectangle();
-        MyRectangle(int x, int y);
-        MyRectangle(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
+        Rect();
+        Rect(int x, int y);
+        Rect(int x, int y, int width, int height, unsigned int foreground = Color::WHITE,
                 unsigned int background = Color::BLACK);
-        MyRectangle(const MyRectangle&);
-        MyRectangle& operator =(const MyRectangle&);
-        ~MyRectangle();
+        Rect(const Rect&);
+        Rect& operator =(const Rect&);
+        ~Rect();
         
         int getWidth() const;
         int getHeight() const;
@@ -31,4 +31,4 @@ _registerForLeakcheckWithID(MyRectangle)
         void erase();
 };
 
-#endif /* RECTANGLE_H_ */
+#endif /* RECT_H_ */

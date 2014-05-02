@@ -11,10 +11,15 @@
 #define PAUSESCREEN_H_
 
 #include "Screen.h"
-#include "Game.h"
-#include "../BlockString.h"
+#include "GameScreen.h"
+#include "MenuScreen.h"
+#include "ConfirmScreen.h"
+#include "../Shape/BlockString.h"
 
-class Game; // Needed because of the circular inclusion
+// Forward declaration of destination screens, due to potential for an inclusion loop
+class GameScreen;
+class MenuScreen;
+class ConfirmScreen;
 
 /*
  * PauseScreen:
@@ -32,9 +37,9 @@ _registerForLeakcheckWithID(PauseScreen)
          * Instantiates a PauseScreen object using the passed Games* to return to.
          * 
          * Parameters:
-         *   Game* background: A pointer to the screen object to return to
+         *   Game* bgScreen: A pointer to the screen object to return to
          */
-        PauseScreen(Game* background);
+        PauseScreen(GameScreen* bgScreen);
         
         /*
          * Destructs this PauseScreen object.
@@ -53,7 +58,7 @@ _registerForLeakcheckWithID(PauseScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToKey(int);
+        void respondToKey(int) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs an action based on the passed Click.
@@ -64,7 +69,7 @@ _registerForLeakcheckWithID(PauseScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* respondToClick(Click);
+        void respondToClick(Click) throw (QUIT, NEW_SCREEN);
         
         /*
          * Performs actions that should happen continuously in the background on this Screen.
@@ -72,7 +77,7 @@ _registerForLeakcheckWithID(PauseScreen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        Screen* doBackground();
+        void doBackground() throw (QUIT, NEW_SCREEN);
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -101,16 +106,17 @@ _registerForLeakcheckWithID(PauseScreen)
          */
         PauseScreen();
         
+        void doResume() throw (NEW_SCREEN);
+        void doExit() throw (NEW_SCREEN);
+        
         /*
          * The game to return control to once this screen exits
          */
-        Game* background;
+        GameScreen* bgScreen;
         
-        /*
-         * Represents clickable text elements
-         */
-        BlockString resumeText;
-        BlockString exitText;
+        BlockString title;
+        BlockString resume;
+        BlockString exit;
 };
 
 

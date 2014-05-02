@@ -4,369 +4,42 @@ Group project for CSI 1440 - Freshman Spring Semester
 
 For complete documentation, check out the source code.
 
-## Outline
+## Project structure
 
 ***Bold Italics*** indicates an abstract object
 
-- [Public API overview](https://github.com/beta382/Tetris#public-api-overview)
-  - [Objects](https://github.com/beta382/Tetris#objects)
-    - [***Drawable***](https://github.com/beta382/Tetris#drawable)
-      - [***Screen***](https://github.com/beta382/Tetris#screen)
-        - [Game](https://github.com/beta382/Tetris#game)
-        - [PauseScreen](https://github/beta382/Tetris#pausescreen)
-      - [PlayingField](https://github.com/beta382/Tetris#playingfield)
-      - [Shape](https://github.com/beta382/Tetris#shape)
-        - [***TetrominoBase***](https://github.com/beta382/Tetris#tetrominobase)
-          - [Tetromino\<BlockType\>](https://github.com/beta382/Tetris#tetrominoblocktype)
-      - [Block](https://github.com/beta382/Tetris#block)
-        - [GhostBlock](https://github.com/beta382/Tetris#ghostblock)
-        - [ExplodingBlock](https://github.com/beta382/Tetris#explodingblock)
-        - [GravityBlock](https://github.com/beta382/Tetris#gravityblock)
-        - [LeftMagnetBlock](https://github.com/beta382/Tetris#leftmagnetblock)
-        - [RightMagnetBlock](https://github.com/beta382/Tetris#rightmagnetblock)
-        - [LaserBlock](https://github.com/beta382/Tetris#laserblock)
-    - Tetris (Provided by instructor, no docs)
-    - GLUT_Plotter (Provided by instructor, no docs)
-  - [Enumerations](https://github.com/beta382/Tetris#enumerations)
-    - [TetrominoShape](https://github.com/beta382/Tetris#tetrominoshape)
-  - [Namespaces](https://github.com/beta382/Tetris#namespaces)
-    - [Color](https://github.com/beta382/Tetris#color)
-    - [Key](https://github.com/beta382/Tetris#key)
-    - [util](https://github.com/beta382/Tetris#util)
-    - [leakcheck](https://github.com/beta382/Tetris#leakcheck)
-- [How to use leakcheck](https://github.com/beta382/Tetris#how-to-use-leakcheck)
-
-## Public API overview: 
-
-### Objects
-
-#### ***Drawable***
-
-```cpp
-virtual void setWidth(int);
-virtual int getWidth() const;
-virtual void setHeight(int);
-virtual int getHeight() const;
-virtual void setLocation(int, int);
-virtual int getLocationX() const;
-virtual int getLocationY() const;
-virtual void setForeground(unsigned int);
-virtual unsigned int getForeground() const;
-virtual void setBackground(unsigned int);
-virtual unsigned int getBackground() const;
-virtual void blink(int, clock_t);
-
-static void setG(GLUT_Plotter*);
-
-/* --- Pure virtual --- */
-virtual void draw();
-virtual void erase();
-```
-    
-#### ***Screen***
-
-```cpp
-bool shouldRetain();
-
-/* --- Pure virtual --- */
-virtual Screen* respondToKey(int);
-vitrual Screen* respondToClick(Click);
-virtual void doBackground();
-```
-
-#### Game
-
-```cpp
-Game(unsigned int color = Color::BLACK);
-
-/* --- Implemented from Screen --- */
-Screen* respondToKey(int);
-Screen* respondToClick(Click);
-void doBackground();
-
-/* --- Implemented from Drawable --- */
-void draw();
-void erase();
-```
-
-#### PauseScreen
-
-```cpp
-PauseScreen(Screen*);
-
-/* --- Implemented from Screen --- */
-Screen* respondToKey(int);
-Screen* respondToClick(Click);
-void doBackground();
-
-/* --- Implemented from Drawable --- */
-void draw();
-void erase();
-```
-
-#### PlayingField
-
-```cpp
-PlayingField();
-PlayingField(int x, int y, int width, int height, int blockSize, int padding,
-    unsigned int foreground = Color::WHITE, unsigned int background = Color::BLACK, 
-    int borderWidth = 0, unsigned int borderColor = Color::GRAY);
-PlayingField(const PlayingField&);
-PlayingField& operator =(const PlayingField&);
-
-template <typename BlockType>
-Tetromino<BlockType>* spawnNewTetromino(TetrominoShape) const;
-
-int mergeAndDelete(Shape*);
-
-int getBlockSize() const;
-int getPadding() const;
-int getTotalBlockSize() const;
-
-bool canShiftUp(const Shape*) const;
-bool canShiftDown(const Shape*) const;
-bool canShiftLeft(const Shape*) const;
-bool canShiftRight(const Shape*) const;
-bool canRotateCW(const TetrominoBase*) const;
-bool canRotateCCW(const TetrominoBase*) const;
-
-/* --- Overriding from Drawable --- */
-int getWidth() const;
-int getHeight() const;
-void setLocation(int, int);
-
-/* --- Implemented from Drawable --- */
-void draw();
-void erase();
-```
-
-#### Shape
-
-```cpp
-Shape();
-Shape(int x, int y, int blockSize, int padding, unsigned int background = Color::BLACK);
-Shape(const Shape&);
-Shape& operator =(const Shape&);
-
-Block* getBlock(int) const;
-Shape& addBlock(Block*);
-
-int numBlocks() const;
-int getBlockSize() const;
-int getPadding() const;
-int getTotalBlockSize() const;
-
-void shiftUp();
-void shiftDown();
-void shiftLeft();
-void shiftRight();
-
-Block*& operator [](int);
-
-/* --- Overriding from Drawable --- */
-int getWidth() const;
-int getHeight() const;
-void setLocation(int, int);
-void setForeground (unsigned int);
-void setBackground (unsigned int);
-
-/* --- Implemented from Drawable --- */
-void draw();
-void erase();
-
-```
-
-#### ***TetrominoBase***
-
-```cpp
-void rotateCW();
-void rotateCCW();
-int getRealWidth() const;
-int getRealHeight() const;
-TetrominoShape getShape() const;
-
-/* --- Pure virtual --- */
-virtual TetrominoBase* makeNewClone() const;
-```
-
-#### Tetromino\<BlockType\>
-
-```cpp
-Tetromino();
-Tetromino(int x, int y, int blockSize, int padding, TetrominoShape shape,
-                unsigned int background = Color::BLACK);
-Tetromino(const Tetromino<BlockType>&);
-Tetromino<BlockType>& operator =(const Tetromino<BlockType>&);
-
-/* --- Implimented from TetrominoBase --- */
-Tetromino<BlockType>* makeNewClone() const;
-```
-
-
-#### Block
-
-```cpp
-Block();
-Block(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-        		unsigned int background = Color::BLACK);
-Block(const Block&);
-Block& operator =(const Block&);
-
-int getSize() const;
-int getPadding() const;
-int getTotalSize() const;
-unsigned int getUniqueID() const;
-void setUniqueID(unsigned int);
-virtual int doEffect(vector<vector<Block*> >&, int x, int y);
-virtual Block* makeNewClone() const;
-
-/* --- Implemented from Drawable --- */
-void draw();
-void erase();
-```
-
-#### GhostBlock
-
-```cpp
-GhostBlock();
-GhostBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
-GhostBlock(const GhostBlock&);
-GhostBlock& operator =(const GhostBlock&);
-
-/* --- Overriding from Block --- */
-int doEffect(vector<vector<Block*> >&, int x, int y);
-GhostBlock* makeNewClone() const;
-void draw();
-```
-
-#### ExplodingBlock
-
-```cpp
-ExplodingBlock();
-ExplodingBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
-ExplodingBlock(const ExplodingBlock&);
-ExplodingBlock& operator =(const ExplodingBlock&);
-
-/* --- Overriding from Block --- */
-int doEffect(vector<vector<Block*> >&, int x, int y);
-ExplodingBlock* makeNewClone() const;
-void draw();
-```
-
-#### GravityBlock
-
-```cpp
-GravityBlock();
-GravityBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
-GravityBlock(const GravityBlock&);
-GravityBlock& operator =(const GravityBlock&);
-
-/* --- Overriding from Block --- */
-int doEffect(vector<vector<Block*> >&, int x, int y);
-GravityBlock* makeNewClone() const;
-void draw();
-```
-
-#### LeftMagnetBlock
-
-```cpp
-LeftMagnetBlock();
-LeftMagnetBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
-LeftMagnetBlock(const LeftMagnetBlock&);
-LeftMagnetBlock& operator =(const LeftMagnetBlock&);
-
-/* --- Overriding from Block --- */
-int doEffect(vector<vector<Block*> >&, int x, int y);
-LeftMagnetBlock* makeNewClone() const;
-void draw();
-```
-
-#### RightMagnetBlock
-
-```cpp
-LeftMagnetBlock();
-RightMagnetBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
-RightMagnetBlock(const RightMagnetBlock&);
-RightMagnetBlock& operator =(const RightMagnetBlock&);
-
-/* --- Overriding from Block --- */
-int doEffect(vector<vector<Block*> >&, int x, int y);
-RightMagnetBlock* makeNewClone() const;
-void draw();
-```
-
-#### LaserBlock
-
-```cpp
-LaserBlock();
-LaserBlock(int x, int y, int size, int padding, unsigned int foreground = Color::WHITE,
-                unsigned int background = Color::BLACK);
-LaserBlock(const LaserBlock&);
-LaserBlock& operator =(const LaserBlock&);
-
-/* --- Overriding from Block --- */
-int doEffect(vector<vector<Block*> >&, int x, int y);
-LaserBlock* makeNewClone() const;
-void draw();
-```
-
-### Enumerations
-
-#### TetrominoShape
-
-```cpp
-enum TetrominoShape {I, O, T, J, L, S, Z};
-```
-
-### Namespaces
-
-#### Color
-
-```cpp
-const unsigned int WHITE;
-const unsigned int BLACK;
-const unsigned int BLUE;
-const unsigned int BROWN;
-const unsigned int GREEN;
-const unsigned int GRAY;
-const unsigned int LIGHT_GRAY;
-const unsigned int RED;
-const unsigned int TAN;
-const unsigned int LIGHT_TAN;
-const unsigned int DARK_TAN;
-const unsigned int DARK_GREEN;
-const unsigned int CYAN;
-```
-
-#### Key
-
-```cpp
-const int UP;
-const int DOWN;
-const int LEFT;
-const int RIGHT;
-const int ESC;
-```
-
-#### util
-
-```cpp
-void wait(clock_t, GLUT_Plotter*);
-```
-
-#### leakcheck
-
-```cpp
-map<void*, pair<string, size_t> > allocated;
-
-void report(ostream& out);
-size_t bytes();
-```
+- Objects
+  - ***Drawable***
+    - ***Screen***
+      - MenuScreen
+      - InstructionScreen
+      - GameScreen
+      - PauseScreen
+      - ConfirmScreen
+      - GameOverScreen
+    - PlayingField
+    - Shape
+      - ***TetrominoBase***
+        - Tetromino\<BlockType\>
+      - BlockString
+      - Logo
+    - Block
+      - GhostBlock
+      - ExplodingBlock
+      - GravityBlock
+      - LeftMagnetBlock
+      - RightMagnetBlock
+      - LaserBlock
+    - Rect
+  - Tetris (Provided by instructor, no docs)
+  - GLUT_Plotter (Provided by instructor, no docs)
+- Enumerations
+  - TetrominoShape
+- Namespaces
+  - Color
+  - Key
+  - util
+  - leakcheck
 
 ##How to use leakcheck
 

@@ -125,7 +125,8 @@ _registerForLeakcheckWithID(Block)
          *   
          * Returns: The number of points the special effect accumulated
          */
-        virtual int doEffect(vector<vector<Block*> >&, int x, int y);
+        virtual void doEffect(vector<vector<Block*> >&, int x, int y, void (*)(int)) 
+        {/*Do nothing*/}
 
         /*
          * Allocates a clone of this Block, including it's uniqueID. Should be overridden by Block

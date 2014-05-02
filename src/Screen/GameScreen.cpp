@@ -7,7 +7,9 @@
  * Date last modified:     Apr 27, 2014
  */
 
-#include "Game.h"
+#include "GameScreen.h"
+
+GameScreen* gs = NULL;
 
 
 /* ---------- Constructors/Destructor ---------- */
@@ -19,28 +21,35 @@
  *   unsigned int color: The value to initialize this Game object's foreground with, defaults to
  *     Color::BLACK
  */
-Game::Game(unsigned int color): 
+GameScreen::GameScreen(unsigned int color): 
 Screen(color),
         prevTime(0), tick(500), score(0), level(1),
-        field(0, 0, 10, 20, 16, 2, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
-        currentTetromino(NULL), tetrominoNext(NULL), shadow(NULL),
+        field(0, 0, 10, 20, 24, 3, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
+        currentTetromino(NULL), nextTetromino(NULL), shadow(NULL),
         bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
-        logo("img/logo_medium.bmp"), scoreText("img/score.bmp"), levelText("img/level.bmp")
+        logo(0, 0, 15, 2, background), 
+        scoreStr(0, 0, 12, 0, "score", Color::LIGHT_GRAY, foreground), 
+        levelStr(0, 0, 12, 0, "level", Color::LIGHT_GRAY, foreground),
+        scoreNum(0, 0, 8, 0, util::itoa(0), Color::BLACK, foreground),
+        levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, foreground)
 {
+    gs = this;
+    id = 3;
     init();
 }
 
 /*
  * Destructs this Game object.
  */
-Game::~Game() {
+GameScreen::~GameScreen() {
     erase();
     delete currentTetromino;
     delete shadow;
-    delete tetrominoNext;
+    delete nextTetromino;
+    gs = NULL;
 }
 
 
@@ -55,9 +64,7 @@ Game::~Game() {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::respondToKey(int key) {
-    Screen* nextScreen = NULL;
-    
+void GameScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
     switch (key) {
         case 'w':
         case Key::UP: // UP
@@ -81,36 +88,14 @@ Screen* Game::respondToKey(int key) {
         case 'e': // Rotate CW
             doRotateCWWithKick();
             break;
-        case '0': // Testing
-            doResetTetromino<Block>();
-            break;
-        case '1':
-            doResetTetromino<ExplodingBlock>();
-            break;
-        case '2':
-            doResetTetromino<GravityBlock>();
-            break;
-        case '3':
-            doResetTetromino<LeftMagnetBlock>();
-            break;
-        case '4':
-            doResetTetromino<RightMagnetBlock>();
-            break;
-        case '5':
-            doResetTetromino<LaserBlock>();
-            break;
         case 'p':
-            retain = true;
-            
-            // Set out previous time back so that when we return, we have a proper offset until the
-            // next tick
-            prevTime -= clock();
-            
-            nextScreen = new PauseScreen(this);
+        case ' ':
+            doPause();
+            break;
+        case Key::ESC:
+            doExit();
             break;
     }
-    
-    return nextScreen;
 }
 
 /*
@@ -122,11 +107,8 @@ Screen* Game::respondToKey(int key) {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::respondToClick(Click click) {
+void GameScreen::respondToClick(Click click) throw (QUIT, NEW_SCREEN) {
     // Do nothing for now
-    Screen* nextScreen = NULL;
-    
-    return nextScreen;
 }
 
 /*
@@ -135,9 +117,7 @@ Screen* Game::respondToClick(Click click) {
  * Returns: A pointer to the Screen object control should shift to after this function exits, or
  *   NULL if control should not shift to another Screen object
  */
-Screen* Game::doBackground() {
-    Screen* nextScreen = NULL;
-    
+void GameScreen::doBackground() throw (QUIT, NEW_SCREEN) {
     // If we previously retained this and returned, stop saying to retain or we'll leak
     if (retain) {
         retain = false;
@@ -160,13 +140,11 @@ Screen* Game::doBackground() {
         if (field.canShiftDown(currentTetromino)) {
             doShiftDown();
         } else if (!doJoinAndRespawn()) {
-            nextScreen = new Game(Color::TAN); // Make this the GameOver Screen
+            doGameOver();
         }
         
         prevTime = curTime;
     }
-
-    return nextScreen;
 }
 
 
@@ -175,7 +153,7 @@ Screen* Game::doBackground() {
 /*
  * Draws all Drawable member data to the screen in an order that preserves view heiarchy.
  */
-void Game::draw() {
+void GameScreen::draw() {
     bgRect.draw();
     field.draw();
     
@@ -190,17 +168,16 @@ void Game::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
 
-    if (tetrominoNext) {
-        tetrominoNext->draw();
+    if (nextTetromino) {
+        nextTetromino->draw();
     }
     
     logo.draw();
-    scoreText.draw();
-    levelText.draw();
+    scoreStr.draw();
+    levelStr.draw();
     
-    drawScore();
-    
-    drawLevel();
+    scoreNum.draw();
+    levelNum.draw();
     
     isVisible = true;
 }
@@ -208,12 +185,18 @@ void Game::draw() {
 /*
  * Erases all Drawable member data from the screen in an order that preserves view heiarchy.
  */
-void Game::erase() {
+void GameScreen::erase() {
     if (isVisible) {
+        levelNum.erase();
+        scoreNum.erase();
+        levelStr.erase();
+        scoreStr.erase();
+        
+        
         logo.erase();
         
-        if (tetrominoNext) {
-            tetrominoNext->erase();
+        if (nextTetromino) {
+            nextTetromino->erase();
         }
         
         bgRectNext.erase();
@@ -240,15 +223,15 @@ void Game::erase() {
  *   the screen as reported by GLUT_Plotter. Useful to dynamically move/scale objects when
  *   the screen size changes.
  */
-void Game::applyLayout() {
+void GameScreen::applyLayout() {
     setWidth(g->getWidth());
     setHeight(g->getHeight());
-
+    
     bgRect.setWidth(getWidth());
     bgRect.setHeight(getHeight());
     
-    int fieldDx = 10-field.getLocationX();
-    int fieldDy = 10-field.getLocationY();
+    int fieldDx = (getHeight()-field.getHeight())/2-field.getLocationX();
+    int fieldDy = (getHeight()-field.getHeight())/2-field.getLocationY();
     field.setLocation(field.getLocationX()+fieldDx, field.getLocationY()+fieldDy);
     
     if (currentTetromino) {
@@ -260,22 +243,42 @@ void Game::applyLayout() {
         shadow->setLocation(shadow->getLocationX()+fieldDx,  shadow->getLocationY()+fieldDy);
     }
     
-    logo.setLocation(field.getLocationX()+field.getWidth()+field.getTotalBlockSize(),
-            field.getLocationY()+field.getHeight()-logo.getHeight());
+    logo.setLocation((field.getLocationX()+field.getWidth()+getWidth())/2-logo.getWidth()/2,
+            getHeight()-logo.getHeight()-30);
     
     bgRectNext2.setLocation(logo.getLocationX()+logo.getWidth()/2-bgRectNext2.getWidth()/2, 
             logo.getLocationY()-bgRectNext2.getHeight()-field.getTotalBlockSize());
     
     bgRectNext.setLocation(bgRectNext2.getLocationX()+2, bgRectNext2.getLocationY()+2);
     
-    if (tetrominoNext) {
-        tetrominoNext->setLocation(
-            bgRectNext.getLocationX()+bgRectNext.getWidth()-tetrominoNext->getWidth()-
-                (bgRectNext.getWidth()/2-tetrominoNext->getRealWidth()/2),
-            bgRectNext.getLocationY()+bgRectNext.getHeight()-tetrominoNext->getHeight()-
-                (bgRectNext.getHeight()/2-tetrominoNext->getRealHeight()/2)
+    if (nextTetromino) {
+        nextTetromino->setLocation(
+            bgRectNext.getLocationX()+bgRectNext.getWidth()-nextTetromino->getWidth()
+                -(bgRectNext.getWidth()/2-nextTetromino->getRealWidth()/2),
+            bgRectNext.getLocationY()+bgRectNext.getHeight()-nextTetromino->getHeight()
+                -(bgRectNext.getHeight()/2-nextTetromino->getRealHeight()/2)
         );
     }
+    
+    scoreStr.setLocation(bgRectNext2.getLocationX()+bgRectNext2.getWidth()/2
+            -scoreStr.getWidth()/2, bgRectNext2.getLocationY()-scoreStr.getHeight()-50);
+    
+    scoreNum.setLocation(scoreStr.getLocationX()+scoreStr.getWidth()/2-scoreNum.getWidth()/2,
+            scoreStr.getLocationY()-scoreNum.getHeight()-15);
+    
+    levelStr.setLocation(scoreNum.getLocationX()+scoreNum.getWidth()/2-levelStr.getWidth()/2,
+            scoreNum.getLocationY()-levelStr.getHeight()-50);
+    
+    levelNum.setLocation(levelStr.getLocationX()+levelStr.getWidth()/2-levelNum.getWidth()/2,
+            levelStr.getLocationY()-levelNum.getHeight()-15);
+}
+
+int GameScreen::getScore() const {
+    return score;
+}
+
+int GameScreen::getLevel() const {
+    return level;
 }
 
 
@@ -284,7 +287,7 @@ void Game::applyLayout() {
 /*
  * Instantiates this Game object's dynamically allocated member data and starts the RNG.
  */
-void Game::init() {
+void GameScreen::init() {
     srand(time(0));
     
     // Spawn a new tetromino and create a shadow in the same place
@@ -298,20 +301,8 @@ void Game::init() {
         shadow->shiftDown();
     }
     
-    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+    nextTetromino = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
-    
-    score1.setLocation(240, 150);
-    score2.setLocation(270, 150);
-    score3.setLocation(300, 150);
-    score4.setLocation(330, 150);
-    score5.setLocation(360, 150);
-    
-    level1.setLocation(285, 60);
-    level2.setLocation(315, 60);
-    
-    scoreText.setLocation(250, 190);
-    levelText.setLocation(260, 100);
     
     draw();
 }
@@ -319,7 +310,7 @@ void Game::init() {
 /*
  * Properly performs a shift up on currentTetromino, performing checks.
  */
-void Game::doShiftUp() {
+void GameScreen::doShiftUp() {
     if (field.canShiftUp(currentTetromino)) {
         currentTetromino->erase();
         currentTetromino->shiftUp();
@@ -330,7 +321,7 @@ void Game::doShiftUp() {
 /*
  * Properly performs a shift down on currentTetromino, performing checks.
  */
-void Game::doShiftDown() {
+void GameScreen::doShiftDown() {
     if (field.canShiftDown(currentTetromino)) {
         currentTetromino->erase();
         currentTetromino->shiftDown();
@@ -343,7 +334,7 @@ void Game::doShiftDown() {
 /*
  * Properly performs a shift left on currentTetromino, performing checks.
  */
-void Game::doShiftLeft() {
+void GameScreen::doShiftLeft() {
     if (field.canShiftLeft(currentTetromino)) {
         // Erase and move the current tetromino, but don't redraw it just yet
         currentTetromino->erase();
@@ -365,7 +356,7 @@ void Game::doShiftLeft() {
 /*
  * Properly performs a shift right on currentTetromino, performing checks.
  */
-void Game::doShiftRight() {
+void GameScreen::doShiftRight() {
     if (field.canShiftRight(currentTetromino)) {
         // Erase and move the current tetromino, but don't redraw it just yet
         currentTetromino->erase();
@@ -387,7 +378,7 @@ void Game::doShiftRight() {
 /*
  * Properly performs a clockwise rotation on currentTetromino WITHOUT performing checks.
  */
-void Game::doRotateCW() {
+void GameScreen::doRotateCW() {
     // Erase and rotate the current tetromino, but don't redraw it just yet
     currentTetromino->erase();
     currentTetromino->rotateCW();
@@ -411,7 +402,7 @@ void Game::doRotateCW() {
 /*
  * Properly performs a counter-clockwise rotation on currentTetromino WITHOUT performing checks.
  */
-void Game::doRotateCCW() {
+void GameScreen::doRotateCCW() {
     // Erase and rotate the current tetromino, but don't redraw it just yet
     currentTetromino->erase();
     currentTetromino->rotateCCW();       
@@ -435,7 +426,7 @@ void Game::doRotateCCW() {
 /*
  * Properly performs a clockwise rotation on currentTetromino, performing checks and wall kicks.
  */
-void Game::doRotateCWWithKick() {
+void GameScreen::doRotateCWWithKick() {
     // If we can rotate the current tetromino CW within the block field, do so
     if (field.canRotateCW(currentTetromino)) {
         doRotateCW();
@@ -469,7 +460,7 @@ void Game::doRotateCWWithKick() {
  * Properly performs a counter-clockwise rotation on currentTetromino, performing checks and wall
  *   kicks.
  */
-void Game::doRotateCCWWithKick() {
+void GameScreen::doRotateCCWWithKick() {
     // If we can rotate the current tetromino CCW within the block field, do so
     if (field.canRotateCCW(currentTetromino)) {
         doRotateCCW();
@@ -503,7 +494,7 @@ void Game::doRotateCCWWithKick() {
  * Properly performs a soft fall on the currentTetromino, bringing it to the bottom of the screen
  *   without merging.
  */
-void Game::doSoftFall() {
+void GameScreen::doSoftFall() {
     while(field.canShiftDown(currentTetromino)) {
         doShiftDown();
         util::wait(25, g);
@@ -524,46 +515,37 @@ void Game::doSoftFall() {
  * 
  * Returns: True if a Tetromino could be successfully spawned, false otherwise
  */
-bool Game::doJoinAndRespawn() {
+bool GameScreen::doJoinAndRespawn() {
     bool couldSpawn;
     
-    score += field.mergeAndDelete(currentTetromino);
-    
-    int old_level = level;
-    level = score/500 + 1;
-    if(level > old_level)
-        PlaySound("sounds/level_up.wav", NULL, SND_ASYNC);
-    
-    //Changes fall speed as levels increase, caps speed at 60
-    tick = (500 - 20*(level-1));
-            
-    if (tick < 60) {
-        tick = 60;
-    }
+    TetrominoBase* tmp = currentTetromino;
+    currentTetromino = NULL;
+    shadow->erase();
+    field.mergeAndDelete(tmp, scoreCallback);
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
     int blockType = rand();
     
-    currentTetromino = field.spawnNewTetromino(tetrominoNext);
+    currentTetromino = field.spawnNewTetromino(nextTetromino);
 
     if (blockType < (RAND_MAX/50)) { // 1/50
-        tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)) { // 1/50
-        tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+(RAND_MAX/69)) { // 1/69
-        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+2*(RAND_MAX/69)) { // 1/69
-        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+3*(RAND_MAX/69)) { // 1/69
-        tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else { // ~11/12
-        tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+        nextTetromino = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
     }
     
@@ -593,50 +575,50 @@ bool Game::doJoinAndRespawn() {
     return couldSpawn;
 }
 
-
-/*
-* Draws score to screen.
-*/
-void Game::drawScore()
-{
-    int firstScore, secondScore, thirdScore, fourthScore, fifthScore;
+void GameScreen::setScore(int score) {
+    this->score = score;
     
-    firstScore = score/10000;
-    secondScore = score/1000%10;
-    thirdScore = score/100%10;
-    fourthScore = score/10%10;
-    fifthScore = score%10;
+    int old_level = level;
+    level = score/500 + 1;
     
-    score1.setFileName(getName(firstScore));
-    score2.setFileName(getName(secondScore));
-    score3.setFileName(getName(thirdScore));
-    score4.setFileName(getName(fourthScore));
-    score5.setFileName(getName(fifthScore));
+    levelNum.setString(util::itoa(level));
+    scoreNum.setString(util::itoa(score));
     
-    score1.draw();
-    score2.draw();
-    score3.draw();
-    score4.draw();
-    score5.draw();
+    if(level > old_level) {
+        PlaySound("sounds/level_up.wav", NULL, SND_ASYNC);
+    }
     
-    cout << score << endl;
+    //Changes fall speed as levels increase, caps speed at 40
+    tick = (500 - 20*(level-1));
+            
+    if (tick < 40) {
+        tick = 40;
+    }
 }
 
-/*
-* Draws level to screen.
-*/
-void Game::drawLevel()
-{
-    int firstLevel, secondLevel;
-    
-    firstLevel = level/10%10;
-    secondLevel = level%10;
-    
-    level1.setFileName(getName(firstLevel));
-    level2.setFileName(getName(secondLevel));
-    
-    level1.draw();
-    level2.draw();
-    
-    cout << level << endl;
+void GameScreen::doPause() throw (NEW_SCREEN) {
+    retain = true;
+    prevTime -= clock(); 
+    throw NEW_SCREEN(new PauseScreen(this));
+}
+
+void GameScreen::doExit() throw (NEW_SCREEN) {
+    retain = true;
+    prevTime -= clock();
+    throw NEW_SCREEN(new ConfirmScreen(this));
+}
+
+void GameScreen::doGameOver() throw (NEW_SCREEN) {
+    retain = true;
+    throw NEW_SCREEN(new GameOverScreen(this));
+}
+
+void scoreCallback(int points) {
+    gs->scoreNum.erase();
+    gs->levelNum.erase();
+    gs->setScore(gs->getScore()+points);
+    gs->applyLayout();
+    gs->scoreNum.draw();
+    gs->levelNum.draw();
+    gs->g->Draw();
 }

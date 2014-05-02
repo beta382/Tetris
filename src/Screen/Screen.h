@@ -11,7 +11,15 @@
 #define SCREEN_H_
 
 #include "../Drawable.h"
-#include "../Rectangle.h"
+#include "../Rect.h"
+
+class Screen;
+
+struct QUIT{};
+struct NEW_SCREEN{
+    NEW_SCREEN(Screen* screen = NULL): screen(screen) {}
+    Screen* screen;
+};
 
 /*
  * Screen:
@@ -35,7 +43,7 @@ _registerForLeakcheckWithID(Screen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen* respondToKey(int key) = 0;
+        virtual void respondToKey(int key) throw (QUIT, NEW_SCREEN)= 0;
         
         /*
          * Performs an action based on the passed Click.  Must be implimented by children of
@@ -47,7 +55,7 @@ _registerForLeakcheckWithID(Screen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen* respondToClick(Click click) = 0;
+        virtual void respondToClick(Click click) throw (QUIT, NEW_SCREEN) = 0;
         
         /*
          * Performs actions that should happen continuously in the background on this Screen. Must
@@ -56,7 +64,7 @@ _registerForLeakcheckWithID(Screen)
          * Returns: A pointer to the Screen object control should shift to after this function
          *   exits, or NULL if control should not shift to another Screen object
          */
-        virtual Screen* doBackground() = 0;
+        virtual void doBackground() throw (QUIT, NEW_SCREEN) = 0;
         
         /*
          * Sets Drawable member data width's, height's, and/or locations according to the size of
@@ -73,6 +81,10 @@ _registerForLeakcheckWithID(Screen)
             return retain;
         }
         
+        int getID() {
+            return id;
+        }
+        
     protected:
         
         /*
@@ -84,7 +96,7 @@ _registerForLeakcheckWithID(Screen)
          */
         Screen(unsigned int color = Color::BLACK):
         Drawable(0, 0, g->getWidth(), g->getHeight(), color), 
-                retain(false), bgRect(0, 0, width, height, color)
+                retain(false), id(0), bgRect(0, 0, width, height, color)
         {
         };
         
@@ -95,11 +107,12 @@ _registerForLeakcheckWithID(Screen)
         Screen& operator =(const Screen& other);
         
         bool retain;
+        int id;
         
         /*
          * Represents the background fill for this Screen object.
          */
-        MyRectangle bgRect;
+        Rect bgRect;
 };
 
 #endif /* SCREEN_H_ */

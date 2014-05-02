@@ -7,30 +7,30 @@
  * Date last modified:     Apr 26, 2014
  */
 
-#include "Rectangle.h"
+#include "Rect.h"
 
-MyRectangle::MyRectangle ():
+Rect::Rect ():
 Drawable(0, 0, 10, 10)
 { 
 }
 
-MyRectangle::MyRectangle (int x, int y):
+Rect::Rect (int x, int y):
 Drawable(x, y, 10, 10)
 {
 }
 
-MyRectangle::MyRectangle (int x, int y, int width, int height, unsigned int foreground, 
+Rect::Rect (int x, int y, int width, int height, unsigned int foreground, 
         unsigned int background):
 Drawable(x, y, width, height, foreground, background)
 {
 }
 
-MyRectangle::MyRectangle (const MyRectangle& other):
+Rect::Rect (const Rect& other):
 Drawable(other)
 {
 }
 
-MyRectangle& MyRectangle::operator =(const MyRectangle& rhs) {
+Rect& Rect::operator =(const Rect& rhs) {
     if (this != &rhs) {
         Drawable::operator =(rhs);
     }
@@ -38,37 +38,43 @@ MyRectangle& MyRectangle::operator =(const MyRectangle& rhs) {
     return *this;
 }
 
-MyRectangle::~MyRectangle() {
+Rect::~Rect() {
     erase();
 }
 
-int MyRectangle::getWidth() const {
+int Rect::getWidth() const {
     return width;
 }
 
-int MyRectangle::getHeight() const {
+int Rect::getHeight() const {
     return height;
 }
 
 /* ---------- Implemented from Drawable ---------- */
 
-void MyRectangle::draw() {
+void Rect::draw() {
     g->setColor(getForeground());
     for (int i = 0; i < getWidth(); i++) {
         for (int j = 0; j < getHeight(); j++) {
-            g->plot(getLocationX()+i, getLocationY()+j);
+            if (getLocationX()+i >= 0 && getLocationX()+i < g->getWidth() && 
+                    getLocationY()+j >= 0 && getLocationY()+j < g->getHeight()) {
+                g->plot(getLocationX()+i, getLocationY()+j);
+            }
         }
     }
     
     isVisible = true;
 }
 
-void MyRectangle::erase() {
+void Rect::erase() {
     if (isVisible) {
         g->setColor(getBackground());
         for (int i = 0; i < getWidth(); i++) {
             for (int j = 0; j < getHeight(); j++) {
-                g->plot(getLocationX()+i, getLocationY()+j);
+                if (getLocationX()+i >= 0 && getLocationX()+i < g->getWidth() && 
+                        getLocationY()+j >= 0 && getLocationY()+j < g->getHeight()) {
+                    g->plot(getLocationX()+i, getLocationY()+j);
+                }
             }
         }
 

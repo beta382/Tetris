@@ -11,7 +11,7 @@
 #define LASERBLOCK_H_
 
 #include "Block.h"
-#include "../Rectangle.h"
+#include "../Rect.h"
 
 /*
  * LaserBlock:
@@ -87,7 +87,7 @@ _registerForLeakcheckWithID(LaserBlock)
          *   
          * Returns: The number of points the special effect accumulated
          */
-        int doEffect(vector<vector<Block*> >&, int x, int y);
+        void doEffect(vector<vector<Block*> >&, int x, int y, void (*)(int));
 
         /*
          * Allocates a clone of this LaserBlock, including it's uniqueID.

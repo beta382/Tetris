@@ -93,9 +93,9 @@ ExplodingBlock& ExplodingBlock::operator =(const ExplodingBlock& rhs) {
  *   
  * Returns: The number of points the special effect accumulated
  */
-int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    int points = 100;
-    
+void ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y, 
+        void (*scoreCallback)(int))
+{
     // Make an explosion rectangle
     int explosionX = (x >= 2) ? getLocationX()-getTotalSize()*2 : getLocationX()-getTotalSize()*x;
     int explosionY = (y >= 2) ? getLocationY()-getTotalSize()*2 : getLocationY()-getTotalSize()*y;
@@ -118,10 +118,12 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
         explosionHeight = getTotalSize()*(y+3)-getPadding();
     }
     
-    MyRectangle explosion(explosionX, explosionY, explosionWidth, explosionHeight, Color::RED,
+    Rect explosion(explosionX, explosionY, explosionWidth, explosionHeight, Color::RED,
             getBackground());
     
     explosion.blink(3, 150);
+    
+    scoreCallback(100);
     
     // Normalize blocks in case this got called from another block's effect
     for (unsigned int i = 0; i < blockField.size(); i++) {
@@ -146,14 +148,12 @@ int ExplodingBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) 
                 Block* tmp = blockField[i][j];
                 blockField[i][j] = NULL;
                 
-                points += tmp->doEffect(blockField, i, j);
+                tmp->doEffect(blockField, i, j, scoreCallback);
                 
                 delete tmp;
             }
         }
     }
-    
-    return points;
 }
 
 /*

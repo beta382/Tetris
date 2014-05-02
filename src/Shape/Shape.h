@@ -10,8 +10,8 @@
 #ifndef SHAPE_H_
 #define SHAPE_H_
 
-#include "Drawable.h"
-#include "blocks.h"
+#include "../Drawable.h"
+#include "../blocks.h"
 
 #include <vector>
 
@@ -102,6 +102,19 @@ _registerForLeakcheckWithID(Shape)
          */
         template <typename BlockType>
         Shape& addBlock(int, int);
+        
+        /*
+         * Adds a Block pointer to this Shape at the specified grid location.
+         * 
+         * Parameters:
+         *   int x: The value of the x-coordinate to add a new Block to
+         *   int y: The value of the x-coordinate to add a new Block to
+         *   unsigned int color: The color of the block to add
+         *   
+         * Returns: A reference to this Shape object
+         */
+        template <typename BlockType>
+        Shape& addBlock(int, int, unsigned int);
         
 
         /*
@@ -252,6 +265,25 @@ template <typename BlockType>
 Shape& Shape::addBlock(int x, int y) {
     blocks.push_back(new BlockType(getLocationX()+getTotalBlockSize()*x, 
             getLocationY()+getTotalBlockSize()*y, getBlockSize(), getPadding(), getForeground(), 
+            getBackground()));
+    
+    return *this;
+}
+
+/*
+ * Adds a Block pointer to this Shape at the specified grid location.
+ * 
+ * Parameters:
+ *   int x: The value of the x-coordinate to add a new Block to
+ *   int y: The value of the x-coordinate to add a new Block to
+ *   unsigned int color: The color of the block to add
+ *   
+ * Returns: A reference to this Shape object
+ */
+template <typename BlockType>
+Shape& Shape::addBlock(int x, int y, unsigned int color) {
+    blocks.push_back(new BlockType(getLocationX()+getTotalBlockSize()*x, 
+            getLocationY()+getTotalBlockSize()*y, getBlockSize(), getPadding(), color, 
             getBackground()));
     
     return *this;
