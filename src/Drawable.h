@@ -142,6 +142,8 @@ _registerForLeakcheckWithID(Drawable)
          *   GLUT_Plotter* plotter: The value to assign to Drawable's static GLUT_Plotter* g
          */
         static void setG(GLUT_Plotter*);
+        
+        static GLUT_Plotter* getG();
 
         virtual ~Drawable() {}
     protected:

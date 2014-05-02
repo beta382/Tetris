@@ -24,6 +24,7 @@ Screen(),
         resume(0, 0, 12, 0, "resume game", Color::GREEN), 
         exit(0, 0, 12, 0, "exit to menu", Color::RED)
 {
+    id = 4;
 }
 
 /*

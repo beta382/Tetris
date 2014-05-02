@@ -9,6 +9,8 @@
 
 #include "GameScreen.h"
 
+GameScreen* gs = NULL;
+
 
 /* ---------- Constructors/Destructor ---------- */
 
@@ -23,17 +25,19 @@ GameScreen::GameScreen(unsigned int color):
 Screen(color),
         prevTime(0), tick(500), score(0), level(1),
         field(0, 0, 10, 20, 24, 3, Color::WHITE, foreground, 2, Color::LIGHT_GRAY),
-        currentTetromino(NULL), tetrominoNext(NULL), shadow(NULL),
+        currentTetromino(NULL), nextTetromino(NULL), shadow(NULL),
         bgRectNext(0, 0, field.getTotalBlockSize()*6+field.getPadding(), 
                 field.getTotalBlockSize()*4+field.getPadding(), Color::LIGHT_TAN, foreground),
         bgRectNext2(0, 0, bgRectNext.getWidth()+4, bgRectNext.getHeight()+4, Color::DARK_TAN, 
                 foreground),
         logo(0, 0, 15, 2, background), 
-        scoreStr(0, 0, 12, 0, "score", Color::LIGHT_GRAY, background), 
-        levelStr(0, 0, 12, 0, "level", Color::LIGHT_GRAY, background),
-        scoreNum(0, 0, 8, 0, util::itoa(0), Color::BLACK, background),
-        levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, background)
+        scoreStr(0, 0, 12, 0, "score", Color::LIGHT_GRAY, foreground), 
+        levelStr(0, 0, 12, 0, "level", Color::LIGHT_GRAY, foreground),
+        scoreNum(0, 0, 8, 0, util::itoa(0), Color::BLACK, foreground),
+        levelNum(0, 0, 8, 0, util::itoa(1), Color::BLACK, foreground)
 {
+    gs = this;
+    id = 3;
     init();
 }
 
@@ -44,7 +48,8 @@ GameScreen::~GameScreen() {
     erase();
     delete currentTetromino;
     delete shadow;
-    delete tetrominoNext;
+    delete nextTetromino;
+    gs = NULL;
 }
 
 
@@ -89,6 +94,7 @@ void GameScreen::respondToKey(int key) throw (QUIT, NEW_SCREEN) {
             break;
         case Key::ESC:
             doExit();
+            break;
     }
 }
 
@@ -162,8 +168,8 @@ void GameScreen::draw() {
     bgRectNext2.draw();
     bgRectNext.draw();
 
-    if (tetrominoNext) {
-        tetrominoNext->draw();
+    if (nextTetromino) {
+        nextTetromino->draw();
     }
     
     logo.draw();
@@ -189,8 +195,8 @@ void GameScreen::erase() {
         
         logo.erase();
         
-        if (tetrominoNext) {
-            tetrominoNext->erase();
+        if (nextTetromino) {
+            nextTetromino->erase();
         }
         
         bgRectNext.erase();
@@ -220,7 +226,7 @@ void GameScreen::erase() {
 void GameScreen::applyLayout() {
     setWidth(g->getWidth());
     setHeight(g->getHeight());
-
+    
     bgRect.setWidth(getWidth());
     bgRect.setHeight(getHeight());
     
@@ -245,12 +251,12 @@ void GameScreen::applyLayout() {
     
     bgRectNext.setLocation(bgRectNext2.getLocationX()+2, bgRectNext2.getLocationY()+2);
     
-    if (tetrominoNext) {
-        tetrominoNext->setLocation(
-            bgRectNext.getLocationX()+bgRectNext.getWidth()-tetrominoNext->getWidth()
-                -(bgRectNext.getWidth()/2-tetrominoNext->getRealWidth()/2),
-            bgRectNext.getLocationY()+bgRectNext.getHeight()-tetrominoNext->getHeight()
-                -(bgRectNext.getHeight()/2-tetrominoNext->getRealHeight()/2)
+    if (nextTetromino) {
+        nextTetromino->setLocation(
+            bgRectNext.getLocationX()+bgRectNext.getWidth()-nextTetromino->getWidth()
+                -(bgRectNext.getWidth()/2-nextTetromino->getRealWidth()/2),
+            bgRectNext.getLocationY()+bgRectNext.getHeight()-nextTetromino->getHeight()
+                -(bgRectNext.getHeight()/2-nextTetromino->getRealHeight()/2)
         );
     }
     
@@ -295,7 +301,7 @@ void GameScreen::init() {
         shadow->shiftDown();
     }
     
-    tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+    nextTetromino = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
             static_cast<TetrominoShape>(rand()%7), bgRectNext.getForeground());
     
     draw();
@@ -512,48 +518,34 @@ void GameScreen::doSoftFall() {
 bool GameScreen::doJoinAndRespawn() {
     bool couldSpawn;
     
-    score += field.mergeAndDelete(currentTetromino);
-    
-    int old_level = level;
-    level = score/500 + 1;
-    
-    levelNum.setString(util::itoa(level));
-    scoreNum.setString(util::itoa(score));
-    
-    if(level > old_level) {
-        PlaySound("sounds/level_up.wav", NULL, SND_ASYNC);
-    }
-    
-    //Changes fall speed as levels increase, caps speed at 60
-    tick = (500 - 20*(level-1));
-            
-    if (tick < 60) {
-        tick = 60;
-    }
+    TetrominoBase* tmp = currentTetromino;
+    currentTetromino = NULL;
+    shadow->erase();
+    field.mergeAndDelete(tmp, scoreCallback);
     
     TetrominoShape shape = static_cast<TetrominoShape>(rand()%7);
     
     int blockType = rand();
     
-    currentTetromino = field.spawnNewTetromino(tetrominoNext);
+    currentTetromino = field.spawnNewTetromino(nextTetromino);
 
     if (blockType < (RAND_MAX/50)) { // 1/50
-        tetrominoNext = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<ExplodingBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)) { // 1/50
-        tetrominoNext = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<LaserBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+(RAND_MAX/69)) { // 1/69
-        tetrominoNext = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<LeftMagnetBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+2*(RAND_MAX/69)) { // 1/69
-        tetrominoNext = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<RightMagnetBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else if (blockType < 2*(RAND_MAX/50)+3*(RAND_MAX/69)) { // 1/69
-        tetrominoNext = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
+        nextTetromino = new Tetromino<GravityBlock>(0, 0, field.getBlockSize(),
                 field.getPadding(), shape, bgRectNext.getForeground());
     } else { // ~11/12
-        tetrominoNext = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
+        nextTetromino = new Tetromino<Block>(0, 0, field.getBlockSize(), field.getPadding(),
                 shape, bgRectNext.getForeground());
     }
     
@@ -583,6 +575,27 @@ bool GameScreen::doJoinAndRespawn() {
     return couldSpawn;
 }
 
+void GameScreen::setScore(int score) {
+    this->score = score;
+    
+    int old_level = level;
+    level = score/500 + 1;
+    
+    levelNum.setString(util::itoa(level));
+    scoreNum.setString(util::itoa(score));
+    
+    if(level > old_level) {
+        PlaySound("sounds/level_up.wav", NULL, SND_ASYNC);
+    }
+    
+    //Changes fall speed as levels increase, caps speed at 40
+    tick = (500 - 20*(level-1));
+            
+    if (tick < 40) {
+        tick = 40;
+    }
+}
+
 void GameScreen::doPause() throw (NEW_SCREEN) {
     retain = true;
     prevTime -= clock(); 
@@ -598,4 +611,14 @@ void GameScreen::doExit() throw (NEW_SCREEN) {
 void GameScreen::doGameOver() throw (NEW_SCREEN) {
     retain = true;
     throw NEW_SCREEN(new GameOverScreen(this));
+}
+
+void scoreCallback(int points) {
+    gs->scoreNum.erase();
+    gs->levelNum.erase();
+    gs->setScore(gs->getScore()+points);
+    gs->applyLayout();
+    gs->scoreNum.draw();
+    gs->levelNum.draw();
+    gs->g->Draw();
 }

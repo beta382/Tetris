@@ -87,7 +87,7 @@ _registerForLeakcheckWithID(LeftMagnetBlock)
          *   
          * Returns: The number of points the special effect accumulated
          */
-        int doEffect(vector<vector<Block*> >&, int x, int y);
+        void doEffect(vector<vector<Block*> >&, int x, int y, void (*)(int));
 
         /*
          * Allocates a clone of this LeftMagnetBlock, including it's uniqueID.

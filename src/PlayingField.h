@@ -126,7 +126,7 @@ _registerForLeakcheckWithID(PlayingField)
          *   
          * Returns: The number of points the merge accumulated
          */
-        int mergeAndDelete(Shape*);
+        void mergeAndDelete(Shape*, void (*scoreCallback)(int));
         
         
         /*
@@ -283,7 +283,7 @@ _registerForLeakcheckWithID(PlayingField)
          *   
          * Returns: The number of points the line clear accumulated
          */
-        int doLineClear(vector<int>);
+        void doLineClear(vector<int>, void (*scoreCallback)(int));
 
         /*
          * Checks the blockField for lines that are able to be cleared.
@@ -315,7 +315,7 @@ _registerForLeakcheckWithID(PlayingField)
          *     
          * Returns: The number of points the special effects accumulated
          */
-        int doClearedBlockEffects(Shape&, vector<Shape*>&);
+        void doClearedBlockEffects(Shape&, vector<Shape*>&, void (*scoreCallback)(int));
 
         /*
          * Performs a falling animation for each of the Shapes pointed to by the pointers in the
@@ -329,7 +329,7 @@ _registerForLeakcheckWithID(PlayingField)
          *     
          * Returns: The number of points the fall accumulated
          */
-        int doFall(vector<Shape*>&);
+        void doFall(vector<Shape*>&, void (*scoreCallback)(int));
 
         
         /*

@@ -17,23 +17,15 @@
  *   GLUT_Plotter* g: A pointer to a GLUT_Plotter object we should prevent from registering events
  */
 void util::wait(clock_t ms, GLUT_Plotter* g) {
-    clock_t start = clock();
+    clock_t end = clock()+ms;
     
     g->Draw(); // Force redraw before we wait
     
-    while (clock() < start+ms);
+    while (clock() < end);
     
-    // Referenced http://freeglut.sourceforge.net/docs/api.php
-#    ifdef FREEGLUT
-        // We might have gotten key-presses during this time, so remove all our glut callbacks
-        g->callBacks(false);
-        
-        // Do a single callback loop to eat events
-        glutMainLoopEvent();
-        
-        // Reinstate callbacks
-        g->callBacks(true);
-#    endif
+    g->callBacks(false);
+    glutMainLoopEvent();
+    g->callBacks(true);
 }
 
 /*

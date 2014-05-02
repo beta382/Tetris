@@ -69,7 +69,7 @@ namespace util {
      *   GLUT_Plotter* g: A pointer to a GLUT_Plotter object we should prevent from registering
      *     events
      */
-    void wait(clock_t ms, GLUT_Plotter* g);
+    void wait(clock_t, GLUT_Plotter* g);
     
     /*
      * An itoa function that doesn't suck to use

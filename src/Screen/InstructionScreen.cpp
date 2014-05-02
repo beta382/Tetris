@@ -29,6 +29,7 @@ Screen(color),
                 "created by: wes cossick, evan green, austin hash, and taylor jones", Color::GRAY,
                 background)
 {
+    id = 2;
 }
 
 InstructionScreen::~InstructionScreen() {

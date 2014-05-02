@@ -186,9 +186,13 @@ _registerForLeakcheckWithID(GameScreen)
          */
         bool doJoinAndRespawn();
         
+        void setScore(int);
+        
         void doPause() throw (NEW_SCREEN);
         void doExit() throw (NEW_SCREEN);
         void doGameOver() throw (NEW_SCREEN);
+        
+        friend void scoreCallback(int);
         
         /*
          * Used as a "tick" marker for automatic tetromino falling, and the duration of the
@@ -217,7 +221,7 @@ _registerForLeakcheckWithID(GameScreen)
         /*
          * Pointer to a TetrominoBase object representing the currently falling tetromino.
          */
-        TetrominoBase* tetrominoNext;
+        TetrominoBase* nextTetromino;
         
         /*
          * Pointer to a Tetromino<GhostBlock> object representing the currently falling tetromino's
@@ -245,6 +249,8 @@ _registerForLeakcheckWithID(GameScreen)
         BlockString scoreNum;
         BlockString levelNum;
 };
+
+void scoreCallback(int);
 
 
 /* ---------- Method template implementation ---------- */

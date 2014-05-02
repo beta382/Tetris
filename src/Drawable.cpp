@@ -238,3 +238,7 @@ Drawable& Drawable::operator =(const Drawable& rhs) {
 void Drawable::setG(GLUT_Plotter* plotter) {
     g = plotter;
 }
+
+GLUT_Plotter* Drawable::getG() {
+    return g;
+}

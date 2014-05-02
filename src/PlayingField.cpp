@@ -209,9 +209,7 @@ TetrominoBase* PlayingField::spawnNewTetromino (TetrominoBase* initFrom) const {
  *   
  * Returns: The number of points the merge accumulated
  */
-int PlayingField::mergeAndDelete (Shape* shape) {
-    int points = 0;
-    
+void PlayingField::mergeAndDelete (Shape* shape, void (*scoreCallback)(int)) {
     mergeCopy(shape);
     
     delete shape;
@@ -221,10 +219,8 @@ int PlayingField::mergeAndDelete (Shape* shape) {
     vector<int> clearableLines = getClearableLines();
 
     if (clearableLines.size() > 0) {
-        points += doLineClear(clearableLines);
+        doLineClear(clearableLines, scoreCallback);
     }
-    
-    return points;
 }
 
 
@@ -465,12 +461,15 @@ bool PlayingField::couldAdd(const Block* block) const {
  *   
  * Returns: The number of points the line clear accumulated
  */
-int PlayingField::doLineClear(vector<int> clearableLines) {
+void PlayingField::doLineClear(vector<int> clearableLines, void (*scoreCallback)(int)) {
     // Static because this recurses with doFall, maintains the remaining shapes across calls, is
     // always cleared/reset before exiting the top-level of a single call.
     static vector<Shape*> fallingShapes;
+    static int cascadeDegree = 0;
+    cascadeDegree++;
     
-    int points = clearableLines.size()*50;
+    // SFX
+    PlaySound("sounds/line_clear.wav", NULL, SND_ASYNC);
     
     vector<Shape*> newFallingShapes;
 
@@ -485,10 +484,12 @@ int PlayingField::doLineClear(vector<int> clearableLines) {
     }
 
     clearedBlocks.blink(3, 150);
+    
+    scoreCallback(clearableLines.size()*50*cascadeDegree);
 
     normalizeBlocks(clearedBlocks);
 
-    points += doClearedBlockEffects(clearedBlocks, fallingShapes);
+    doClearedBlockEffects(clearedBlocks, fallingShapes, scoreCallback);
 
     // See if we have any new shapes to form, and add them to fallingShapes
     newFallingShapes = formNewContiguousShapes(blockField);
@@ -500,15 +501,11 @@ int PlayingField::doLineClear(vector<int> clearableLines) {
     // Maintains proper order since we might add new shapes out-of-order
     sort(fallingShapes.begin(), fallingShapes.end(), compareShapePointerByLocation);
 
-    points += doFall(fallingShapes);
+    doFall(fallingShapes, scoreCallback);
     
     // Clear fallingShapes when this finally exits, should be totally NULL at this point
     fallingShapes.clear();
-    
-    // SFX
-    PlaySound("sounds/line_clear.wav", NULL, SND_ASYNC);
-    
-    return points;
+    cascadeDegree = 0;
 }
 
 /*
@@ -592,11 +589,11 @@ void PlayingField::normalizeBlocks(Shape& shape) {
  *     
  * Returns: The number of points the special effects accumulated
  */
-int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes) {
+void PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fallingShapes,
+        void (*scoreCallback)(int))
+{
     vector<vector<Block*> > remainingBlockField(width,
             vector<Block*>(height, static_cast<Block*>(NULL)));
-    
-    int points = 0;
     
     // Before we perform any special effects, temporarily directly merge any fallingShapes
     for (unsigned int i = 0; i < fallingShapes.size(); i++) {
@@ -617,8 +614,9 @@ int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fa
     
     // For each cleared block, perform the block's special effect, and then delete the block
     for (int i = 0; i < clearedBlocks.numBlocks(); i++) {
-        points += clearedBlocks[i]->doEffect(blockField, 
-                xIndexFromLocation(clearedBlocks[i]), yIndexFromLocation(clearedBlocks[i]));
+        clearedBlocks[i]->doEffect(blockField, 
+                xIndexFromLocation(clearedBlocks[i]), yIndexFromLocation(clearedBlocks[i]), 
+                scoreCallback);
     }
     
     // Extract the merged fallingShapes and make them into a separate blockField
@@ -642,8 +640,6 @@ int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fa
     // Takes a blockField made from the potentially modified original fallingShapes and forms new
     // shapes out of them. Effectively refreshes fallingShapes post-special effects
     fallingShapes = formNewContiguousShapes(remainingBlockField);
-    
-    return points;
 }
 
 /*
@@ -658,9 +654,7 @@ int PlayingField::doClearedBlockEffects(Shape& clearedBlocks, vector<Shape*>& fa
  *     
  * Returns: The number of points the fall accumulated
  */
-int PlayingField::doFall(vector<Shape*>& fallingShapes) {
-    int points = 0;
-    
+void PlayingField::doFall(vector<Shape*>& fallingShapes, void (*scoreCallback)(int)) {
     bool didFall = true;
     // While we are still shifting down...
     while(didFall) {
@@ -703,7 +697,7 @@ int PlayingField::doFall(vector<Shape*>& fallingShapes) {
             vector<int> clearableLines = getClearableLines();
 
             if (clearableLines.size() > 0) {
-                points += doLineClear(clearableLines)*2; // Double points for each cascading clear
+                doLineClear(clearableLines, scoreCallback); // Double points for each cascading clear
             }
 
             didFall = false;
@@ -727,8 +721,6 @@ int PlayingField::doFall(vector<Shape*>& fallingShapes) {
             util::wait(100, g);
         }
     }
-    
-    return points;
 }
 
 /*
@@ -872,7 +864,6 @@ void PlayingField::setLocation(int x, int y) {
     int dX = x - getLocationX();
     int dY = y - getLocationY();
     
-    erase();
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             if (blockField[i][j]) {
@@ -884,8 +875,6 @@ void PlayingField::setLocation(int x, int y) {
     
     bgRect.setLocation(bgRect.getLocationX()+dX, bgRect.getLocationY()+dY);
     bgRect2.setLocation(bgRect2.getLocationX()+dX, bgRect2.getLocationY()+dY);
-    
-    draw();
     
     this->x = x;
     this->y = y;

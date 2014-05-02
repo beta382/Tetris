@@ -93,11 +93,9 @@ LaserBlock& LaserBlock::operator =(const LaserBlock& rhs) {
  *   
  * Returns: The number of points the special effect accumulated
  */
-int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    int points = 100;
-    
-    
-    
+void LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y,
+        void (*scoreCallback)(int))
+{
     int laserY, baseRow;
     
     if (y <= 0) {
@@ -115,6 +113,8 @@ int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
             getPadding(), getTotalSize()*3-getPadding(), Color::RED, getBackground());
     
     laser.blink(3, 150);
+    
+    scoreCallback(100);
     
     // Normalize blocks in case this got called from another block's effect
     for (unsigned int i = 0; i < blockField.size(); i++) {
@@ -137,14 +137,12 @@ int LaserBlock::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
                 Block* tmp = blockField[j][i];
                 blockField[j][i] = NULL;
                 
-                points += tmp->doEffect(blockField, j, i);
+                tmp->doEffect(blockField, j, i, scoreCallback);
                 
                 delete tmp;
             }
         }
     }
-    
-    return points;
 }
 
 /*

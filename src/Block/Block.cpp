@@ -131,21 +131,6 @@ void Block::setUniqueID(unsigned int id) {
 }
 
 /*
- * Performs this Block's special effect on the given blockField from the passed coordinates. Should
- *   be called when this Block is cleared from the PlayingField.
- *   
- * Parameters:
- *   <vector<vector<Block*> >& blockField: A reference to the blockField to perform the effect on
- *   int x: The x-coordinate of this Block within the blockField
- *   int y: The y-coordinate of this Block within the blockField
- *   
- * Returns: The number of points the special effect accumulated
- */
-int Block::doEffect(vector<vector<Block*> >& blockField, int x, int y) {
-    return 0;
-}
-
-/*
  * Allocates a clone of this Block, including it's uniqueID. Should be overridden by Block
  *   subclasses so that you can clone a Block of the propper class into a polymorphic Block pointer
  *   without knowing the class of the Block you are cloning.
